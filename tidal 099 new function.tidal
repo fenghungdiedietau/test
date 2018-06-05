@@ -1,0 +1,41 @@
+cps 0.8
+
+d1 $ stack [
+    s (iter 8 (efull 3 8 "bd cp" "bass"))
+    # n (slow 10 (scale 0 10 $ sine1))
+    -- ,
+    -- distrib [5,16,17] $ sound "sn"
+    -- # n (slow 4 (scale 0 6 $ sine1))
+    ]
+
+    hush
+
+d2 $ sound "[[bd sn]/[2 3],[bd cp]*[2 3]]"
+
+would be the same as
+
+d3 $ sound "[bd sn] [bd sn bd]"
+
+hush
+
+d3 silence
+
+  -- "x ~ ~ x ~ ~ x ~"
+
+d1
+  $ distrib [3,5,17]
+  $ sound "[tt bd]*10"
+  # n (efull 3 16 "11" "2")
+  # nudge (scale 0 2 $ slow 16 $ sine)
+  # orbit 1
+  # release 1
+  # begin (slow 10 (scale 0.1 0.99 $ sine1))
+  -- # cut 1
+
+d1 silence
+
+d2
+  $ sound "bd*3"
+  # speed 0.5
+  # size 0.7
+  # room 0.4

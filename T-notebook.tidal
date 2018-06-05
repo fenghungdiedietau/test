@@ -1,0 +1,515 @@
+//Pattern Transformers
+//Sample Transformers
+//Conditional Transformers
+//
+
+speed nagtive value==>play backward
+
+d1
+  -- $spread ($) [(loopAt 4), slow 3, striate 13]
+  $loopAt 8 $ chop "[[{8 12 13}%4],[2(3,5)]]/2" $sound "dna:2"
+
+d1
+-- $ within (0,0.5)(#speed 4)
+-- $ within (0.5,1)( (rev).(#speed 2))
+$ spread ($)
+[jux (#speed 0.4),jux (#speed 3),smash 3 [2,4,6,8],(|+|pan sine1)]
+$ loopAt 1
+$ chop "16" $ sound "dna:4"
+# cut "2"
+  -- |+|speed"<1.3 1>"
+  -- |+|pan (every 3 (density 4) $ sine*1)
+  -- |+|begin "[[0.2 0.3 0.5], [0.4 0.1]]"
+  -- |+|accelerate (whenmod 9 4 (slow "8 4 5") "[0.2 0.2 -0.3 0.1]")
+
+hush
+
+
+Fit
+
+fit :: Int -> [a] -> Pattern Int -> Pattern a
+The fit function takes a pattern of integer numbers,
+which are used to select values from the given list.
+What makes this a bit strange is that only a given
+number of values are selected each cycle. For example:
+
+cps(120/60/4)
+
+d1 $ sound (fit 3 ["bd", "sn", "arpy", "arpy:1", "casio"] "0 [~ 1] 2 1")
+
+d1 silence
+
+The above fits three samples into the pattern,
+i.e. for the first cycle this will be "bd", "sn" and "arpy",
+giving the result "bd [~ sn] arpy sn" (note that we start counting at zero,
+  so that 0 picks the first value).
+  The following cycle the next three values in the list will be picked,
+  i.e. "arpy:1", "casio" and "bd", giving the pattern
+  "arpy:1 [~ casio] bd casio" (note that the list wraps round here).
+
+fit' :: Time -> Int -> Pattern Int -> Pattern Int -> Pattern a -> Pattern a
+fit' is a generalization of fit, where the list is instead constructed
+by using another integer pattern to slice up a given pattern.
+The first argument is the number of cycles of that latter pattern
+to use when slicing. It’s easier to understand this with a few examples:
+
+
+d1 $ sound (fit' 1 3 "0 1 2" "1 0 1 [~ 2]" "bd arpy cp")
+
+The first 1 just tells it to slice up a single cycle of "bd sn".
+The 2 tells it to select two values each cycle,
+just like the first argument to fit.
+The next pattern "0 1" is the “from” pattern which tells it how to slice
+, which in this case means "0" maps to "bd", and "1" maps to "sn".
+  The next pattern "1 0" is the “to” pattern, which tells it how to rearrange
+  those slices. So the final result is the pattern "sn bd".
+
+A more useful example might be something like
+
+bps(60/120)
+
+d1 $ fit' 1 4 (run 4) "0"
+   $ chop 4 $ (sound "breaks152" # unit "c")
+
+{-|which uses chop to break a single sample into individual pieces,
+which fit' then puts into a list (using the run 4 pattern) and
+reassembles according to the complicated integer pattern.
+-}
+
+
+d1 silence
+
+which uses chop to break a single sample into individual pieces,
+which fit' then puts into a list (using the run 4 pattern) and
+reassembles according to the complicated integer pattern.
+
+hush
+
+Chop
+chop :: Pattern Int -> ParamPattern -> ParamPattern
+chop granualizes every sample in place as it is played,
+turning a pattern of samples into a pattern of sample parts.
+Use an integer value to specify how many granules each sample is chopped into:
+
+bps (120/120)
+
+d1
+  $ degradeBy 0.1
+  $ chop 8
+  $ sound "arpy feel*2 newnotes"
+
+d2 $ (0.2 <~)$ cat[s "bd*4 ", s"hh*4",s"cp*4",s "sn*2" ]
+
+hush
+
+d1
+  -- $ fast 3
+  $ loopAt 4
+  $ chop "<32 10 5>"
+  $ sound "app:2"
+  # speed "-1"
+
+hush
+
+You can pattern that first parameter:
+
+d1 $ chop "<4 1 3>" $ sound "arpy ~ feel*2 newnotes"
+   # room ((slow 4)sine1*2)
+  --  # size ((slow 4)sine1*2)
+   # nudge "[0 0.04]*4"
+
+hush
+
+You end up with a pattern of the chopped up bits of samples,
+so for example if you then reverse the pattern,
+you reverse the order of the bits:
+
+
+d1
+  $ rev
+   --(run 3)
+  $ loopAt 1 $ sound "app:2"
+  # speed
+
+hush
+
+d1 $ density "{1! [2 ~] 4! ~}%5"
+   $ slowcat [superimpose (smash 4 [4,2,1,4]) $ jux rev $ sound (samples "{gretsch*4, gretsch*3 bd*2 sn/2}" (stack [(slow 3 $ run 8), "1 5 2"]))
+              |+| speed "2",
+              interlace
+              (jux (0.25 <~) $ (striate 4) $ sound "bd/4*4 bleep/7")
+              (sound (samples "mouth*8" (every 3 rev $ run 8)))
+             ]
+
+             hush
+
+d1 $ superimpose (smash 4 [4,2,1,4])
+   $ jux rev
+   $ sound (samples "{gretsch*4, gretsch*3 bd*2 sn/2}" (stack [(slow 3 $ run 8), "1 5 2"]))
+   |+| speed "2"
+
+
+d1
+  --  $superimpose ((smash 4 [4,2,1,4]).(brak))
+  --  $juxBy 0.1 ((fast 2).(every 3 (0.3 <~)).(brak))
+  $density 1.2
+   $ interlace
+     (sound (samples "{808:5*4 ,bd*2 cp*3 gretsch*4}" (slow 1 "4 7 5 ")))
+     (sound (samples "{808:3*3 ~,bd:3*2 [sn:3 ~]/5 gretsch*4}" (fast 4 "3 7 5")))
+  --  # size (slow 3 "{0.2 0.3 0.5}%7")
+  --  # room (slow 3 $ "[0.1(3,5),0.7(4,5)]" )
+
+
+   d1
+      -- $superimpose ((smash 4 [4,2,1,4]).(brak))
+      $juxBy 0.5 ((fast 2).(every 3 ("<0.2> " <~)).(brak))
+      -- $ interlace
+      -- $chunk 12 (rev).(smash 8[7,3,10]).(iter 3).(#gain 1)
+      $ (sound (samples "{808:7*2 808:2 ,bd*2 cp*3 gretsch*4}" (slow 1 "4 7 5 ")))
+        -- (sound (samples "{808:4*3 ~,bd:3*2 [sn:3 ~]/5 gretsch*4}" (fast 4 "3 7 5")))
+      # size (slow 1 "{0.2 0.7 0.5}%4")
+      # room (slow 4 $ "[0.1(3,5),0.7(7,10)]" )
+
+   hush
+-- (slow 1 $ run 4))
+-- (stack [(fast 1 $ run 2), "1 2 3 4 5"]))
+
+d1 $ sound (samples "{gretsch*4, gretsch*3 bd*2 sn/2}" (stack [(slow 3 $ run 8), "1 5 2"]))
+
+d1 $ density 4 $sound (samples "<arpy*5 arpy*2>" (every 3 (fast 1) $ run 6) )
+
+d1 $sound "gretsch"
+
+hush
+
+d1 $ superimpose (smash 4 [1,2,1,2])  $ sound "bd sn [cp ht] hh"
+
+hush
+
+d1 $ every 4 (rev . chop 8) $ superimpose (iter 4) $
+              every 2 (slow 2) $ stack [sound (samples "cp(3,8)" (slow 10 $ run 12)) |+| speed "1" |+| pan "0",
+                                        sound (samples "bd(5,8)" (slow 12 $ run 12)) |+| speed "0.9" |+| pan "1"
+                                       ]
+            |+| delay "0.9"
+            |+| delaytime "0.02 0.01"
+
+d1 $sound (samples "cp*4" (slow 12 $ scan 12))
+
+d1 $ foldEvery [3, 4, 5] (fast 2) $ sound "bd sn kurt"
+
+hush
+
+
+d1 $ sound (samples "[sd8, jvbass]*100" (slow 1 $ scan 8))
+
+foldEvery
+foldEvery :: [Int] -> (Pattern a -> Pattern a) -> Pattern a -> Pattern a
+foldEvery transforms a pattern with a function, but only for the given number of repetitions. It is similar to chaining multiple every functions together.
+
+Example
+
+bps(90/120)
+
+d1
+  $ foldEvery [2,3]  ((|+|cutoff (sine1*3000)).(slow "[1 3]").(jux (|+| pan "0.2")).(0.3 <~))
+  $ foldEvery [3,4,8]( (whenmod 4 3 $ (|+| speed "1.5" ).(0.125<~)).(striate 3))
+  $ sound "[app:4*2 ,[bd:4  ~] cp:3/3 bd:3]"
+  #cut"1"
+
+  d1 silence
+
+this is equal to:
+
+d1 $ every 3 (fast 2) $ every 4 (fast 2) $ every 5 (fast 2) $ sound "bd sn kurt"
+
+Interlace
+interlace :: ParamPattern -> ParamPattern -> ParamPattern
+(A function that takes two ParamPatterns,
+and blends them together into a new ParamPattern.
+A ParamPattern is basically a pattern of messages to a synthesiser.)
+
+Shifts between the two given patterns, using distortion.
+
+Example:
+
+d1 $ interlace (sound  "bd sn kurt") (sound  "arpy arpy:2 cp")
+
+
+
+hush
+
+Picking samples
+
+You can have one pattern for sample names,
+and another of sample numbers,
+and combine them to pick which sample you want.
+
+d1 $ sound (samples "drum arpy newnotes" "0 1 2")
+This isn't very exciting until you start manipulating
+the patterns before combining them, and as in the below adding a bit more
+pattern manipulation on top:
+
+d2 $ jux (density 3)
+   $ sound (samples "drum can can" (slow 2.5 "0 1 2 4 5 6 7 "))
+
+hush
+
+smash
+smash :: Int -> [Time] -> ParamPattern -> ParamPattern
+Smash is a combination of spread and striate - it cuts the samples into the given number of bits, and then cuts between playing the loop at different speeds according to the values in the list.
+
+So this:
+
+d1 $ smash 3 [2,3,4] $ sound "ho ho:2 ho:3 hc"
+
+Is a bit like this:
+
+d1 $ slow "<2 3 4>" $ striate 3 $ sound "ho ho:2 ho:3 hc"
+
+
+
+Lets try that reverse in just one speaker:
+
+d1 $ slow 1 $ jux rev $ chop 8 $ sound "dna"
+
+Different values of chop can yield very different results,
+depending on the samples used:
+
+d1 $ chop 16 $ sound (samples "arpy*8" (run 16))
+d1 $ chop 32 $ sound (samples "arpy*8" (run 16))
+d1 $ chop 256 $ sound "bd*4 [sn cp] [hh future]*2 [cp feel]"
+
+You can also use chop (or (striate)[#striate]) with very long samples,
+to cut it into short chunks and pattern those chunks.
+The following cuts a sample into 32 parts, and plays it over 8 cycles:
+
+bps(120/120)
+
+d2 $s"bd"
+
+d1
+  $ loopAt "[1 0.4 4 0.2]" $rev$ chop 16 $ sound "app:2"
+
+d3
+  $ loopAt "<8 2 3 4>" $ chop "<6 16 8>" $ sound "bev"
+
+hush
+
+The loopAt takes care of changing the speed of sample
+playback so that the sample fits in the given number of cycles.
+
+You can’t hear that the sample has been cut into bits in the above.
+This becomes more apparent when you do further manipulations of the pattern,
+for example rev to reverse the order of the cut up bits:
+
+d1 $ loopAt 8 $ rev $ chop 32 $ sound "bev"
+d1 $ loopAt 8 $ chop 32 $ sound "bev"
+
+Run
+
+run n generates a pattern representing a cycle of numbers
+from 0 to n-1 inclusive.
+Notably used to ‘run’ through a folder of samples in order:
+
+d1 $ n (run 8) # sound "bd"
+
+d1 $ every 2 (slow 2) $ n (run 8) # s "cs"
+
+hush
+
+The first parameter to run can be given as a pattern:
+
+d1 $ n (run "<4 8 4 6>") # sound "amencutup"
+
+LoopAt
+
+loopAt makes sample fit the given number of cycles. Internally,
+it works by setting the unit parameter to “c”,
+changing the playback speed of the sample with the speed parameter,
+and setting setting the density of the pattern to match.
+
+d1 $ loopAt 2 $ sound "cs:4"
+
+
+It’s a good idea to use this in conjuction with chop,
+so the break is chopped into pieces and you don’t have
+to wait for the whole sample to start/stop.
+
+d1 $ slow 1 $ (loopAt 4 (density 4) $ "[{[2 4]3 6}%4,4(3,4)]" )
+   $ slow "<3 1 2>" $ chop 20 $ sound "app:1"
+
+-- d1 $ slow 2 $ loopAt "[{[2 4]3 1}%3,3(2,7),4(4,12)]/2"
+   d1 $ slow "[3 1 2]" $ chop 4 $ sound "app:2"
+
+hush
+
+   d1 $ fast 2 $ loopAt "[{[2 4]3 1}%3,4(2,7),6(3,12)]/2"
+      $ slow "[3 1 2]" $ chop 3 $ sound "cs:2"
+
+hush
+
+Like all tidal functions, you can mess about with this considerably.
+The below example shows how you can supply a pattern of cycle counts to loopAt:
+
+d1 $ juxBy 0.6 (|*| speed "2") $ loopAt "<4 6 2 3>" $ chop 32 $ sound "app:4"
+
+hush
+
+linger
+linger :: Pattern Time -> Pattern a -> Pattern a
+Similar to trunc, in that it truncates a pattern so that only the first
+fraction of the pattern is played. However unlike trunk, linger repeats
+that part to fill the remainder of the cycle.
+
+The following example plays only the first three quarters of the pattern. For example this repeats the first quarter, so you only hear a single repeating note:
+
+d1 $ linger 0.25 $ n "0 2 [3 4] 2" # sound "arpy"
+
+or slightly more interesting, applied only every fourth cycle:
+
+PLAY
+hush
+
+d1 $ every 4 (linger 0.5) $ n "0 2 [3 4] 2" # sound "breaks125"
+
+or to a chopped-up sample:
+
+PLAY
+d1 $ every 2 (linger 0.25) $ loopAt 2 $ chop 8 $ sound "breaks125"
+
+You can also pattern the first parameter,
+for example to cycle through three values, one per cycle:
+
+PLAY
+d1 $ trunc "<0.75 0.25 1>" $ sound "bd sn:2 [mt rs] hc"
+PLAY
+
+d1 $ linger "<0.25 0.5 1>" $ loopAt 4 $ chop 32 $ sound "app:2"
+
+
+
+
+# speed ((0.2*) <$> (slow 2) sine1)
+$ within(0.2,0.7) (juxBy 0.7 ((rev).(#speed (slow 3 $ sine*2))))
+$ within(0.5,1)(|+| speed ($ sine*3))
+
+hush
+
+just practice
+
+d1
+$ jux (rev)
+$ weave 16 (chop "3" $striate' 8 0.2 $ sound "app:2")
+[iter 5  (vowel "e ~ a ~ u")|+|pan "0 1 1"|+| speed "<2 3 4>",
+iter 3 (speed "{2 3? 1 0.5}%3")
+]
+
+hush
+
+d1 $ every 2 (slow "<4 5 6>") $ (juxcut (rev . iter 3)
+   $ every 3 (0.25 <~) $ striate' 4 0.01$ sound "[app:2,app:4]")
+   |+| speed "[{2! 1 ~ 4}%4,3]"
+
+d1 $ (superimpose (iter 8) $ sound (pick <$> "app app:2" <*> "[1 2 3 4]/5"))
+|+| speed "[1 0.75 0.5 1]/2"
+
+d1 $ stack [slow 1 $ every 1 (rev) $ slow 12 $ striate' 224 0.1 $ sound "[app:2]*6"
+            |+| pan "1"
+           ,
+            slow 2 $ every 2 (rev) $ slow 12 $ striate' 22 0.04$ sound "[app:1]*4"
+            |+| pan "0"
+           ]
+
+d1 silence
+
+d2 $ weave' 32 (slow 4 $ striate' 64 (1/32) $ sound "app:1 [app:1*2 app:2]*3/4")
+  [(vowel "a e i o u" |+|),
+   (vowel "i a u " |+|),
+   (speed (fast 2(sine1*1)) |+|),
+   (pan (slow 4(sine1*0.4)) |+|).(cutoff "15000"|+|)
+  ]
+
+  d1 $ slowspread ($) [rev, iter 3, rev, density 4]
+     $ jux (rev) $ every 4 (striate 16)
+     $ sound (pick <$> "app:3*2 app:1 app:2" <*> "[1 2 3 4 6]/7")
+    |+| speed "2"
+    |+| gain "1"
+
+    d1 $ every 3 (slow 3) $ every 5 (density 2) $ (density 3 $ striate' 8 0.01 $ sound "app:1*3 app:2")
+       |+| speed "2 3 5"
+
+hush
+
+  d1 $ weave 32 (sound "app:3*3" # n (run 6))
+    [vowel "a e i",
+     vowel "i [i o] o u",
+     vowel "[e o]/3 [i o u]2",
+     speed "1 2 3"
+    ]
+
+    d1 $jux ((# speed 3) . rev)$ weave 4 (sound "app:4*16")[
+      up (slow "<0.3 2 4 0.7>" (sine1*12))
+    ]
+    |+| gain 0.7
+
+    d1 $every 3(0.21 <~)$ jux ((#speed 2).(rev)) $ weave' 32 (sound (samples "app:1 [app:1*2 app:2]*3/4" (run 8)))
+              [density 4 . (vowel "a e o" |+|),
+               whenmod 5 3 rev . (vowel "a e o i" |+|),
+               rev . chop 2 . (vowel "o i a o i" |+|),
+               slow 2 . rev . chop 4 . (speed "2 3 1" |+|),
+               rev . chop 4 . (speed "-0.75 -0.5" |+|)
+              ]
+
+hush
+
+d1 $ every 3 (0.2 <~) $ whenmod 3 2 (density "4 2") $ sound "tcl:3 [tcl:2 808:2 tcl:2 808:2]/3"
+
+hush
+
+Polymeter  a polymeter pattern is one where two patterns have different sequence lengths, but share the same pulse or tempo.
+
+d1 $ sound "{bd hh sn cp, arpy bass2 drum notes*3 can}"
+--five-note rhythm being played at the pulse of a four-note rhythm
+
+d1 $ sound "{arpy bass2 drum notes can, bd hh sn cp}"
+-- four-note rhythm over a five-note rhythm
+
+d1 $ sound "{~ ~ ~ ~, arpy bass2 drum notes can}"
+--equals
+d1 $ sound "{arpy bass2 drum notes can}%4"
+
+jux (and juxBy)
+
+The jux function creates strange stereo effects, by applying a function to a pattern, but only in the right-hand channel.
+For example, the following reverses the pattern on the righthand side:
+
+bps 1.5
+
+d1 $ slow 64 $ striate' 32 (1/2) $ sound "dna"
+#cut 0
+
+When passing pattern transforms to functions like jux and every, it’s possible to chain multiple transforms together with "."
+for example this both reverses and halves the playback speed of the pattern in the righthand channel:
+
+d1 $ slow 32 $ jux ((# speed 0.5) . rev) $ striate' 32 (1/16) $ sound "bev"
+
+hush
+
+With jux, the original and effected versions of the pattern are panned hard left and right
+(i.e., panned at 0 and 1). This can be a bit much, especially when listening on headphones.
+The variant juxBy has an additional parameter, which brings the channel closer to the centre. For example:
+
+d1 $ slow 32 $ juxBy 0.8 ((# speed 0.5) . rev) $ striate' 32 (1/16) $ sound "bev"
+
+TUTOR12 doesnotwork
+
+let inverse 1 = 0
+    inverse 0 = 1
+do
+  let pat = "[1 1 0 1]"
+  d1 $ gain "[1 0 1 1 0 1]" # sound "bd:6"
+  d2 $ gain (inverse <$> pat) # sound"808:2"
+
+-- echo & negate nani?
+  d2 $ every 4 (echo (negate 3/32)) $ n "c5*4" # s "b"
+    # accelerate "-2" # speed "1" # sustain "0.1 ! ! 1" # voice "0.0"

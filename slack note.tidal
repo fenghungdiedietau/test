@@ -1,0 +1,198 @@
+d1 $ n (scaleP "<minPent majPent>" "0 1 2 3 4") # sound "supermandolin"
+
+d1 $ overlay (sound "bd*4") $ sound "hh*2"
+
+d2 $ superimpose ((slow 10) . (# s "bd")) $ n "0*9" # s "hh"
+
+
+------danielmkarlsson
+cps (-1)
+
+d1
+$ (247<~)
+$ fast 1.25
+$ s "ng:1(5,9)?"
+# pan (slow 0.1 $ scale 0 0.5 $ rand)
+# rel (slow 0.11 $ choose [0.1,0.1,0.1,0.1,2])
+# hpf (slow 0.12 $ scalex 200 20000 $ rand)
+# up (slow 0.13 $ choose [-6,-3,0,0,0,0,3,6,9,12])
+# gain (slow 0.14 $ scalex 0.5 2 $ rand)
+
+d2
+$ (378<~)
+$ fast 1.25
+$ s "ng:2(5,9)?"
+# pan (slow 0.15 $ scale 0.5 1 $ rand)
+# rel (slow 0.16 $ choose [0.1,0.1,0.1,0.1,2])
+# gain 1
+
+d3
+$ (691<~)
+-- $ degradeBy (1/4)
+$ s "ng:3"
+# pan (slow 0.17 $ scale 0.25 0.75 $ rand)
+# rel (slow 0.18 $ choose [0.2,0.2,0.2,0.2,2])
+# hpf (slow 0.19 $ scalex 20 20000 $ rand)
+-- # up ("[11,13,16,18,20,23,27,30,32]" + choose [-24,-12,0,0,0,0,12,24])
+# orbit 1
+# delay (slow 0.2 $ choose [0,0,0,0.125,0.125,1])
+# delayfb (slow 0.21 $ choose [0.125,0.125,1])
+# delayt (slow 0.22 $ choose [(1/12),(1/12),(1/6)])
+# gain (slow 0.23 $ scalex 0.125 2 $ rand)
+
+d4
+$ (367<~)
+$ fast (choose [1.125,1.375,1.375,1.375,1.375])
+$ degradeBy 0.9
+$ s "ng:2"
+# lpf (slow 0.24 $ scalex 20 10000 $ rand)
+-- # up (slow 0.25 $ choose [3,3,3,3,6,9,12,15,18,24])
+-- # gain (slow 0.26 $ scalex 0.5 1.25 $ rand)
+
+d5
+$ (667<~)
+$ fast 1.25
+$ s "ng"
+# begin (slow 0.27 $ rand)
+# end (slow 0.28 $ rand)
+# att (slow 0.29 $ rand)
+# rel (slow 0.3 $ scale 1 4 $ rand)
+# loop (irand 5)
+# nudge (slow 16 $ scale 0 3 $ sine)
+# pan (slow 16 $ sine)
+# cut (slow 0.31 $ choose [0,1,1,1])
+# lpf (slow 0.32 $ scalex 20 20000 $ rand)
+# gain (slow 0.33 $ scalex 0.5 1 $ rand)
+# up (-1.25)
+
+cps (0.2)
+
+hush
+
+d1 $ outside 2 (iter 4) $ n "0 1 2 3" # sound "numbers"
+
+d2
+   $ slow 2
+   $ iter 4
+   $ fast 2
+   $ n "0 1 2 3" # sound "numbers"
+   0 1 2 3
+   01230123 ->0 1 2 3 0 1 2 3
+   23012301
+   01230123
+   23012301
+
+d1
+ $ ("<0 0 0.25 0.25 0.5 0.5 0.75 0.75>" <~ )
+  $ n "0 1 2 3" # sound "breaks125"
+
+  0 1 2 3
+  0 1 2 3
+  1 2 3 0
+  1 2 3 0
+  2 3 0 1
+  2 3 0 1
+  3 0 1 2
+  3 0 1 2
+  --correct
+
+  ranrotL maxrotation p = spreadChoose ($) l $ p
+    where l = [rotL (x) | x <- [0.00, 0.01 .. maxrotation]]
+
+  d1 $ ranrotL 0.5 $ sound "bev"
+
+--jan 8 spaceOut map thing
+hush
+
+
+  d2
+     $ stut' 2 0.25 ((|+|resonance (slow 2 $ sine1*1)).(|+|cutoff (slow 4 $ sine1*4000)).(|*|gain "0.9").(|*|speed (choose [0.1,-0.2,0.4,-0.4,0.42,0.5,0.7,-0.5,0.8])).(|+| pan "1 0"))
+     $ slow 2.5 $ density "1" $ spaceOut ( (map (1/) [1,1.7..8] ) ++ (map (1/) [8,7.75..1]))
+     -- $ every 1 ((|+| accelerate "-0.5").(|+|pan "1"))
+     -- $ slow 4
+     $ s "[ng:4]"
+     |+| speed "[0.4]"
+     # cut "0"
+     |+|resonance (slow 4 $ sine1*1)
+     # begin (scalex 0.02 0.1 $ rand)
+     |+|cutoff (sine1*5000)
+     -- # sustain (scale 0.2 1 $ sine1)
+     # gain "1"
+     -- # delay "0.2"
+      -- # delayfeedback "0"
+
+cps (1)
+
+-- drone
+
+ d3
+    -- $ jux (0.1 <~)
+    -- $ slow (15/2)
+    $ stut' 4 0.25 ((|+|begin (slow 4 $sine)).(|*|gain "0.6").(|+|speed (choose [0.1,-0.2,0.2,0.3,0.4,0.24])).(|+| pan "1 0"))
+    $ slow 2.5
+    $ density "1" $ spaceOut ( (map (1/) [1,1.4..8] ) ++ (map (1/) [8,7.75..1]))
+    -- $ every 2 (|=| accelerate (slow 3 $sine1))
+    -- $ slow 4
+    $ n (irand 5)
+    # s "[sing4]"
+    -- |+| sustain (choose [0.5,0.3,0.4,0.5,0.2])
+    -- |+| sustain "1"
+    # cut "0"
+    |+| gain "0.6"
+    |+| cutoff (sine1*2000)
+    |+| speed "[0.4]"
+    -- |+| begin "0.4"
+          -- # room "0.9"
+    -- |=| delay "0.8"
+    -- |=| delayfeedback "0.5"
+
+hush
+
+cps 1
+
+       d5 $ slow 2.5 $ density "1"
+          $ spaceOut ((map (1/) [1,1.4..8] ) ++ (map (1/) [8,7.75..1]))
+          -- $ jux ((stut 10 0.5 0.02).(|+|pan "1 0"))
+          $ s "[ng:1]"
+          # cut "0"
+          # gain "1"
+          # room "0.8"
+
+    d4
+       -- $ degradeBy "<0.3 0.1>"
+       -- $ density "0.4"
+       -- $ every 6 ((|+| speed "[0.3 0.5]"))
+       -- $ every 7 ((|+| up "1.5"))
+       $ whenmod 4 0 (sometimes (density ( choose [0.3, 0.2 ,0.1])).((stut 6 0.5 0.12).(|+| speed (choose [0.2,0.4,0.6,0.8,0.5,-0.2])) ))
+       $ slow 3
+       $ spaceOut ( (map (1/) [1,3.5..8] ) ++ (map (1/) [8,7.75..1]))
+             $ s "ng:3 ng"
+             # cut "0"
+             # begin (scale 0.04 0.2 $ sine)
+             -- # sustain (scale 0.2 1 $ sine1)
+             # gain "1.5"
+
+
+
+d3 silence
+
+d3 $ spaceOut ( (map (1.5/) [1,1.5..10] ) ++ (map (1/) [8,7.75..3]))$ s "ng:3"
+
+d4 $ spaceOut ( (map (1/) [1,1.5..10] ) ++ (map (1/) [8,7.75..1]))$ s "ng:2"
+
+d4 $ spaceOut [1,2,3]  $ s "bd"
+
+
+cps (1.2)
+
+
+hush
+
+  -- |+| gain (slow 2 $ sine1)
+
+  d2 $ slow 2 $ density "<1>" $ spaceOut ( (map (1/) [1,1.25..9] ) ++ (map (1/) [8,7.75..1.2])) $ s "ng:1"
+  |+| gain (slow 2 $ sine1)
+  # pan (slow 0.1 $ scale 0 0.5 $ rand)
+  # rel (slow 0.11 $ choose [0.1,0.1,0.1,0.1,2])
+  -- # hpf (slow 0.12 $ scalex 200 20000 $ rand)
+  # up (slow 0.13 $ choose [-6,-3,0,0,0,0,3,6,9,12])
