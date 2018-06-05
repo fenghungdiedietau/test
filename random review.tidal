@@ -2,26 +2,32 @@
 bps(120/120)
 
 d1
-  $ slow 5
-  $ jux (|+| speed "[1,0.5 1]")
+  $ slow 1
+  $ jux ((|+| speed "[1,0.5 1]").(degradeBy 0.9))
+  $ every 5 (within (0,0.25) (fast 0.4))
   -- $ off 0.5 ((|*|gain (fast 2.6 (sine1*0.2 + 0.5))).(loopAt "[[0.35 0.2][0.35 0.24][0.35 0.2],0.3(2,7)]"))
-  $ every 2 (within (0,0.25)$ off 0.25  (0.33 <~))
+  -- $ every 2 (within (0,0.25)$ off 0.25  (0.33 <~))
   -- $ every 1 (within (0,0.1) $ off 0 ((0.1<~).(|*| gain 1).(|+|speed 1)))
-  -- $ every 2 (within (0,0.3) (fast 1.2).(0.25<~))
   -- $ off 0.125 (((choose [0.66,0,0,0.33]) <~ ).(|*| gain 1).(|+|speed "1").(density 2))
   -- $ every 4 (rev)
-  $ stack [
-  striate "2"
-  $ sound (samples "{like1*3 like2*3 like3*3 [like4*3 ~] ~ }%6" $ fast (choose [2,5]) (run "3 4")) |+| pan"0"
-  |+| gain 0.8,
-  striate "3"
-  $ sound (samples "[[like1*2] like2*2 like3*2 like4*3 ]%3" $ fast (choose [4]) (run "8"))
-  |+| pan "1" |+|gain 0.9
+  $ stack
+  [
+  striate' "<100>" (1/20) (
+  (|-|speed (slow 4 (scale 0.7 1.2 $ sine)))
+  $ sound "[like1*6 like2*4 like3*5 like4*3]/9")
+  |+| n (slow 12 (scale 0 5 $ sine1))
+  |+| pan (efull 2 10 "0.4" "0.6")
+  |+| begin (efull 3 18 "0" "0.3")
+  |+| attack (efull 3 15 "0.51" "1")
+  |+| gain 1
+  -- ,
+  -- striate "3"
+  -- $ sound (samples "[[like1*2] like2*2 like3*2 like4*3 ]%3" $ fast (choose [4]) (run "8"))
+  -- |+| pan "1" |+|gain 1
   ]
-  # cut (fast 2 (choose [0,1]))
   # cut "0"
-  -- # release 0.2
-  # release "[0.5 0.3 0.4 0.8]/17"
+  -- # release 12
+  -- # release "[0.5 0.3 0.4 0.5]/16"
 
 hush
 
