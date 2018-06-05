@@ -1,12 +1,16 @@
 cps 0.8
 
-d1 $ stack [
-    s (iter 8 (efull 3 8 "bd cp" "bass"))
-    # n (slow 10 (scale 0 10 $ sine1))
-    -- ,
-    -- distrib [5,16,17] $ sound "sn"
-    -- # n (slow 4 (scale 0 6 $ sine1))
-    ]
+d1
+  $ sometimes ((swingBy (3/2) 12).(degradeBy 0))
+  $ stack [
+  s (iter 8 (efull 3 8 "bd cp" "bass"))
+  # n (slow 12 (scale 0 10 $ sine1))
+  -- ,
+  -- distrib [5,16,17] $ sound "sn"
+  -- # n (slow 4 (scale 0 6 $ sine1))
+  ]
+  # gain 0.8
+
 
     hush
 

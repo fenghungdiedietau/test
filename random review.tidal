@@ -31,15 +31,9 @@ d1
 
 hush
 
-d1
-  $ slow 8 $ every 4 (rev)
-  $ jux (|+| speed "[2,3]")
-  $ spread striate "[4 3 2, 6]"
-  $ sound (samples "stab*4 sn" $ run 8)
-
 
 --1/09
---
+
 bps 1
 
 d1
@@ -147,19 +141,7 @@ d1
   hush
 
 
-bps 1
 --dna 0115
-
-d1 $ slow 4 $ striate' 128 (1/16) $ sound "dna"
-   # cut 1
-
-
-  d2
-    -- $every 1 (0.1 <~)
-      $sound "[cp bd bd bd]"
-
-
-d2 silence
 
 bps (120/120)
 
@@ -186,7 +168,7 @@ $ sound "dna"
 
 hush
 
-d1 $ weave' 8 ((slow 6 $ striate' 180 (1/16) $ sound "dna") |+| pan (slow 4 $ sine1 + 0.2))
+d2 $ weave' 8 ((slow 6 $ striate' 180 (1/16) $ sound "dna") |+| pan (slow 4 $ sine1 + 0.2))
          [jux (every 3 (slow 3).((stut' 6 0.5)(vowel "a e i o u" |+|).(|+|begin"0.5"))),
           -- (vowel "i e p u" |+|),
           juxBy 0.7 (every 4 (stut' 4 0.5 (|*|speed (slow 2 $ sine1*0.8 ))))
@@ -210,28 +192,27 @@ d1 $ stack [slow 4 $ every 2 (rev) $ slow 32 $ striate 256 $ sound "[dna]*6"
 hush
 
 
--- # speed "1"
+--how to use preplace?? unit
 
 d2
-   -- $ slow "{[50 4]*2 10 [10 50*2] 1 }*6, [1 [90 10 1 100][1 100 1 1 ][10 10 100 10]]*4"
-   $ striate' 4 "0.2 0.5 0.8 0.1"
-   -- $ iter 16
-   $ sound ( preplace (1,1)
+   -- $ striate' 4 "0.2 0.5 0.8 0.1"
+   $ sound ( preplace (1,2)
    "[[x!!!! x x!],[x ~]*2 ~ [~ x*2] ~ , ~ [x ~ ~ x][~ x ~ ~ ][~ ~ x ~]]"  "dna")
-   |+| cutoff (slow 5 $ sine1*2000 +4000)
    # cut 1
-   # begin "0.2"  #unit "s"
+   # begin "0"  #unit "c"
 
 --1/17
+-- spread + striate
 d1
   -- $ slowspread (slow) [64,36,24,30]
    -- $ jux (|+| speed (scale 0.3 1.2 $ density 2 sine1))
-  $ loopAt 4
+  $ loopAt 8
   $ (spread (striate' 200) [(1/24), (1/30), (1/20), (1/20) , (1/20)] $ sound "dna" )
    -- |+| speed (scale 0.2 1 $ density 2 sine)
   # cut "0"
 
-hush
+  hush
+
 
 
 hush
