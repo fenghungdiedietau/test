@@ -1,9 +1,9 @@
 --0204
-bps(120/120)
+bps(140/120)
 
 d1
   $ slow 1
-  $ jux ((|+| speed "[1,0.5 1]").(degradeBy 0.9))
+  $ jux ((|+| speed "[1,0.5 1]").(degradeBy 0.3))
   $ every 5 (within (0,0.25) (fast 0.4))
   -- $ off 0.5 ((|*|gain (fast 2.6 (sine1*0.2 + 0.5))).(loopAt "[[0.35 0.2][0.35 0.24][0.35 0.2],0.3(2,7)]"))
   -- $ every 2 (within (0,0.25)$ off 0.25  (0.33 <~))
@@ -16,8 +16,8 @@ d1
   (|-|speed (slow 4 (scale 0.7 1.2 $ sine)))
   $ sound "[like1*6 like2*4 like3*5 like4*3]/9")
   |+| n (slow 12 (scale 0 5 $ sine1))
-  |+| pan (efull 2 10 "0.4" "0.6")
-  |+| begin (efull 3 18 "0" "0.3")
+  |+| pan (efull 3 10 "0.4" "0.6")
+  |+| begin (efull 2 17 "0" "0.3")
   |+| attack (efull 3 15 "0.51" "1")
   |+| gain 1
   -- ,

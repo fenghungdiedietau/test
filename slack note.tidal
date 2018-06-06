@@ -196,3 +196,23 @@ hush
   # rel (slow 0.11 $ choose [0.1,0.1,0.1,0.1,2])
   -- # hpf (slow 0.12 $ scalex 200 20000 $ rand)
   # up (slow 0.13 $ choose [-6,-3,0,0,0,0,3,6,9,12])
+
+
+----
+  kindohm 上午10點17分
+  ok....
+  I have something like this:
+  `stut' 8 0.125 id $ s "bd"`
+  but I want the "0.125" part to be a pattern scaled on a sine function
+  something like:
+  `stut' 8 (scale 0.001 0.1 $ slow 20 sine) id $ s "bd"`
+  but that doesn't work. is this possible?
+
+----
+  yaxu 下午5點44分
+  @kindohm try `stut' 8 (toRational <$> (scale 0.001 0.1 $ slow 20 sine)) id $ s "bd"`
+  or this `sine'` seems to work without the torational bit
+  `let sine' = realToFrac <$> sine`
+  actually it seems like it would be good to generalise sine, square, rand, etc in this way so they work both for float and rational (time) numbers
+  travelling atm but if someone has a moment to make a github issue on that, it'd be good!
+d1 $stut' 8 (toRational <$> (scale 0.001 0.1 $ slow 20 sine)) id $ s "bd"
