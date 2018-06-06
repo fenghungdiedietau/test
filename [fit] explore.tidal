@@ -14,7 +14,22 @@ d1 $ sound (fit 3 ["bd", "sn", "arpy", "arpy:1", "casio"] "0 [~ 1] 2 1")
 固定結構中 "0 [~ 1] 2 1"
 置入不同採樣"bd", "sn", "arpy", "arpy:1", "casio"
 由fit n 指定數字與採樣的對映
+n=3,cycle 1 ,0 1 2 對映 bd sn arpy
+    cycle 2 ,0 1 2 對映 arpy:1 casio (回到列表的頭) bd
+
+n=2,cycle 1 ,0 1  對映 bd sn
+    cycle 2 ,0 1  對映 arpy arpy:1
+    cycle 3 ,0 1  對映 arpy:1  bd
+
+n=1, vermona perfourmer?
+    cycle 1 , 0  對映 arpy:0
 --
+
+--interlace pattern?
+d1
+  -- $ slow 2
+  $ sound (fit 2 ["bd", "bass3", "cp", "808:3" , "tink"] "0*2 [~ 1] [{0 1 2 3}%5 [4]] 1")
+  # n (slow 3 (scale 0 10 $ sine1))
 
 d1 silence
 
@@ -61,7 +76,7 @@ hush
 --0606------------------------------
 d1
   $ jux (slow 2)
-  $ every 4 (within (0.125,0.375) (stut' 20 0.25 (|+| speed 2)))
+  $ every 4 (within (0.233,0.5) (stut' 20 0.25 (|+| speed 2)))
   $ sometimes ((swingBy (3/2) 8).(degradeBy 0))
   $ sometimes ((swingBy (1/2) 8).(degradeBy 0.2))
   $ fit' 1 16 (run 16) (efull 3 8 "10 6" (slow 12 (run 16)))
@@ -116,11 +131,11 @@ bps (150/120)
 
 d2
  $ every 1 (# n (slow 68 (run (68))))
- $ fit' 1 16 (run 16) (efull 3 8 "{12 [~ 13] 14}%12" (iter 12 (slow 2 (run 16))))
+ $ fit' 1 15 (run 16) (efull 3 8 "{12 [~ 13] 14}%12" (iter 12 (slow 3 (run 16))))
  $ chop 16
- $ sound "[tt,tta]"
- # attack 0.1
- # release "{3 ~ [0.1 2] 0.2}%12"
+ $ sound "[tt]"
+ # attack 0.2
+ # release "{4 ~ [0.1 2] 0.2}%12"
 
  ------------------------------------
 

@@ -1,13 +1,20 @@
 //Pattern Transformers
 //Sample Transformers
 //Conditional Transformers
-//
 
 speed nagtive value==>play backward
 
 d1
-  -- $spread ($) [(loopAt 4), slow 3, striate 13]
-  $loopAt 8 $ chop "[[{8 12 13}%4],[2(3,5)]]/2" $sound "dna:2"
+  -- $ fast 3
+  $ loopAt 4
+  $ rev
+  $ every 1 (|=| speed (efull 2 8 "0.5" "-0.5"))
+  $ chop "<32 10 20>"
+  $ sound "app*2"
+
+d1
+  $spread ($) [(loopAt 4), slow 3, striate 13]
+  $loopAt 5 $ chop "[[{8 12 13}%4],[2(3,5)]]/2" $sound "dna:2"
 
 d1
 -- $ within (0,0.5)(#speed 4)
@@ -35,21 +42,31 @@ Use an integer value to specify how many granules each sample is chopped into:
 
 bps (120/120)
 
-d1
-  $ degradeBy 0.1
-  $ chop 8
-  $ sound "arpy feel*2 newnotes"
+d2
+  -- $ degradeBy 0
+  $ chop 4
+  $ sound "arpy feel"
 
-d2 $ (0.2 <~)$ cat[s "bd*4 ", s"hh*4",s"cp*4",s "sn*2" ]
+  a r p y f e e l
+
+chop 是granualizes every sample
+跟striate不一樣
+
+d1
+  -- $ slow 5
+  $ striate 4
+  $ sound "arpy feel"
+
+  a f r e p e y l
 
 hush
 
-d1
-  -- $ fast 3
-  $ loopAt 4
-  $ chop "<32 10 5>"
-  $ sound "app:2"
-  # speed "-1"
+d2
+$ (0.2 <~)
+$ cat[s "bd*4 ", s"hh*4",s"cp*4",s "sn*2" ]
+
+hush
+
 
 hush
 
@@ -144,6 +161,9 @@ hush
 
 d1 $ sound (samples "[sd8, jvbass]*100" (slow 1 $ scan 8))
 
+
+
+
 foldEvery
 foldEvery :: [Int] -> (Pattern a -> Pattern a) -> Pattern a -> Pattern a
 foldEvery transforms a pattern with a function, but only for the given number of repetitions. It is similar to chaining multiple every functions together.
@@ -163,6 +183,8 @@ d1
 this is equal to:
 
 d1 $ every 3 (fast 2) $ every 4 (fast 2) $ every 5 (fast 2) $ sound "bd sn kurt"
+
+
 
 Interlace
 interlace :: ParamPattern -> ParamPattern -> ParamPattern
@@ -263,6 +285,7 @@ The first parameter to run can be given as a pattern:
 
 d1 $ n (run "<4 8 4 6>") # sound "amencutup"
 
+
 LoopAt
 
 loopAt makes sample fit the given number of cycles. Internally,
@@ -328,16 +351,13 @@ PLAY
 
 d1 $ linger "<0.25 0.5 1>" $ loopAt 4 $ chop 32 $ sound "app:2"
 
-
-
-
 # speed ((0.2*) <$> (slow 2) sine1)
 $ within(0.2,0.7) (juxBy 0.7 ((rev).(#speed (slow 3 $ sine*2))))
 $ within(0.5,1)(|+| speed ($ sine*3))
 
 hush
 
-just practice
+---apure
 
 d1
 $ jux (rev)
@@ -382,31 +402,43 @@ d2 $ weave' 32 (slow 4 $ striate' 64 (1/32) $ sound "app:1 [app:1*2 app:2]*3/4")
 
 hush
 
-  d1 $ weave 32 (sound "app:3*3" # n (run 6))
-    [vowel "a e i",
-     vowel "i [i o] o u",
-     vowel "[e o]/3 [i o u]2",
-     speed "1 2 3"
-    ]
+d1
+  $ weave 32 (sound "app:3*3" # n (run 1))
+  [
+    vowel "a e i",
+    vowel "i [i o] o u",
+    vowel "[e o]/3 [i o u]2",
+    speed "1 2 1"
+  ]
+  # cut 1
 
-    d1 $jux ((# speed 3) . rev)$ weave 4 (sound "app:4*16")[
-      up (slow "<0.3 2 4 0.7>" (sine1*12))
-    ]
-    |+| gain 0.7
-
-    d1 $every 3(0.21 <~)$ jux ((#speed 2).(rev)) $ weave' 32 (sound (samples "app:1 [app:1*2 app:2]*3/4" (run 8)))
-              [density 4 . (vowel "a e o" |+|),
-               whenmod 5 3 rev . (vowel "a e o i" |+|),
-               rev . chop 2 . (vowel "o i a o i" |+|),
-               slow 2 . rev . chop 4 . (speed "2 3 1" |+|),
-               rev . chop 4 . (speed "-0.75 -0.5" |+|)
-              ]
-
-hush
-
-d1 $ every 3 (0.2 <~) $ whenmod 3 2 (density "4 2") $ sound "tcl:3 [tcl:2 808:2 tcl:2 808:2]/3"
+d1
+  $jux ((# speed 3) . rev)
+  $ weave 4 (sound "app:4*16")
+  [
+  up (slow "<0.3 2 4 0.7>" (sine1*12))
+  ]
+  |+| gain 0.7
+  |=| bsin 12 0.5 0.9
 
 hush
+
+
+d1
+  $ jux ((#speed 2).(rev))
+  $ weave' 32 (sound (samples "app [app*2 app]*3/4" (run 8)))
+          [
+            density 4 . (vowel "a e o" |+|),
+            whenmod 5 3 rev . (vowel "a e o i" |+|),
+            rev . chop 2 . (vowel "o i a o i" |+|),
+            slow 2 . rev . chop 4 . (speed "2 3 1" |+|),
+            rev . chop 4 . (speed "-0.75 -0.5" |+|)
+          ]
+  #release "1"
+
+
+hush
+------------------------
 
 Polymeter  a polymeter pattern is one where two patterns have different sequence lengths, but share the same pulse or tempo.
 
@@ -425,11 +457,6 @@ jux (and juxBy)
 The jux function creates strange stereo effects, by applying a function to a pattern, but only in the right-hand channel.
 For example, the following reverses the pattern on the righthand side:
 
-bps 1.5
-
-d1 $ slow 64 $ striate' 32 (1/2) $ sound "dna"
-#cut 0
-
 When passing pattern transforms to functions like jux and every, it’s possible to chain multiple transforms together with "."
 for example this both reverses and halves the playback speed of the pattern in the righthand channel:
 
@@ -441,16 +468,19 @@ With jux, the original and effected versions of the pattern are panned hard left
 (i.e., panned at 0 and 1). This can be a bit much, especially when listening on headphones.
 The variant juxBy has an additional parameter, which brings the channel closer to the centre. For example:
 
-d1 $ slow 32 $ juxBy 0.8 ((# speed 0.5) . rev) $ striate' 32 (1/16) $ sound "bev"
+d1 $ slow 16 $ juxBy 0.8 ((# speed 0.5) . rev) $ striate' 32 (1/16) $ sound "bev"
 
-TUTOR12 doesnotwork
+Kindohm TUTOR12
 
 let inverse 1 = 0
     inverse 0 = 1
+
 do
   let pat = "[1 1 0 1]"
   d1 $ gain "[1 0 1 1 0 1]" # sound "bd:6"
-  d2 $ gain (inverse <$> pat) # sound"808:2"
+  d2 $ gain (inverse <$> pat) # sound"808:5"
+
+hush
 
 -- echo & negate nani?
   d2 $ every 4 (echo (negate 3/32)) $ n "c5*4" # s "b"

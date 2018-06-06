@@ -19,7 +19,7 @@ bps (2)
 
 d1
   $ ifp ((== 0).(flip mod 5))
-  (#coarse "3 5 7")(#room "1 0.3 0.6").(0.23 <~)
+  (#coarse "3 5 2 3")(#room "0.4 0.3 0.6").(0.23 <~)
   $ every 4(|+|speed "10 7 3 ")
   -- $ every 3(|+|accelerate "0.2 2.8 6")
   -- .(stut' 2 (1/120) (# vowel "{a e i o u}%5"))
