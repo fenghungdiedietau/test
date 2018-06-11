@@ -1,0 +1,14 @@
+swingBy
+swingBy x n divides a cycle into n slices and delays the notes in the second half of each slice by x fraction of a slice . swing is an alias for `swingBy (1%3)`
+
+chunk
+
+struct
+
+envL
+
+overlay
+
+append
+
+hold
