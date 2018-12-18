@@ -191,11 +191,13 @@ hush
   -- |+| gain (slow 2 $ sine1)
 
   d2 $ slow 2 $ density "<1>" $ spaceOut ( (map (1/) [1,1.25..9] ) ++ (map (1/) [8,7.75..1.2])) $ s "ng:1"
-  |+| gain (slow 2 $ sine1)
-  # pan (slow 0.1 $ scale 0 0.5 $ rand)
+  |+| gain (slow 2 $ sine)
+  # pan (slow 0.1 $ range 0 0.5 $ rand)
   # rel (slow 0.11 $ choose [0.1,0.1,0.1,0.1,2])
   -- # hpf (slow 0.12 $ scalex 200 20000 $ rand)
   # up (slow 0.13 $ choose [-6,-3,0,0,0,0,3,6,9,12])
+
+hush
 
 
 ----
@@ -216,3 +218,74 @@ hush
   actually it seems like it would be good to generalise sine, square, rand, etc in this way so they work both for float and rational (time) numbers
   travelling atm but if someone has a moment to make a github issue on that, it'd be good!
 d1 $stut' 8 (toRational <$> (scale 0.001 0.1 $ slow 20 sine)) id $ s "bd"
+
+
+--2018_12_17 from tidalcycles blog
+
+"1 2 3" |+ "4 5"    --5 6 8
+
+"1 2 3" +| "4 5"    --5 7
+
+"1 2 3 4" +| "4 5"  --5 8
+
+"1 2 3 4 5" +| "4 5"-- 5 8
+
+"1 2 3 4 5" |+ "4 5"-- 5 6 7 9 10
+
+"1 1 0 " +| "0 0"   --1 1
+
+"1 1 0 "|+ "0 0"    --1 1 0
+
+
+
+Unified pattern operators
+
+|+|, |+ and +| all work on patterns of parameters
+
+(now known as control patterns) as well as patterns of numbers.
+
+So these two are the same:
+
+d1 $ n ("1 2 " + "3 4 5") + s "numbers"
+
+--4 [5 6] 7
+
+d1 $ n ("1 2 " + "1 2 " + "3 4 5") + s "numbers"
+--5 [6 8] 9
+
+---little track
+d1 $ n ("1 2 3? 4?" + "[1 2 ~ ~ ~ ~]%12" ) + s "[pad,bd*3]" + n (irand 10)
+
+d2 $ sound "[[feel(3,7,5)]*2 jvbass(5,18,7)]/2.5]"
+   + n "<1,~,<3,4,5,7,1>,5>*2 <1,4,5,2>"
+   # cut 0
+--
+
+a
+
+hush
+
+and
+
+d1 $ n "1 2" + n "3 4 5" + s "numbers"
+
+Of course there are also *, /, % and - versions of the above.
+
+There is also |>| and |<| and friends;
+
+the arrow there points at where the values come from.
+
+So you could do "[1 2] [3 5 6]" |> "5 2" to take the structure from the left,
+
+and the values from the right, giving you "[5 5] [2 2 2]". Aha!
+
+|> basically does what # does now, we’ll likely keep that as an alias..
+
+
+
+hush
+
+d1
+-- $ loopAt 1
+-- $ chop 4
+$ n ("1" + "1 4" * "3 <4,1,2,3> 5? <12,3,4,5>" + "[<1,2,3,~,5,~,9,12> <~,1,0,~> <8,2,3,4> ~]") + s "[breaks125]" + cut 1
