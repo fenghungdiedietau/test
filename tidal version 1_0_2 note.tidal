@@ -23,7 +23,7 @@ d1 $ note ((scale "dorian" $ "{6 . 2 3 4 , ~ . ~ [10 8] 9 . 10 11 ~ 8}%2")) #s "
 hush
 
 -- segment (discretize) // range (scale)
-d1 
+d1
   $ chop 10
   $ n (slow 1
   --
@@ -44,3 +44,6 @@ a continuous pattern. Without segment the samples will get triggered at
 an undefined frequency which may be very high.
 
 hush
+
+
+nihahahaha
