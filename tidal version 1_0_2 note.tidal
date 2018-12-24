@@ -1,0 +1,181 @@
+
+https://tidalcycles.org/index.php/Combining_pattern_structure
+
+custum dirt sample path>>>>>
+https://tidalcycles.org/index.php/Custom_Samples
+
+
+--cps becomes a function
+
+d1 $ sound "[sn(3,8) cp?]"
+   # cps (slow 5  $ range 0.8 4 saw)
+   * cps (slow ( segment 1 $ range 1 100 $ cT 1 "12") $ range 150 1 square)
+   + n (segment 2 $ irand 10)
+
+hush
+
+
+d2
+  $ slow 2
+  $ segment 32
+  $ speed (smooth "[0.2 1 0.8 1.2]")
+  # s "yes:0(3,8)"
+  -- # cut 1
+
+hush
+--d1 ~ d16
+
+
+d1 $ note ((scale "dorian" $ "{6 . 2 3 4 , ~ . ~ [10 8] 9 . 10 11 ~ 8}%2")) #s "gtr" # gain 1
+
+hush
+
+-- segment (discretize) // range (scale)
+d1
+  -- $ chop 10
+  $ speed (slow (smooth "100 10 40 4")
+  --
+  $ segment (choose[83,56,29,44,90])
+    --
+  $ range 12 ( segment 12 $range 12 (-1) $cF 1 "12") $ sine)
+  + sound "jvbass"
+  + n (slow 3 $ segment  (choose[13,26,19,54,89]) $ range 12 (-12) $ sine )
+  -- # cps (slow 30  $ range 0.8 1.3 saw)
+  -- + attack (slow 24 $ segment (100) $ range 1 0.3 saw)
+  + gain 1.4
+
+  hush
+
+  d1
+  $ density 0.2
+  $ n (run ( segment 2 $ range 0 10 $ cF 1 "12")) # sound "[bd]"
+
+  d1
+  $ density ( segment 2 $ range 0 1 $ cT 1 "13")
+  $ n (run ( segment 2 $ range 0 10 $ cF 1 "12")) # sound "[bd]"
+
+
+
+  d2 $  sound "[cp]"
+
+--smooth / smooth
+
+d1
+-- $ slow ("[0*10 0*10 2*20 1]" + smooth "0 10 200")
+$ sound "808*10"
+-- + n (scan 10)
+-- + speed ("0*10" + smooth "-1 0.9 1.1" )
+# n (cF 1 "12")
+-- + speed "0 0 2*2 1"
++ cut 1
+
+hush
+
+d1
+-- $ every 3 (sometimes $ within (0,1) $ off (1.2) (stut' 100  1.2 (+ speed "-1")))
+$ every 16 (sometimes $ within (0.2,0.6) $ off (1.3) (+ n (run 12)).(+ speed "0.8"))
+$ n (run "<4 8 4 6>" + smooth ((iter 12)"-10 <0 3 10 210> <10 210 ~>?")) + sound "[amencutup]"
+-- # cut 2
+
+--MIDI ctrl
+
+setcps (1)
+
+d1
+-- -- $ slow 20
+-- $ every 6 ((rev).(# pan (range 0.15 0.85 $ rand)))
+-- $ every 7 ((rev).(# pan (range 0.25 0.75 $ rand)).(+ accelerate (segment 1 $ range 0 0.2 $ cF 1 "13" )))
+-- $ every 16 (sometimes $ within (0.2,0.6) $ off (1.3) (+ n (run 32)).(+ speed "0.91"))
+-- $ slow "[1,2..10]"
+-- $ loopAt 1
+$ chop 10
+-- $ striate 10
+-- (segment 2 $ range 0.1 0.9 $ cF 0.4 "12")
+ -- (scan 120)
+-- "<10 11 12 9 8 11 30 12 1 3 5 12>"
+-- "[40(3,8),10(11,24,14),30(3,8),100(11,24,14)]"
+-- "[25(3,8)|%|5,120(3,8)*4]|%|10"
+-- $ n (run "<4 8 4 6>" + smooth ((iter 14)"-1 <0 3 10 210> <10 210 ~>"))
+$ sound "[amencutup:6]"
+-- $ every 3 (sometimes $ within (0,1) $ off (1.2) (stut' 100  1.2 (+ speed "-1")))
+-- # cps (slow (segment 12 $ range 1 200 $ cT 5 "12" )  $ segment 1 $ range 0.8 3 saw)
+-- + attack (segment 1 $ range 0 0.1 $ cF 1 "13" )
+-- + hold "5"
+-- + release "2"
+-- + lpf (segment 10 $ range 250 4500 $ cF 300 "12" )
+# cut 0
+
+hush
+-- # cut 2
+
+d2 $ sound "sn"
+
+hush
+
+p "gerard" $ sound "hh hh hh hh"
+
+p "gerard" silence
+
+
+In this example, the pattern originates from the shape of a sine wave,
+a continuous pattern. Without segment the samples will get triggered at
+an undefined frequency which may be very high.
+
+hush
+
+
+
+d1 $ fast 0.5 $ iter 4 $ sound "numbers:1 numbers:2 numbers:3 numbers:4"
+
+d1 $ sound "[voodoo voodoo:3, arpy arpy:4 arpy:2]"
+
+d1 $ sound "{voodoo voodoo:3, arpy arpy:4 arpy:2}"
+
+hush
+
+d1 $ euclid 3 8 $ sound "bd*2 [sn cp]"
+
+d1 $ sound "bev ~" # cut 1
+
+d2 $ slow 4 $ sound "pebbles ~"
+# cut 1
+
+d1 $ randslice 32 $ sound "bev"
+
+setcps (1)
+
+d2 $ n (scan 10) # sound "amencutup"
+# cut 1
+
+hush
+
+d1 $ sound "tink*16"
+   # gain (segment 4 $ range 2 (1)  $ rand)
+
+   d1 $ degradeBy 0.1 $ sound "tink*16"
+
+
+--Osc
+cF is what you use for floating point controls.
+The second parameter1 is the default value,
+for when tidal hasn't received that control yet.
+There is also cS for strings and cI for integers.
+For time values (for using e.g. as the first parameter of fast/slow), use cT.
+
+--cT
+   d1
+   -- $ density (cT 1 "12")
+   -- $ fast (cT 1 "12")
+   -- $ slow (cT 1 "12")
+   $ sound "bd*1"
+   -- # speed (cF 1 "hello")
+
+--cF
+
+   d1 $ sound "bd*13"
+   # speed (cF 1 "12")
+   # cps (cF 1 "12")
+
+d1 $ sound "amencutup" + n (run (discretise 1 $ range 1 16 $ cF 0 "12" ))
+
+   hush

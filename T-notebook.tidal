@@ -47,19 +47,42 @@ d2
   $ chop 4
   $ sound "arpy feel"
 
-  a r p y f e e l
+  a_r_p_y f_e_e_l
+
+d2
+  $ slow 5
+  $ chop 4
+  $ sound "arpy feel ~"
+
+  d2
+  -- $ scan 3
+    $ chop 200
+    $ sound "[arpy(3,8),arpy:2(3,8) ~,arpy:3(3,8) ~ ~,arpy:4(3,8) ~ ~ ~,arpy:5(3,8) ~ ~ ~ ~]"
+
+hush
 
 chop 是granualizes every sample
 跟striate不一樣
 
+hush
+
 d1
-  -- $ slow 5
+  $ slow 5
   $ striate 4
   $ sound "arpy feel"
 
-  a f r e p e y l
+  a_f_r_e p_e_y_l
 
 hush
+
+
+d1
+  $ slow 5
+  $ striate 4
+  $ sound "arpy feel ~ "
+
+  a_f_~_ r_e_~_ p_e_~_ y_l_~_
+
 
 d2
 $ (0.2 <~)
