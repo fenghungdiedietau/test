@@ -1,0 +1,92 @@
+--day 01 2018/12/24
+
+hush
+
+do
+let
+  a= "[[yes [bd:5 yes] [yes*2]]*[1 [1.25 [1 <1 5>]] <1 3> <3.3 1 2>]*<1.5 2>]"
+  b= "[[tt4b [bd:5 tt4b] [tt4b*2]]*[1 [1.25 [1 <5>]]  <3.3 1 2>]*<1.5 2>]"
+d1
+   $ off 0.5 (
+   (# begin (segment "24" $ range 0 1  $ saw ))
+   .(# accelerate 0.12)
+   .(# room (segment 24 $ range 0.4 0.9 $ rand))
+   .(# cutoff (slow 12 $ segment 24 $ range 1500 5000 $ saw))
+   )
+   -- $ brak
+   $ sound b
+   |+ n (slow 136 $ run 136)
+   -- |+ n (segment (range 1 30 $ (cT 1 "12")) $ range 0 1 $ saw )
+   -- |+ n "100"
+   # cut 1
+   # release (slow 4 $ segment 64 $ range 4 10 $ saw )
+
+   hush
+
+--day 02 2018/12/25 radio , with MIDI controls
+d3
+  -- $ almostNever ( (off 1 (|+ n (slow 136 $ run 136)))
+  -- .(# sound "[[yes*5 [bd*4 yes] sn yes]*[[1] [1.25 [5]] 2 3]*2]")
+  -- .(|+ release "10")
+  -- .(#cut "0 0 1")
+  -- )
+  $ every 3 (within (0.75,1.3) ((# gain "0.5" )
+  .(# cutoff (slow 20 $ segment 20 $ range 200 3000 $ sine))
+  .(density 1.25)
+  .(stut' 15 (range 0 2 $ (cT 0.25 "12")) (# speed "0.5"))))
+  -- $ every 5 (within (0,0.75) $ juxBy 0.1 (|+ n (segment 40 $ range 1 10 $ sine )))
+  -- $ off 1 ((juxBy 1 (+n "1")).(# begin (segment 40 $ range 1 0 $ sine )).rev)
+  $ sound "[[yes*5 [bd*4 yes] yes]*[[1] [1.25 [5]] 2 3.3]*2]"
+  -- |+| n (segment 30 $ range 1 12 $ saw )
+  -- |+ n "[16]"
+  |+ n (slow 136 $ run 136)--(cF 1 "15"))
+  -- # n "2"
+  # begin (segment "<24>" $ range 0 (cF 1 "13") $ saw )
+  -- # cut 1
+  -- # hold "1.3"
+  -- # release (slow 20 $ segment 40 $ range 0.3 1 $ saw )
+ |+ release (slow 9 $ segment 10 $ range 0.5 (range 0 5 $ (cF 5 "14")) $ sine )
+  -- # attack (slow 5 $ segment 20 $ range 0.14 0.175 $ saw )
+  -- # gain "1"
+
+hush
+
+--day 3 **spread + striate**
+d1
+  $ almostNever (loopAt 4)
+  $ slowspread (slow) [164,128,240,300]
+  $ jux (|+| speed (segment (choose [16,1,32]) $ range 0.5 1.2 $ density 0.15 sine))
+  $ (spread (striate' 200) [(10/24), (1/30), (1/20), (15/20) , (10/20)] $ sound "yes" )
+   |+| speed (slow 100 $ segment 100 $ range 0.2 1 $ sine)
+  # n (slow 136 $ run 136)
+
+
+
+  d1
+  $ loopAt 1
+  $ sound"yes"
+  |+ n (slow 10000 $run 10000)
+
+  hush
+  -- $ loopAt (choose [1,2])
+  -- $ sound (slow 10 $ choose ["yes","bev"])
+
+
+problem task:怎麼自動置換sample set??
+
+
+do
+  let a = (choose[1,2,0.5])
+  let b = (choose["yes","sn","bd","cp"])
+  d1
+  $ loopAt a
+  $ sound (b)
+  # n (slow 10000 $run 10000)
+
+do
+let a = segment 1 $ choose ["bd","yes"]
+d1 $ sound a
+
+do
+  let a = segment 1 $ choose ["tt4b","yes"]
+  d1 $ sound $ samples a "0 1 2 3"
