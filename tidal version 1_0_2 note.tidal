@@ -5,25 +5,16 @@ custum dirt sample path>>>>>
 https://tidalcycles.org/index.php/Custom_Samples
 
 
-<<<<<<< HEAD
 --cps becomes a function
 
 d1 $ sound "[sn(3,8) cp?]"
    # cps (slow 5  $ range 0.8 4 saw)
    * cps (slow ( segment 1 $ range 1 100 $ cT 1 "12") $ range 150 1 square)
    + n (segment 2 $ irand 10)
-=======
---cps
-
-d1 $ sound "[sn(3,8) bd]"
-   # cps (slow 5  $ range 0.8 4 saw)
-   * cps (slow 200 $ range 300 1 square)
->>>>>>> 201d29c74e6a4ea1154a8aa004ea9b2d1d025a6d
 
 hush
 
 
-<<<<<<< HEAD
 d2
   $ slow 2
   $ segment 32
@@ -34,11 +25,6 @@ d2
 hush
 --d1 ~ d16
 
-=======
---d1 ~ d16
-
-d9 $ sound"bd"
->>>>>>> 201d29c74e6a4ea1154a8aa004ea9b2d1d025a6d
 
 d1 $ note ((scale "dorian" $ "{6 . 2 3 4 , ~ . ~ [10 8] 9 . 10 11 ~ 8}%2")) #s "gtr" # gain 1
 
@@ -46,7 +32,6 @@ hush
 
 -- segment (discretize) // range (scale)
 d1
-<<<<<<< HEAD
   -- $ chop 10
   $ speed (slow (smooth "100 10 40 4")
   --
@@ -56,23 +41,11 @@ d1
   + sound "jvbass"
   + n (slow 3 $ segment  (choose[13,26,19,54,89]) $ range 12 (-12) $ sine )
   -- # cps (slow 30  $ range 0.8 1.3 saw)
-=======
-  $ chop 10
-  $ n (slow 1
-  --
-  $ segment (choose[83,56,29,44,90])
-  --
-  $ range 12 (-12) $ sine)
-  + sound "jvbass"
-  + n (slow 3 $ segment (choose[13,26,19,54,89]) $ range 12 (-12) $ sine )
-  # cps (slow 30  $ range 0.8 1.3 saw)
->>>>>>> 201d29c74e6a4ea1154a8aa004ea9b2d1d025a6d
   -- + attack (slow 24 $ segment (100) $ range 1 0.3 saw)
   + gain 1.4
 
   hush
 
-<<<<<<< HEAD
   d1
   $ density 0.2
   $ n (run ( segment 2 $ range 0 10 $ cF 1 "12")) # sound "[bd]"
@@ -143,8 +116,6 @@ p "gerard" $ sound "hh hh hh hh"
 
 p "gerard" silence
 
-=======
->>>>>>> 201d29c74e6a4ea1154a8aa004ea9b2d1d025a6d
 
 In this example, the pattern originates from the shape of a sine wave,
 a continuous pattern. Without segment the samples will get triggered at
@@ -153,7 +124,6 @@ an undefined frequency which may be very high.
 hush
 
 
-<<<<<<< HEAD
 
 d1 $ fast 0.5 $ iter 4 $ sound "numbers:1 numbers:2 numbers:3 numbers:4"
 
@@ -209,6 +179,3 @@ For time values (for using e.g. as the first parameter of fast/slow), use cT.
 d1 $ sound "amencutup" + n (run (discretise 1 $ range 1 16 $ cF 0 "12" ))
 
    hush
-=======
-nihahahaha
->>>>>>> 201d29c74e6a4ea1154a8aa004ea9b2d1d025a6d

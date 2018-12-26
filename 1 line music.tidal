@@ -1,0 +1,4 @@
+--1
+d1$ sound"bd"  + cps ( segment 100 $ range 1 100 $ sine )
+
+hush
