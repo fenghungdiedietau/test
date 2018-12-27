@@ -6,7 +6,7 @@ which are used to select values from the given list.
 What makes this a bit strange is that only a given
 number of values are selected each cycle. For example:
 
-cps(120/60/4)
+setcps(120/60/4)
 
 d1 $ sound (fit 3 ["bd", "sn", "arpy", "arpy:1", "casio"] "0 [~ 1] 2 1")
 
@@ -28,8 +28,8 @@ n=1, vermona perfourmer?
 --interlace pattern?
 d1
   -- $ slow 2
-  $ sound (fit 2 ["bd", "bass3", "cp", "808:3" , "tink"] "0*2 [~ 1] [{0 1 2 3}%5 [4]] 1")
-  # n (slow 3 (scale 0 10 $ sine1))
+  $ sound (fit 2 ["bd", "linnhats", "cp", "808:3" , "tink"] "0*2 [~ 1] [{0 1 2 3}%5 [4]] 1")
+  # n (slow 3 (range 0 10 $ sine))
 
 d1 silence
 
