@@ -109,12 +109,12 @@ d1
    + begin (slow 2 $ segment 16 ((irand 16)/16))
    -- + cut "[1 0 [1 0] 0 1 [0 1]]"
    + unit "[c r]%10"
+   + unit "[c r ]%10"
    --sample playing lengths
    # release (segment 16 (choose [1,0.5,1.24]))
 
    hush
 
--- try spaceOut + fit  
 d4 $ spaceOut [1.8,0.3,0.6]
    -- $ s "[bd*4,cp]"
    $ sound (fit 2 ["bd", "bd", "cp", "bd" , "bd"] "[0*6,1]")
