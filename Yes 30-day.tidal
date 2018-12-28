@@ -99,22 +99,33 @@ hush
 
 d1
    -- some effects
-   $ degradeBy 0.4
+   -- $ degradeBy 0.1
+   -- $ every 3 (+ n (slow (range 0.75 2 $ cT 1 "13" )  $ segment 13 (irand 2)))
    $ every 4 (within (0.75,1) (fast 0.75 . (# speed "-1")))
-   $ every 5 (within (0,0.5)((+ accelerate ((sine))).(rev)))
+   $ every 5 (within (0,0.15)((+ accelerate ((sine))).(rev)))
    ----random picking n samples in sample folder every (1/16)cycles
    $ loopAt 1
    $ sound "[breaks125,tt4b]"
-   + n (slow (choose [1,2,3,5]) $ segment 16 (irand 4))
-   + begin (slow 2 $ segment 16 ((irand 16)/16))
+   -- + n (slow (choose [1,2,3,5]) $ segment 16 (irand 4))
+   + n (slow 114 $ run 114)
+   + n "28"
+   + begin (slow (range 0.05 5 $ cT 2.5 "12" ) $  segment 16 (saw))
    -- + cut "[1 0 [1 0] 0 1 [0 1]]"
    + unit "[c r]%10"
    + unit "[c r ]%10"
    --sample playing lengths
-   # release (segment 16 (choose [1,0.5,1.24]))
+   # cut "0"
+   -- |+ release (segment 16 (choose [1,0.75,1.25]))
+   |+ release (range 0.0075 6 $ cF 1 "13" )
+   # gain "1.3"
 
-   hush
+once $ s "momo" # gain "1.2" + n (irand 1)
+
+  hush
 
 d4 $ spaceOut [1.8,0.3,0.6]
    -- $ s "[bd*4,cp]"
    $ sound (fit 2 ["bd", "bd", "cp", "bd" , "bd"] "[0*6,1]")
+   -- # cps (iter 10 (segment 12 $ run 1))
+
+hush

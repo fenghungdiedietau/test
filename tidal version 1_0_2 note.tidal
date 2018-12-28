@@ -7,7 +7,7 @@ https://tidalcycles.org/index.php/Custom_Samples
 
 --cps becomes a function
 
-d1 $ sound "[sn(3,8) cp?]"
+d1 $ sound "[sn(3,8) cp]"
    # cps (slow 5  $ range 0.8 4 saw)
    * cps (slow ( segment 1 $ range 1 100 $ cT 1 "12") $ range 150 1 square)
    + n (segment 2 $ irand 10)
@@ -48,7 +48,9 @@ d1
 
   d1
   $ density 0.2
-  $ n (run ( segment 2 $ range 0 10 $ cF 1 "12")) # sound "[bd]"
+  $ n (run ( segment 2 $ range 0 10 $ cF 1 "12")) # sound "[cp]"
+
+  hush
 
   d1
   $ density ( segment 2 $ range 0 1 $ cT 1 "13")
