@@ -202,15 +202,14 @@ d1
   -- $ slow 2
   $ degradeBy 0.6
   $ loopAt 1
-  $ sound"yes:11"
+  $ sound"yes"
   + begin (fast 1 $ smooth $ segment 16 $ range 0 1 $saw)
   + gain (fast 1 $ smooth $ segment 16 $ range 0.4 1 $saw)
-  # release 0.04
+  # release 0.045
   -- # hold 0.05
-  + release ((iter 16) (smooth "[2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]"))
+  + release ((iter 16) (smooth "[0.2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]"))
   + pan "[1 0]/2"
   + n (slow 136 (run 136))
-  ---dreamseq
 
   d2
     -- $ slow 2
@@ -225,6 +224,11 @@ d1
     # hold 0.2
     + hold ((iter 16) (smooth "[ 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0]"))
     + n (slow 136 (run 136))
+
+
+d1 $ sound "{bd ~}%16"
+
+d2 $ sound "sn"
 
 
   hush

@@ -1,9 +1,10 @@
-d1 $ n (scaleP "<minPent majPent>" "0 1 2 3 4") # sound "supermandolin"
+d1 $ n (scale "<minPent majPent>" "0 1 2 3 4") # sound "supermandolin"
 
 d1 $ overlay (sound "bd*4") $ sound "hh*2"
 
 d2 $ superimpose ((slow 10) . (# s "bd")) $ n "0*9" # s "hh"
 
+hush
 
 ------danielmkarlsson
 cps (-1)
@@ -75,12 +76,15 @@ d2
    $ slow 2
    $ iter 4
    $ fast 2
-   $ n "0 1 2 3" # sound "numbers"
+   $ n "0 1 2 3"
+   # sound "numbers"
    0 1 2 3
    01230123 ->0 1 2 3 0 1 2 3
    23012301
    01230123
    23012301
+
+hush
 
 d1
  $ ("<0 0 0.25 0.25 0.5 0.5 0.75 0.75>" <~ )
@@ -99,29 +103,34 @@ d1
   ranrotL maxrotation p = spreadChoose ($) l $ p
     where l = [rotL (x) | x <- [0.00, 0.01 .. maxrotation]]
 
-  d1 $ ranrotL 0.5 $ sound "bev"
+  d1 $ ranrotL 0.2 $ sound "bev"
 
---jan 8 spaceOut map thing
+--2018-1-8=>2019-1-1 (spaceOut//map)
 hush
 
+(1/) <$> [1,1.7..8]
+--equals
+(map (1/) [1,1.7..8])
 
-  d2
-     $ stut' 2 0.25 ((|+|resonance (slow 2 $ sine1*1)).(|+|cutoff (slow 4 $ sine1*4000)).(|*|gain "0.9").(|*|speed (choose [0.1,-0.2,0.4,-0.4,0.42,0.5,0.7,-0.5,0.8])).(|+| pan "1 0"))
-     $ slow 2.5 $ density "1" $ spaceOut ( (map (1/) [1,1.7..8] ) ++ (map (1/) [8,7.75..1]))
-     -- $ every 1 ((|+| accelerate "-0.5").(|+|pan "1"))
-     -- $ slow 4
-     $ s "[ng:4]"
-     |+| speed "[0.4]"
-     # cut "0"
-     |+|resonance (slow 4 $ sine1*1)
-     # begin (scalex 0.02 0.1 $ rand)
-     |+|cutoff (sine1*5000)
-     -- # sustain (scale 0.2 1 $ sine1)
-     # gain "1"
-     -- # delay "0.2"
-      -- # delayfeedback "0"
+d2
+   $ stut' 3 0.5 (
+                    (+resonance (slow 2 $ sine*1)).
+                    (+ coarse "0.2(3,8)").
+                    (+ speed (segment 20 $ (choose [0.1,-0.2,0.4,-0.4,0.42,0.5,0.7,-0.5,0.8]))).
+                    (+| pan (smooth $ "1 0.4 0.1 0.9")).
+                    (+| n (scan 3))
+                  )
+   -- $ slow
+   $ spaceOut ( ((1/) <$> [1,1.5..8]) ++ (map (1/) [8,7.75..1]))
+   $ s "[bass]"
+   -- + speed "[1]"
+   + cutoff (slow 4 $smooth$   range 2000 4000 $ sine)
+   + cutoff (slow 17 $ range 3000 1000 $ sine)
+   + resonance (slow 4 $ sine*1)
+   + begin  (segment 10 $ smooth $ range 0.02 0.25 $ rand)
+   -- +| cutoff (segment 10 $ smooth $ range 2000 8000 $ rand)
 
-cps (1)
+hush
 
 -- drone
 
@@ -190,7 +199,7 @@ hush
 
   -- |+| gain (slow 2 $ sine1)
 
-  d2 $ slow 2 $ density "<1>" $ spaceOut ( (map (1/) [1,1.25..9] ) ++ (map (1/) [8,7.75..1.2])) $ s "ng:1"
+  d2 $ slow 2 $ density "<1>" $ spaceOut ( (map (1/) [1,1.25..9] ) ++ (map (1/) [8,7.75..1.2])) $ s "bd:1"
   |+| gain (slow 2 $ sine)
   # pan (slow 0.1 $ range 0 0.5 $ rand)
   # rel (slow 0.11 $ choose [0.1,0.1,0.1,0.1,2])
@@ -218,6 +227,8 @@ hush
   actually it seems like it would be good to generalise sine, square, rand, etc in this way so they work both for float and rational (time) numbers
   travelling atm but if someone has a moment to make a github issue on that, it'd be good!
 d1 $stut' 8 (toRational <$> (scale 0.001 0.1 $ slow 20 sine)) id $ s "bd"
+
+:t stut'
 
 
 --2018_12_17 from tidalcycles blog
@@ -289,3 +300,42 @@ d1
 -- $ loopAt 1
 -- $ chop 4
 $ n ("1" + "1 4" * "3 <4,1,2,3> 5? <12,3,4,5>" + "[<1,2,3,~,5,~,9,12> <~,1,0,~> <8,2,3,4> ~]") + s "[breaks125]" + cut 1
+
+
+d1 $ sound "bass" # speed (1+(2.0**("[1]"/12)))
+
+:t (map (1/) [1,1.25..9] )
+
+(map (1/) [1,1.25..9] )
+
+hush
+
+d1 $ every "[3 4]" (fast 2) $ sound "bd*8"
+
+d1 $ compress (0,1/3) $ sound "bd*4"
+
+d1 $ sound (discretise 8 $ choose ["bd","snare"]) # gain 1.2 # legato 2
+
+hush
+
+-- struct gives structure (the value 'x' isn't used, but its structure is)
+d1 $ sound (struct "x(3,8) x*2" $ choose ["bd","snare"]) # gain 1.2 # legato 2
+
+d1 $ n (scan 8) # sound "drum" # speed 2
+
+d1 $ jux (rev . (4.25 <~)) $ n (scan 8) # sound "sn" # speed 2
+
+hush
+
+
+:t [1,2..4]
+
+:t (run 8)
+
+d4 $ repeatCycles 4 $ struct "x*8?" $ sound "arpy" +| note (irand 16)
+
+d4 $ loopFirst $ struct "x*8?" $ sound "bd" # speed 2 # room 0.1 # sz 0.5
+
+queryArc "1 2 3" (0,1)
+
+:t queryArc
