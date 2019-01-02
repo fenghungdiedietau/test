@@ -181,3 +181,52 @@ For time values (for using e.g. as the first parameter of fast/slow), use cT.
 d1 $ sound "amencutup" + n (run (discretise 1 $ range 1 16 $ cF 0 "12" ))
 
    hush
+
+-- Yaxu q&a------
+d1 $ s "bd*10"
+   # coarse (segment 8 $ range 1 5 $ sine)
+-- this dont work interg
+
+:t coarse
+
+:t (segment 8 $ range 1 5 $ sine)
+
+:t (round <$> (segment 8 $ range 1 5 $ sine))
+
+hush
+
+d1 $ s "bd*10"
+   # coarse (round <$> (segment 8 $ range 1 5 $ sine))
+
+-- struct  sew
+
+d1 $ struct (every 4 inv "t [f t] [t f] f") $ sound "bd" # speed 2
+
+d2 $ jux rev $ sew (every 3 inv "t f t f")
+  (sound "bd (5,16,<2 4>)")
+  (sound "cp (5,8,2)")
+  # speed "<2 4>"
+
+d2 $ jux rev $ sew (every 3 inv "t [f t] ~")
+  (sound "bd*7")
+  (sound "cp*8")
+  -- # speed "<2 4>"
+
+hush
+
+:t sew
+
+:t struct
+
+-- selectF//select
+d1 $ selectF (cF 0.5 "22") [id,rev, fast 2,(+ speed 2)] $ sound "cp(3,8)"
+
+hush
+
+:t selectF
+
+d2 $ sound (select (cF 0.5 "21") ["sn:4*3","bd*3"])
+
+
+
+----Yaxu q&a end

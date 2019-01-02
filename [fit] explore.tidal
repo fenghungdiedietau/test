@@ -143,6 +143,12 @@ hush
 
 --0622 spaceOUt fit?
 
-d4 $ spaceOut [1.8,0.3,0.6]
+d4
+  -- $ spaceOut [1.8,0.33,0.6]
   -- $ s "[bd*4,cp]"
-   $ sound (fit 2 ["bd", "bd", "cp", "bd" , "bd"] "[0*6,1]")
+  $ sound (fit 3 ["bd", "bd", "cp", "sn" , "bd"] "[0*6,1(3,8),2*5]")
+  + cps (segment 3 $ smooth $ (wchoose[(1,0.2),(1.65,0.5),(0.75,0.4)]))
+  + n (segment 2 $ (wchoose[(1,0.2),(2,0.5),(3,0.4)]))
+  -- + cut 1
+
+hush
