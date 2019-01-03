@@ -239,15 +239,22 @@ p "sitar" $ struct ("[[t t [f ]] f t]") $ sound "sitar"  # cut 1
 
 xfade "yes" $ sound "yes:14"
 
+<<<<<<< HEAD
 
 --
+=======
+>>>>>>> 23dade0fe5b806ea0f9ccb6e347104d9a1d5473b
 xfade "yes"
   -- $ chop (round <$> (segment 12 $ range 4 6 $ saw))
   $ juxBy 0.8 ((chop (round <$> (smooth $ segment 15 $ range 1 7  $ saw))).rev.
                (slow "<1 1.2 3>")
               )
   $ off 1 ((struct (every 3 ((slow 2).inv )"[t [t [t f]] ~ t]") ).(# speed 2))
+<<<<<<< HEAD
   $ sound "yes"
+=======
+  $ sound "yes"  
+>>>>>>> 23dade0fe5b806ea0f9ccb6e347104d9a1d5473b
   -- # cut 1
   + begin (slow 6 $ smooth $ segment 16 $ range 0 1 $saw)
   + release (slow 5 $ smooth $ segment 8 $ range 0.125 0.2 $ saw)
