@@ -230,3 +230,35 @@ d2 $ sound (select (cF 0.5 "21") ["sn:4*3","bd*3"])
 
 
 ----Yaxu q&a end
+d1 silence
+
+hush
+
+p "sitar" $ struct ("[[t t [f ]] f t]") $ sound "sitar"  # cut 1
+
+
+xfade "yes" $ sound "yes:14"
+
+
+--
+xfade "yes"
+  -- $ chop (round <$> (segment 12 $ range 4 6 $ saw))
+  $ juxBy 0.8 ((chop (round <$> (smooth $ segment 15 $ range 1 7  $ saw))).rev.
+               (slow "<1 1.2 3>")
+              )
+  $ off 1 ((struct (every 3 ((slow 2).inv )"[t [t [t f]] ~ t]") ).(# speed 2))
+  $ sound "yes"
+  -- # cut 1
+  + begin (slow 6 $ smooth $ segment 16 $ range 0 1 $saw)
+  + release (slow 5 $ smooth $ segment 8 $ range 0.125 0.2 $ saw)
+  + lpf (slow 17 $ smooth $ segment 14 $ range 400 2500 $ saw)
+
+hush
+
+
+
+xfade "susan" $ sound "gabba(3,8,<0 2 4>)"
+
+xfade "susan" $ sound "cp*2"
+
+:t xfade
