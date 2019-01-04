@@ -232,3 +232,61 @@ d2 $ sound "sn"
 
 
   hush
+
+--day 07
+
+xfade "yes"
+ -- $ juxBy ((slow 5 $ segment 8 $ range 0 1 $ saw)) (chop 10)
+  -- $ chop (round <$> (slow 4 $ smooth $ segment 16 $ range 20 40 $ sine))
+  -- $ juxBy 0.8 ((chop (round <$> (smooth $ segment 15 $ range 1 7  $ saw))).rev.
+  --              (slow "<1 1.2 3>")
+  --             )
+  -- $ off 1 ((struct (every 2 ((slow 2).inv )"[t [t [t f]] ~ t]") ).(# speed 2).(# room 0.9).(# size 0.5))
+  $ sound "yes"
+  -- # cut 1
+  + begin (slow 7 $ smooth $ segment 16 $ range 0 1 $saw)
+  + release (slow 5 $ smooth $ segment 8 $ range 0.125 0.4 $ saw)
+  + lpf (slow 16 $ smooth $ segment 14 $ range 800 3500 $ saw)
+  + cps (slow 11 $ smooth $ segment 32 $ range 1 10 $ sine)
+  + n (slow (136*6) $ run 136)
+
+hush
+
+
+
+--day 08
+
+:t weave
+
+hush
+
+d1 $ weave 12 ((pan (range 0.2 0.8 $ sine)))
+                   [
+                    struct (every "<4>" (slow 1.5) "[[t f <f t>][t f f] t  [t [f t]]]") $
+                    sound "tt4b"
+                    + begin
+                    (
+                      -- slow 6 $
+                      -- slow "<6.7 7.8 8.9 9.9 3.5 20>" $
+                      smooth $ segment 16 $ range 0 1 $saw)
+                    +  release (slow 5.08  $ smooth $ segment 8 $ range 0.125 0.9 $ saw)
+                    +| release ((0.125 <~) $ slow 5 $ smooth $ segment 16 $ range 0.125 0.5 $ saw)
+                    -- *| release ((0.130 <~)  $ slow 20.05 $ smooth $ segment 20 $ range 0.5 4 $ saw)
+                    + lpf (slow 16 $ smooth $ segment 14 $ range 2500 4500 $ saw)
+                    -- + room (slow 10 $ segment 12 (choose [0.8,0,1.2]))
+                    -- # size 0.3
+                    ,
+                     (0.04<~)
+                     $ sound "momo"
+                     + begin (slow 7 $ smooth $ segment 16 $ range 0 1 $saw)
+                     + release (slow 5.08 $ smooth $ segment 8 $ range 0.125 0.9 $ saw)
+                     +| release ((0.125 <~) $slow 5 $ smooth $ segment 16 $ range 0.5 0.4 $ saw)
+                     *| release ((0.25 <~) $slow 5.05 $ smooth $ segment 20 $ range 0.5 1 $ saw)
+                     + lpf (slow 16 $ smooth $ segment 14 $ range 800 6500 $ saw)
+                     # gain 0
+                    ]
+    # n (slow (1000*1) $ run 1000)
+
+
+
+hush
