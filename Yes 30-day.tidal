@@ -300,10 +300,10 @@ d1 $ loopAt 8 $ rev
 
 
 d1
-   $ loopAt ((slow 8 $ smooth $ segment 1 $ range 1.02 1 $ saw))
-   $ every 2 rev
+   -- $ loopAt ((slow 8 $ smooth $ segment 1 $ range 1.02 1 $ saw))
+   $ rev
+   $ chop 36
    -- $ linger ((slow 4  $ segment 3 $ range 0.5 1 $ saw))
-   $ chop 64
 --   "[<0.25 1 1 [1 0.25]>]"
    -- $ stuck [
    --          linger "[0.25]",
@@ -311,14 +311,39 @@ d1
    --          ]
    -- $ stut 3 0.5 1
    $ sound "yes:134"
-   + n (slow (136*1) $ run 136)
-   + begin (slow 1 $ segment 12 $ range 0.05 1 $ saw)
+   - n (slow (136*1) $ run 136)
+   + begin (slow 1 $ segment 16 $ range 0.05 1 $ saw)
    -- # attack 0.06
    # cut 1
 
 hush
 
-d1 $ loopAt 8
-   $ off 0 ((struct "[t t f]").(rev))
-   $ chop 64
-   $ sound "bev"
+-----*solve the gap when n change*-----
+
+let a = (slow 12 $ segment 72 $ range 20 35 $ saw)
+in
+d1
+  -- $ degradeBy 0.1
+  $ loopAt 1
+  $ off 0.125 (
+            (rev).
+            (+ speed "1").
+            (+ n "1 2").
+            (+ pan "0.2 0.8").
+            (+ begin  (slow  (a*2) $ segment 16 $ range 0.01 0.99 $ saw)).
+            (+ release (slow (1/a) $ segment 16 $ range 0.125 6 $ saw)).
+            (+ gain (slow (a*3) $ segment 16 $ range 0.5 1 $ sine))
+            )
+  $ chop (round <$> a)
+  $ sound "[tt4b:0]"
+  + begin  (slow (a) $ segment a $ range 0.01 0.99 $ saw)
+  + attack (slow (a) $ segment a $ range 0.5 1 $ saw)
+  + n (slow (136) (run 136 ))
+  -- + cut 1
+  -- = gain "0.4"
+
+  hush
+
+
+
+  hush

@@ -186,7 +186,7 @@ d1 $ density 4 $ sound (samples "<arpy*5 arpy*2>" (every 3 (fast 1) $ run 6))
 
 hush
 
-======Smash========
+========Smash========
 smash
 smash :: Int -> [Time] -> ParamPattern -> ParamPattern
 Smash is a combination of spread and striate - it cuts the samples into the given number of bits,
@@ -282,13 +282,15 @@ hush
 
 Lets try that reverse in just one speaker:
 
-d1 $ slow 1 $ jux rev $ chop 8 $ sound "dna"
+d1 $ slow 4 $ jux rev $ chop 8 $ sound "bev"
 
 Different values of chop can yield very different results,
 depending on the samples used:
 
 d1 $ chop 16 $ sound (samples "arpy*8" (run 16))
+
 d1 $ chop 32 $ sound (samples "arpy*8" (run 16))
+
 d1 $ chop 256 $ sound "bd*4 [sn cp] [hh future]*2 [cp feel]"
 
 You can also use chop (or (striate)[#striate]) with very long samples,
@@ -297,7 +299,7 @@ The following cuts a sample into 32 parts, and plays it over 8 cycles:
 
 bps(120/120)
 
-d2 $s"bd"
+d2 $ s"bd"
 
 d1
   $ loopAt "[1 0.4 4 0.2]" $rev$ chop 16 $ sound "app:2"
@@ -314,11 +316,11 @@ You can’t hear that the sample has been cut into bits in the above.
 This becomes more apparent when you do further manipulations of the pattern,
 for example rev to reverse the order of the cut up bits:
 
-d1 $ loopAt 8 $ rev $ chop 32 $ sound "bev"
+d1 $ loopAt 8 $ rev $ chop 64 $ sound "bev"
+
 d1 $ loopAt 8 $ chop 32 $ sound "bev"
 
-Run
-
+=======Run========
 run n generates a pattern representing a cycle of numbers
 from 0 to n-1 inclusive.
 Notably used to ‘run’ through a folder of samples in order:
@@ -334,7 +336,7 @@ The first parameter to run can be given as a pattern:
 d1 $ n (run "<4 8 4 6>") # sound "amencutup"
 
 
-LoopAt
+=======LoopAt========
 
 loopAt makes sample fit the given number of cycles. Internally,
 it works by setting the unit parameter to “c”,
