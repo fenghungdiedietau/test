@@ -290,3 +290,35 @@ d1 $ weave 12 ((pan (range 0.2 0.8 $ sine)))
 
 
 hush
+
+-- day 09 --start from this
+d1 $ loopAt 8 $ rev $ linger 0.5 $ chop 64 $ sound "bev"
+
+d1 $ loopAt 8 $ rev
+   $ linger ((slow 8 $ smooth $ segment 1 $ range 0.5 1 $ saw))
+   $ chop 64 $ sound "bev"
+
+
+d1
+   $ loopAt ((slow 8 $ smooth $ segment 1 $ range 1.02 1 $ saw))
+   $ every 2 rev
+   -- $ linger ((slow 4  $ segment 3 $ range 0.5 1 $ saw))
+   $ chop 64
+--   "[<0.25 1 1 [1 0.25]>]"
+   -- $ stuck [
+   --          linger "[0.25]",
+   --          linger "1"
+   --          ]
+   -- $ stut 3 0.5 1
+   $ sound "yes:134"
+   + n (slow (136*1) $ run 136)
+   + begin (slow 1 $ segment 12 $ range 0.05 1 $ saw)
+   -- # attack 0.06
+   # cut 1
+
+hush
+
+d1 $ loopAt 8
+   $ off 0 ((struct "[t t f]").(rev))
+   $ chop 64
+   $ sound "bev"

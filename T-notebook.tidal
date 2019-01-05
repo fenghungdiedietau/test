@@ -1,73 +1,82 @@
-//Pattern Transformers
-//Sample Transformers
-//Conditional Transformers
-
-speed nagtive value==>play backward
+======Speed=======
+speed "nagtive value"==>play backward
 
 d1
-  -- $ fast 3
   $ loopAt 4
   $ rev
-  $ every 1 (|=| speed (efull 2 8 "0.5" "-0.5"))
+  $ every 2 (+ speed  "-0.5")
   $ chop "<32 10 20>"
-  $ sound "app*2"
+  $ sound "bev*2"
+  # gain 1.5
 
-d1
-  $spread ($) [(loopAt 4), slow 3, striate 13]
-  $loopAt 5 $ chop "[[{8 12 13}%4],[2(3,5)]]/2" $sound "dna:2"
+======Spread=======
 
-d1
--- $ within (0,0.5)(#speed 4)
--- $ within (0.5,1)( (rev).(#speed 2))
+d1 $ spread fast[2,3] $ sound "ho ho:2 ho:3 hc"
+
+equals to
+
+d1 $ fast <2 3> $ sound "ho ho:2 ho:3 hc"
+
+pass ($) as the function to spread values over,
+you can put different functions as the list of values
+
+let a = slow 2 $ smooth $ segment 50 $ range 0.1 4 $ sine
+    b = a*2
+    c = a*3
+    d = 10
+    in
+    d1
+    -- $ fast a
+    $ spread ($) [
+            off a (juxBy a (# speed a).(stut d a a)),
+            off b       (# speed b).(stut d b b),
+            off c       (# speed c).(stut d c c)
+            ]
+    $ struct ("[[t f]*2 [f t]*3 t]")
+    $ sound "[bd [cp:4 bass3]/3] bd ~"
+    -- + n (slow 1000 $ run 1000)
+    -- # cut 1
+
+hush
+
+let a = (slow 10 $ degradeBy 0.2 $ segment 32 $ range 0.1 0.9 $ saw )
+    b = (round <$> a*30)
+in
+d2
+$ striate b
 $ spread ($)
-[jux (#speed 0.4),jux (#speed 3),smash 3 [2,4,6,8],(|+|pan sine1)]
-$ loopAt 1
-$ chop "16" $ sound "dna:4"
-# cut "2"
-  -- |+|speed"<1.3 1>"
-  -- |+|pan (every 3 (density 4) $ sine*1)
-  -- |+|begin "[[0.2 0.3 0.5], [0.4 0.1]]"
-  -- |+|accelerate (whenmod 9 4 (slow "8 4 5") "[0.2 0.2 -0.3 0.1]")
-
-hush
+[jux (# lpf (1700*a)),jux (# lpf (3000*a)),(+ pan sine)]
+$ sound "tt4b:2"
++ begin a
 
 
 hush
 
-Chop
+=====Chop=====
 chop :: Pattern Int -> ParamPattern -> ParamPattern
 chop granualizes every sample in place as it is played,
 turning a pattern of samples into a pattern of sample parts.
 Use an integer value to specify how many granules each sample is chopped into:
 
-bps (120/120)
-
 d2
-  -- $ degradeBy 0
   $ chop 4
   $ sound "arpy feel"
 
   a_r_p_y f_e_e_l
 
 d2
-  $ slow 5
+  $ slow 2
   $ chop 4
   $ sound "arpy feel ~"
 
-  d2
-  -- $ scan 3
-    $ chop 200
-    $ sound "[arpy(3,8),arpy:2(3,8) ~,arpy:3(3,8) ~ ~,arpy:4(3,8) ~ ~ ~,arpy:5(3,8) ~ ~ ~ ~]"
-
-hush
-
-chop 是granualizes every sample
-跟striate不一樣
+d2
+  $ chop 200
+  $ sound "[arpy(3,8),arpy:2(3,8) ~,arpy:3(3,8) ~ ~,arpy:4(3,8) ~ ~ ~,arpy:5(3,8) ~ ~ ~ ~]"
 
 hush
 
 d1
-  $ slow 5
+  $ slow 2
   $ striate 4
   $ sound "arpy feel"
 
@@ -75,32 +84,41 @@ d1
 
 hush
 
-
 d1
-  $ slow 5
+  $ slow 2
   $ striate 4
   $ sound "arpy feel ~ "
 
   a_f_~_ r_e_~_ p_e_~_ y_l_~_
 
 
+=====Cat=====
 d2
-$ (0.2 <~)
-$ cat[s "bd*4 ", s"hh*4",s"cp*4",s "sn*2" ]
+$ cat [s"bd*4", s"hh*4", s"cp*4", s "sn*2" ]
+
+hush
+
+=======Pattern chop (int) parameter:=======
+
+"<  >"
+or
+(round <$> (slow 10 $ segment 32 $ range 10 20 $ saw ))
+
+
+d1 $ chop "<4 1 3>"
+   $ sound "arpy ~ feel*2 newnotes"
+   # room ((slow 4)sine*2)
+   # size ((slow 5)sine*1.3)
+
+d1
+  $ chop  (round <$> (slow 3 $ segment 16 $ range 10 20 $ saw ))
+  $ sound "arpy ~ feel*2 newnotes"
+  # room ((slow 4)sine*2)
+  # size ((slow 5)sine*1.3)
 
 hush
 
 
-hush
-
-You can pattern that first parameter:
-
-d1 $ chop "<4 1 3>" $ sound "arpy ~ feel*2 newnotes"
-   # room ((slow 4)sine1*2)
-  --  # size ((slow 4)sine1*2)
-   # nudge "[0 0.04]*4"
-
-hush
 
 You end up with a pattern of the chopped up bits of samples,
 so for example if you then reverse the pattern,
@@ -109,60 +127,78 @@ you reverse the order of the bits:
 
 d1
   $ rev
-   --(run 3)
-  $ loopAt 1 $ sound "app:2"
-  # speed
+   (run 3)
+  $ loopAt 1
+  $ sound "bev"
 
 hush
 
+
+======Superimpose=======
+
 d1 $ density "{1! [2 ~] 4! ~}%5"
-   $ slowcat [superimpose (smash 4 [4,2,1,4]) $ jux rev $ sound (samples "{gretsch*4, gretsch*3 bd*2 sn/2}" (stack [(slow 3 $ run 8), "1 5 2"]))
+   $ slowcat [
+    superimpose (smash 4 [4,2,1,4]) $ jux rev $ sound (samples "{gretsch*4, gretsch*3 bd*2 sn/2}" (stack [(slow 3 $ run 8), "1 5 2"]))
               |+| speed "2",
               interlace
               (jux (0.25 <~) $ (striate 4) $ sound "bd/4*4 bleep/7")
               (sound (samples "mouth*8" (every 3 rev $ run 8)))
              ]
 
-             hush
+hush
 
 d1 $ superimpose (smash 4 [4,2,1,4])
    $ jux rev
    $ sound (samples "{gretsch*4, gretsch*3 bd*2 sn/2}" (stack [(slow 3 $ run 8), "1 5 2"]))
-   |+| speed "2"
 
+
+
+=======Interlace // Samples //========
 
 d1
   --  $superimpose ((smash 4 [4,2,1,4]).(brak))
-  --  $juxBy 0.1 ((fast 2).(every 3 (0.3 <~)).(brak))
-  $density 1.2
-   $ interlace
+   -- $juxBy 0.1 ((fast 2).(every 3 (0.3 <~)).(brak))
+  $ density 1.2
+  $ interlace
      (sound (samples "{808:5*4 ,bd*2 cp*3 gretsch*4}" (slow 1 "4 7 5 ")))
      (sound (samples "{808:3*3 ~,bd:3*2 [sn:3 ~]/5 gretsch*4}" (fast 4 "3 7 5")))
   --  # size (slow 3 "{0.2 0.3 0.5}%7")
   --  # room (slow 3 $ "[0.1(3,5),0.7(4,5)]" )
 
 
-   d1
-      -- $superimpose ((smash 4 [4,2,1,4]).(brak))
-      $juxBy 0.5 ((fast 2).(every 3 ("<0.2> " <~)).(brak))
-      -- $ interlace
-      -- $chunk 12 (rev).(smash 8[7,3,10]).(iter 3).(#gain 1)
-      $ (sound (samples "{808:7*2 808:2 ,bd*2 cp*3 gretsch*4}" (slow 1 "4 7 5 ")))
-        -- (sound (samples "{808:4*3 ~,bd:3*2 [sn:3 ~]/5 gretsch*4}" (fast 4 "3 7 5")))
-      # size (slow 1 "{0.2 0.7 0.5}%4")
-      # room (slow 4 $ "[0.1(3,5),0.7(7,10)]" )
+d1
+  -- $superimpose ((smash 4 [4,2,1,4]).(brak))
+  $juxBy 0.5 ((fast 2).(every 3 ("<0.2> " <~)).(brak))
+  -- $ interlace
+  -- $chunk 12 (rev).(smash 8[7,3,10]).(iter 3).(#gain 1)
+  $ (sound (samples "{808:7*2 808:2 ,bd*2 cp*3 gretsch*4}" (slow 4 "4 7 5")))
+    -- (sound (samples "{808:4*3 ~,bd:3*2 [sn:3 ~]/5 gretsch*4}" (fast 4 "3 7 5")))
+  # size (slow 1 "{0.2 0.7 0.5}%4")
+  # room (slow 4 $ "[0.1(3,5),0.7(7,10)]" )
 
-   hush
--- (slow 1 $ run 4))
--- (stack [(fast 1 $ run 2), "1 2 3 4 5"]))
+hush
+
+=======Stack Parameters========
 
 d1 $ sound (samples "{gretsch*4, gretsch*3 bd*2 sn/2}" (stack [(slow 3 $ run 8), "1 5 2"]))
 
-d1 $ density 4 $sound (samples "<arpy*5 arpy*2>" (every 3 (fast 1) $ run 6) )
-
-d1 $sound "gretsch"
+d1 $ density 4 $ sound (samples "<arpy*5 arpy*2>" (every 3 (fast 1) $ run 6))
 
 hush
+
+======Smash========
+smash
+smash :: Int -> [Time] -> ParamPattern -> ParamPattern
+Smash is a combination of spread and striate - it cuts the samples into the given number of bits,
+and then cuts between playing the loop at different speeds according to the values in the list.
+
+So this:
+
+d1 $ smash 3 [2,3,4] $ sound "ho ho:2 ho:3 hc"
+
+Is a bit like this:
+
+d1 $ slow "<2 3 4>" $ striate 3 $ sound "ho ho:2 ho:3 hc"
 
 d1 $ superimpose (smash 4 [1,2,1,2])  $ sound "bd sn [cp ht] hh"
 
@@ -175,17 +211,17 @@ d1 $ every 4 (rev . chop 8) $ superimpose (iter 4) $
             |+| delay "0.9"
             |+| delaytime "0.02 0.01"
 
+
+========Scan========
+
 d1 $sound (samples "cp*4" (slow 12 $ scan 12))
-
-d1 $ foldEvery [3, 4, 5] (fast 2) $ sound "bd sn kurt"
-
-hush
-
 
 d1 $ sound (samples "[sd8, jvbass]*100" (slow 1 $ scan 8))
 
+========FoldEvery========
 
 
+hush
 
 foldEvery
 foldEvery :: [Int] -> (Pattern a -> Pattern a) -> Pattern a -> Pattern a
@@ -193,7 +229,7 @@ foldEvery transforms a pattern with a function, but only for the given number of
 
 Example
 
-bps(90/120)
+d1 $ foldEvery [3, 4, 5] (fast 2) $ sound "bd sn kurt"
 
 d1
   $ foldEvery [2,3]  ((|+|cutoff (sine1*3000)).(slow "[1 3]").(jux (|+| pan "0.2")).(0.3 <~))
@@ -201,7 +237,7 @@ d1
   $ sound "[app:4*2 ,[bd:4  ~] cp:3/3 bd:3]"
   #cut"1"
 
-  d1 silence
+d1 silence
 
 this is equal to:
 
@@ -241,17 +277,6 @@ d2 $ jux (density 3)
 
 hush
 
-smash
-smash :: Int -> [Time] -> ParamPattern -> ParamPattern
-Smash is a combination of spread and striate - it cuts the samples into the given number of bits, and then cuts between playing the loop at different speeds according to the values in the list.
-
-So this:
-
-d1 $ smash 3 [2,3,4] $ sound "ho ho:2 ho:3 hc"
-
-Is a bit like this:
-
-d1 $ slow "<2 3 4>" $ striate 3 $ sound "ho ho:2 ho:3 hc"
 
 
 
@@ -512,6 +537,10 @@ hush
 
 
 
-mortal
+======Mortal======
 mortal :: Time -> Time -> Time -> [ParamPattern] -> ParamPattern
 Degrade the new pattern over time until it ends in silence
+
+:t mortal
+
+d1
