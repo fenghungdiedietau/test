@@ -1,0 +1,54 @@
+=====303=====
+
+d1
+  -- $ fast 1.5
+  $ n (run 30) # s "303"
+   -- + n (segment 13 $ range 0 15 $ sine)
+
+hush
+
+==== Vdm Note Numbers====
+         0:kick
+        1/3:hihat 1
+         2:snare
+         4:drum1
+         5:drum2
+        6/8:hihat 2
+         7:multi
+         9:clap
+=========================
+
+d2
+  -- $ degradeBy 0.8
+  $ slow (choose [3,0.5,10,17,16,0.8] )
+  $ struct ("t*4 ~ ~ ~ ~ ~")
+  $ n "[7] ~ ~ ~ ~ ~"
+  + gain (segment 10 $ choose [1,1.1..2])
+  -- - n (iter 6 $ run 9)
+  + s "[vdm,303]"
+
+hush
+
+ccn – the CC param number you want to control: ccn 30
+ccv – the value to send to the CC param, ranging from 0 to 127: ccv 64
+
+=======Timeline CC=========
+Mix 14 0-127
+Type Encoder 19 0-11
+Time 3 0-127
+Repeats 9 0-127
+Mix 14 0-127
+Filter 15 0-127
+Grit 16 0-127
+Speed 17 0-127
+Depth 18 0-127
+
+d3 $ stack [
+             ccv "120" # ccn 14
+            ,ccv (slow 3 $ segment 32 $ range 0.1 30 $ saw) # ccn 3
+            ,ccv (slow 10 $ segment 32 $ range 3 100 $ tri) # ccn 3
+            ,ccv  "110"  # ccn 9
+            ]
+  # s "vdm"
+
+========0106=========
