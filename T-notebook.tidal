@@ -534,9 +534,16 @@ do
 hush
 
 -- echo & negate nani?
-  d2 $ every 4 (echo (negate 3/32)) $ n "c5*4" # s "b"
-    # accelerate "-2" # speed "1" # sustain "0.1 ! ! 1" # voice "0.0"
+d2
+  $ every 1 (echo (negate 5/32))
+  $ n "c5*4" # s "arpy"
+  -- # accelerate "-2"
+  # speed "1"
+  -- # sustain "0.1 ! ! 1" # voice "0.0"
 
+:t negate
+
+hush
 
 
 ======Mortal======
@@ -546,3 +553,58 @@ Degrade the new pattern over time until it ends in silence
 :t mortal
 
 d1
+
+-----------End-----------
+Type: end :: Pattern Double -> ControlPattern
+
+end turns a number pattern into a control pattern that changes the playback end position of a sample.
+end takes a pattern of numbers from 0 to 1.
+It controls the end point of each sample. e.g. 0.75 to only play 75% of each sample,
+0.5 to only play 50%, and so on:
+
+d1 $ s "rave/2" # end "<0 0.25 0.5>"
+You can use begin to alter the playback start position of a sample.
+
+--begin + end ==> scan
+
+
+---------------Shape-----------------
+
+Type: shape :: Pattern Double -> ControlPattern
+
+shape produces wave shaping distortion, a pattern of numbers from 0 for no distortion up to 1
+for loads of distortion. It can get very loud if you reach 1 - be careful!
+
+--cutting shape
+
+d1 $ s "drum*8" # squiz "1 2 8 256"
+
+hush
+
+-------repeatCycles
+Type: repeatCycles :: Int -> Pattern a -> Pattern
+
+repeatCycles is function that repeats each cycle of a given pattern a given number of times..
+It takes two inputs, the number of repeats, and the pattern you are transforming.
+For example, to repeat each random cycle of notes three times:
+
+d1 $ repeatCycles 3 $ sound "arpy(5,8)" # n (irand 8)
+
+hush
+
+-----rangex
+Type: rangex :: (Floating b, Functor f) => b -> b -> f b -> f b
+
+rangex is an exponential version of range described above, good to use for frequencies.
+For example, range 20 2000 "0.5" will give 1010 - halfway between 20 and 2000.
+But rangex 20 2000 0.5 will give 200 - halfway between on a logarithmic scale.
+This usually sounds better if you’re using the numbers as pitch frequencies.
+Since rangex uses logarithms, don’t try to scale things to zero or less!
+
+
+---shuffle & scramble
+
+d1 $ sound ( shuffle 3  "bd sn hh")
+
+
+d1 $ slice "0 1 2*2 3 16 32 20 0" 128 $ s "bev"
