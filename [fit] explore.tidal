@@ -152,3 +152,17 @@ d4
   -- + cut 1
 
 hush
+
+------Preplace substitude By Fit
+
+d1
+  $ ifp ((== 0).(flip mod 5))
+  (#coarse "3 5 2 3")(#room "0.4 0.3 0.6").(0.23 <~)
+  $ every 4(|+|speed "10 7 3 ")
+  $ every 3(|+|accelerate "0.2 2.8 6")
+  .(stut' 2 (1/120) (# vowel "{a e i o u}%5"))
+  $ ifp ((== 1).(flip mod 4))
+  (#speed "3 -5 [6 7 8]")(#room "0.6 4").(0.28 <~)
+  $ interlace
+  (sound (fit 1 ["bd","bass3:0","sn:4","808:2"] "[[0(3,8)]/5,0*2 ~ 0,[~ ~ 0] ~ ]" ))
+  (sound "jungle:1 sn bd [808:1 hh*5]*2")

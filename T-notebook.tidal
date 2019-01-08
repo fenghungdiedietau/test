@@ -577,6 +577,8 @@ for loads of distortion. It can get very loud if you reach 1 - be careful!
 
 --cutting shape
 
+
+--------squiz--------
 d1 $ s "drum*8" # squiz "1 2 8 256"
 
 hush
@@ -607,4 +609,115 @@ Since rangex uses logarithms, don’t try to scale things to zero or less!
 d1 $ sound ( shuffle 3  "bd sn hh")
 
 
-d1 $ slice "0 1 2*2 3 16 32 20 0" 128 $ s "bev"
+d1
+-- $ slice "0 1 2*2 3 16 32 20 0" 128
+$ loopAt 8
+$ s "bev"
+
+
+
+-----substruct??-----
+
+d1 $ slow 2 $ weave 16 (pan tri) [
+  substruct "x/4 x/2" $ stut 3 0.9 0.5 $ substruct "x x*2" $ sound "tok(3,8)",
+  substruct "x/8 x/4" $ stut 3 0.9 0.25 $ substruct "x x*2" $ sound "tok:2(5,16)/2"
+  ]
+  # speed "1"
+  # delay "0.6" # delaytime "0.002" # delayfeedback "0.8"
+  # orbit "0"
+
+
+
+--------elem??--------
+
+d1 $ when ((elem '4').show)
+  (striate 4)
+  $ sound "hh hc"
+
+---------chunk-----------
+
+Type: Chunk :: Int -> (Pattern b -> Pattern b) -> Pattern b -> Pattern b
+
+chunk divides a pattern into a given number of parts, then cycles through those parts
+in turn, applying the given function to each part in turn (one part per cycle).
+
+Example:
+
+d1 $ chunk 4 (# speed 2) $ sound "bd hh sn cp"
+
+The below highlights in "" which part of the above pattern has the (# speed 2)
+ function applied to it over four cycles:
+
+"bd "hh sn cp
+bd "hh" sn cp
+bd hh "sn" cp
+bd hh sn "cp"
+
+Another example:
+
+d1 $ chunk 4 (hurry 2) $ sound "bd sn:2 [~ bd] sn:2"
+
+----------chunk'------------dosen't work
+chunk' does the same as chunk but cycles through the parts in the reverse direction.
+
+
+d1
+   $ chunk 4 ((slow "<1.3 1.8 1.3>").("<0.18 0.2 >" <~).(rev))
+   $ jux ((smash 6 [2,4,1,3]).(# speed "1.2").(# accelerate 0.3))
+   $ sound "cp sn bd [808:1 hh:3]"
+
+
+
+-----------stut'--------
+d1
+  $ slow 3
+  $ stut' 5 (0.125/1) (|+| gain (every 3 (0.4 <~) $ "1 2 3 5"))
+  $ sound "bd*5 [~ cp]"
+
+
+---------ifp--------
+ifp decides whether to apply one or another function depending on the result
+of a test function, which is passed the current cycle as a number.
+For example:
+
+d1 $ ifp ((== 0).(flip mod 3))
+  (striate 4)
+  (# coarse "24 48") $
+  sound "hh hc"
+
+This will apply striate 4 for every even cycle, and # coarse "24 48" for every odd one.
+
+Detail: The test function does not rely on anything tidal-specific,
+it uses plain Haskell functionality for operating on numbers.
+That is, it calculates the modulo of 2 of the current cycle which is either 0
+(for even cycles) or 1. It then compares this value against 0 and returns the result,
+which is either True or False. This is what the first part of ifp's type signature
+signifies (Int -> Bool), a function that takes a whole number and returns either True or False.
+
+
+---------preplace---------not in 1.0 anymore , Fit can to the same thing?
+preplace :: (Time, Time) -> Pattern String -> Pattern b -> Pattern b Source #
+
+Preplace (blen, plen) beats values combines the timing of beats with the values of values.
+Other ways of saying this are: * sequential convolution * values quantized to beats.
+Examples:
+d1 $ sound  $ preplace (1,5) "[x? [~ x] x x?,[x(3,7)]/7]" "bd sn:2 808:5 cp 808:7"
+
+d1
+  $ ifp ((== 0).(flip mod 5))
+  (#coarse "3 5 7 ")(#room "1 0.3 0.6").(0.23 <~)
+  $ every 3(|+|speed "4 2 6")
+  -- $ every 4(|+|accelerate "0.2 2.8  9")
+  -- .(stut' 4 (1/2) (# vowel "{a e i o u}%2"))
+  $ ifp ((== 1).(flip mod 3))
+  (#speed "3 -5 ~ 9")(#room "0.6  4").(0.18 <~)
+  $ sound $ preplace (1,3) "[[x(3,8)],x*2 ~ x,[x! ~] ~ ]" "bd bass3 sn 808:2"
+
+-----------what's this---------
+  swingBy
+  swingBy x n divides a cycle into n slices and delays the notes in the second half of each slice by x fraction of a slice . swing is an alias for `swingBy (1%3)`
+
+  envL
+  overlay
+  append
+  hold

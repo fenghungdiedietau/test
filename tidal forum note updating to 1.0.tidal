@@ -339,3 +339,7 @@ d4 $ loopFirst $ struct "x*8?" $ sound "bd" # speed 2 # room 0.1 # sz 0.5
 queryArc "1 2 3" (0,1)
 
 :t queryArc
+
+
+rev "0 1 2 3 4 5 6 7" is the same as "7 6 5 4 3 2 1 0"
+inside 2 rev "0 1 2 3 4 5 6 7" gives "3 2 1 0 7 6 5 4"
