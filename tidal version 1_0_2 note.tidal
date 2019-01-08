@@ -108,11 +108,6 @@ $ sound "[amencutup:6]"
 # cut 0
 
 hush
--- # cut 2
-
-d2 $ sound "sn"
-
-hush
 
 p "gerard" $ sound "hh hh hh hh"
 
@@ -182,23 +177,25 @@ d1 $ sound "amencutup" + n (run (discretise 1 $ range 1 16 $ cF 0 "12" ))
 
    hush
 
--- Yaxu q&a------
+---------- Yaxu q&a----------
+https://www.youtube.com/watch?v=-RXleibnFKM
+
 d1 $ s "bd*10"
    # coarse (segment 8 $ range 1 5 $ sine)
--- this dont work interg
 
-:t coarse
+--this fail because coarse :: Pattern Int -> ControlPattern
+--variable need to be integer
 
 :t (segment 8 $ range 1 5 $ sine)
 
 :t (round <$> (segment 8 $ range 1 5 $ sine))
 
-hush
-
 d1 $ s "bd*10"
    # coarse (round <$> (segment 8 $ range 1 5 $ sine))
 
--- struct  sew
+hush
+
+------ struct & sew --------
 
 d1 $ struct (every 4 inv "t [f t] [t f] f") $ sound "bd" # speed 2
 
@@ -218,7 +215,27 @@ hush
 
 :t struct
 
--- selectF//select
+------------sew------------
+Type: Pattern Bool -> Pattern a -> Pattern a -> Pattern a
+
+sew Uses a pattern of boolean (true or false) values to switch between two other patterns.
+For example the following will play the first pattern for the first half of a cycle,
+and the second pattern for the other half.
+
+d1 $ sound (sew "t f" "bd*8" "cp*8")
+
+The above combines two patterns of strings, and passes the result to the sound function.
+It's also possible to sew together two control patterns, for example:
+
+d1 $ sew "t <f t> <f [f t] t>" (n "0 .. 15" # s "future") (s "cp:3*16" # speed saw + 1.2)
+
+You can also use Euclidean rhythm syntax in the boolean sequence:
+
+d1 $ sew "t(11,16)" (n "0 .. 15" # s "future") (s "cp:3*16" # speed sine + 1.5)
+
+
+---------- selectF//select
+
 d1 $ selectF (cF 0.5 "22") [id,rev, fast 2,(+ speed 2)] $ sound "cp(3,8)"
 
 hush
@@ -229,21 +246,15 @@ d2 $ sound (select (cF 0.5 "21") ["sn:4*3","bd*3"])
 
 
 
-----Yaxu q&a end
-d1 silence
+----------- Yaxu q&a End -----------
 
 hush
-
-p "sitar" $ struct ("[[t t [f ]] f t]") $ sound "sitar"  # cut 1
-
 
 xfade "yes" $ sound "yes:14"
 
 
 
 hush
-
-
 
 xfade "susan" $ sound "gabba(3,8,<0 2 4>)"
 

@@ -22,25 +22,25 @@ would be the same as
 
 d2 $ sound "[bd sn] [sn bd sn]"
 
-
 d2 $ sound "[[bd sn]/[2 3],[bd cp]*[2 3]]"
-
-
-bps 138
-
-
 
 hush
 
-
   -- "x ~ ~ x ~ ~ x ~"
 
+----------distrib-----------
 d1
-  $ distrib [3,5,17]
-  $ sound "[sn bd]*10"
+  $ distrib [(round <$> (slow 18 $ segment 18 $ range 1 3 $ sine)),(round <$> (slow 5 $ segment 16 $ range 5 8 $ sine)),17]
+  $ sound "[bd]*4"
   -- # gain (efull 3 16 "1" "2")
   -- # nudge (range 0 2 $ slow 16 $ sine)
   -- # orbit 1
   -- # release 1
   -- # begin (slow 10 (range 0.1 0.99 $ sine))
   -- # cut 1
+
+d2
+    $ distrib [(round <$> (slow 18 $ segment 18 $ range 1 4 $ saw)),(round <$> (slow 10 $ segment 16 $ range 5 20 $ sine)),17]
+    $ sound "[sn]*2"
+
+:t distrib
