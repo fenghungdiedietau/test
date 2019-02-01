@@ -14,15 +14,6 @@ d1 $ sound "[sn(3,8) cp]"
 
 hush
 
-
-d2
-  $ slow 2
-  $ segment 32
-  $ speed (smooth "[0.2 1 0.8 1.2]")
-  # s "yes:0(3,8)"
-  -- # cut 1
-
-hush
 --d1 ~ d16
 
 
@@ -73,11 +64,36 @@ $ sound "808*10"
 
 hush
 
-d1
--- $ every 3 (sometimes $ within (0,1) $ off (1.2) (stut' 100  1.2 (+ speed "-1")))
-$ every 16 (sometimes $ within (0.2,0.6) $ off (1.3) (+ n (run 12)).(+ speed "0.8"))
-$ n (run "<4 8 4 6>" + smooth ((iter 12)"-10 <0 3 10 210> <10 210 ~>?")) + sound "[amencutup]"
+d2
+$ every 6 ((slow 1.25).(linger 0.125))
+$ every 10 (sometimes $ within (0,0.25) $ off (1.2) (stut' 100  1.2 (+ speed (segment 3.5 $ smooth "-1 2"))))
+-- $ every 16 (sometimes $ within (0.2,0.6) $ off (1.25) (+ n (run 4)).(+ speed "0.8"))
+$ n ( run "<4 8 4 6>"
+      +| smooth ((iter 12)"-10 <0 3 10 210> <10 210 ~>?")
+      + (range 0 10 $ segment 9 $ sine )
+      -- + (slow 114 "0 .. 113")
+      )
++ sound "[amencutup]"
+# gain 1.2
 -- # cut 2
+
+d2 silence
+
+d3
+$ every 10 (sometimes $ within (0,0.2) $ off (1.2) (stut' 90 1.2 (+ speed "-1")))
+$ every 6 (# release 0.49)
+$ every 12 (degrade)
+$ stut' 4 0.65 ((# lpf (range 1200 13000 $ segment 24 $ saw)).(rev))
+-- $ every 16 (sometimes $ within (0.2,0.6) $ off (1.25) (+ n (run 4)).(+ speed "0.8"))
+$ off 0 ((# speed "-1").(# begin (slow 2.5 $ range 0 0.5 $ segment 12 $ saw )).(# release 1))
+$ n (
+      run "<4 8 4 6>"
+      -- +| smooth ((iter 12)" -10 <0 3 10 210> <10 210 ~>?")
+      + (range 0 10 $ segment 9 $ sine )
+      + (slow 114 "0 .. 113")
+      )
++ sound "[yes]"
+# cut 3
 
 --MIDI ctrl
 

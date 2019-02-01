@@ -495,3 +495,20 @@ setcps
 hush
 
 :t inside
+
+---day 10
+
+
+d2
+  $ slow 1
+  $ segment 32
+  $ speed (slow 14 $ segment 20 $ smooth "[-0.14 1 0.8 1.2]")
+  + speed (slow 15 $ smooth  $ segment 200 "-0.05  0.05")
+  # s "[dtna4b:0(3,8,4) dtna4b(2,5,3)]/3"
+  # n (slow 10000 $ run 10000)
+  # rsaw 9 3.5 1.5 30
+  -- # attsin 6 0.2 0.05 40
+  # bsaw 2 0 1 20
+  -- # cut 1
+
+hush
