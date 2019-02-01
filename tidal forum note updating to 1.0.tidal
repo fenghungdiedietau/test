@@ -363,8 +363,8 @@ composition is where I'm on my own. As a result my mode of listening and sense o
 d1 $ chunk "<7 3 5>" (hurry 2) $ s "hh*2 lt"
 -- dont work
 
-d1 $ do x <- "<7 3 5>"
-        chunk x (hurry 2) $ s "hh*2 lt"
+d1 $ do x <- "<7 .. 15>"
+        chunk x (hurry 3) $ s "hh*2 lt"
 
 ----------inside-----------
 Type: inside :: Pattern Time -> (Pattern a -> Pattern b) -> Pattern a -> Pattern b
@@ -384,6 +384,50 @@ d1
   -- $ inside 4 (every 2 rev)
   $ striate 16
   $ sound "bd*8"
+
+
+
+hush
+
+d1
+  $ striate "<1 .. 12>"
+  $ every 3 (hurry 0.9)
+  $ jux (loopAt 0.6 . degrade)
+  $ jux (loopAt 0.6 . degrade . loopAt 2 . rev)
+  $ sound "bottle" +| n "0 .. 10"
+
+-----------------------------------
+what does "rot" do
+
+
+-----------------all-----------------------
+all = streamAll tidal
+
+all ((+| n (slow 2 "1 .. 20")).(+ speed sine))
+
+d1 $ sound "bd"
+
+d2 $ sound "tt4b"
+
+turn off all
+
+all id
+
+hush
+
+------asap-----
+Play one cycle of pattern immediately.
+
+asap $ sound "cp"
+
+
+------runwith?????--------
+d3
+$ degrade
+$ slow 1.5
+$ sometimes (#speed 2)
+$ runWith 4 (density 1.5) $ iter 4 $ n (run 16) # sound "bass1"
+# cut 0 # gain 0.9
 
 
 
