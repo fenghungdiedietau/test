@@ -1,9 +1,6 @@
 
 https://tidalcycles.org/index.php/Combining_pattern_structure
 
-custum dirt sample path>>>>>
-https://tidalcycles.org/index.php/Custom_Samples
-
 
 --cps becomes a function
 
@@ -255,6 +252,8 @@ d1 $ sew "t(11,16)" (n "0 .. 15" # s "future") (s "cp:3*16" # speed sine + 1.5)
 d1 $ selectF (cF 0.5 "22") [id,rev, fast 2,(+ speed 2)] $ sound "cp(3,8)"
 
 hush
+
+--------------------------
 
 :t selectF
 

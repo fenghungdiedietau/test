@@ -432,3 +432,47 @@ $ runWith 4 (density 1.5) $ iter 4 $ n (run 16) # sound "bass1"
 
 
 hush
+
+
+----rot ????-------
+
+try~~~~
+complete SC synth
+
+https://github.com/musikinformatik/SuperDirt/blob/develop/library/default-synths-extra.scd
+
+
+striate (round <$> (segment 1 $ range 1 16 $ cF 1 "cc32"))
+
+
+
+-------------
+yaxu 4:28 AM
+yep ++ does list concatenation and no other magic
+basic arithmetic does indeed work fine on continuous patterns,
+you used to have to do (+) <$> sine <*> saw in the old days,
+now it's just sine + saw
+
+
+[1,2,3,4] ++ [5,6,7,8] === [1,2,3,4,5,6,7,8]
+
+d1
+$ sound "arpy*20"
+# speed ((slow 2 sine) + (slow 2 sine))
+# cut 1
+# cps 1
+
+hush
+
+d1
+$ sound " bd (3,8)"
+# cps ((range 0.95 1.1 $ slow 10 sine) * (discretise 1 $ range 0.15 0.7 $ rand))
+
+
+hush
+
+let tickle = every "<2 3>" (fast "<2 4 6>" . (|+| speed (
+                                                        (range 1 2 $ fast 0.25 tri) *
+                                                        (range 1 3 $ fast 0.125 sine)
+                                                        )
+                                                        ))
