@@ -294,3 +294,32 @@ maj9 nineSus4 ninesus4 9sus4 sixby9 6by9 m6by9 sevenFlat9
 7f9 m7flat9 m7f9 sevenFlat10 7f10 nineSharp5 9s5 m9sharp5
 m9s5 sevenSharp5flat9 7s5f9 m7sharp5flat9 eleven 11 m11
 maj11 elevenSharp 11s m11sharp m11s thirteen 13 m13
+
+let shrand n = (n <~) $ rand
+
+
+d1
+  $ sound "numbers"
+  # n (choose [1 .. 9])
+
+d1
+  $ sound "numbers"
+  # n (choose [1,2 .. 9])
+
+d1
+  $ sound "numbers"
+  + speed (segment 10 (choose [1,1.25 .. 3]))
+
+d1
+  $ sound "numbers"
+  + speed (segment 10 (choose [1,2 .. 3]))
+
+hush
+
+
+d1
+  $ sound "numbers"
+  # n (choose [1 .. 9])
+
+
+d3 $ sew "(3,8)" ( sound "jvbass*4") ( sound "cp(2,8)")
