@@ -548,3 +548,11 @@ hush
     # cut 1
 
 hush
+
+
+d1
+  $ whenmod 8 6 (iter 4)
+  $ striate (iter 6 "[4 3 2 5 <6 12 8>]/3")
+  $ sound "tt4b cp:1"
+  # n (slow 1000 $ run 1000)
+  # cut 1

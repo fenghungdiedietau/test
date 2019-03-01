@@ -8,7 +8,7 @@ number of values are selected each cycle. For example:
 
 setcps(120/60/4)
 
-d1 $ sound (fit 3 ["bd", "sn", "arpy", "arpy:1", "casio"] "0 [~ 1] 2 1")
+d1 $ sound (fit 1 ["bd", "sn", "arpy", "arpy:1", "casio"] "0 [~ 1] 2 1")
 
 --
 固定結構中 "0 [~ 1] 2 1"
