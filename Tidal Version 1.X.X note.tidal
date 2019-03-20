@@ -323,3 +323,59 @@ d1
 
 
 d3 $ sew "(3,8)" ( sound "jvbass*4") ( sound "cp(2,8)")
+
+
+
+------
+
+d1 $ fast 2 $ "bd*8" # speed "-1" # sus 0.1 + 0.05*(slow 4 sine)
+
+vs 
+
+d1 $ fast 2 $ "bd*8" # speed "-1" # sus (slow 4 sine*0.05 + 0.1 )
+
+==
+
+d1 $ fast 2 $ "bd*8" # speed "-1" # sus (0.1 + 0.05*(slow 4 sine))
+
+hush
+
+"1 _ _ 1 _ _ 1 _"
+aka "1@3 1@3 1@2" 
+
+d1
+ $ slow 4
+ $ n (spread toScale [hexDorian, kumai, hirajoshi, iwato] "[0 1 2 3  4 3 2 1  0 -1 0 -1  0@4]")
+ # s "supermandolin" # sustain "[1 1 1 4]"
+
+
+ ----
+ linger' :: Pattern Time -> Pattern Time -> Pattern d -> Pattern d
+
+linger' = tParam2 (\m n p -> _fast (1/n) $ zoomArc (Arc m (m+n)) p)
+
+d1 $ linger' ("<[0 1 2 3 4 5 6 7] [0 1 2 0 1 2 0 1]>"/8) ("1"/8) $ s "bd hh sn:1 hh hh bd sn:1 bd"
+
+hush
+
+d1 $ stack $ map ($ "bd sn") [id, (0.25 <~) . fast 2]
+
+hush
+
+
+d1 $ sound "bd*32" # speed (perlin + 0.5)
+
+
+d1 $ s "cp*16" + gain ( squeezeJoin $ const saw <$> ("1(3,10)" :: Pattern Int) )
+
+let trigger osc string = ( squeezeJoin $ const osc <$> (string :: Pattern Int) )
+
+d1 
+$ sound "cp*<8 16 4 <8 16 8 32>*4>*1.5" 
+# cutoff (trigger (rangex 15000 200 (inside "<1 2>*5" (foldEvery [3,4,5,6] (("[1 2 1]"/8) <~)) 
+$ slow "<1 4 2 0.5>*8" $ saw)) "1 _ _ 1 _ _ 1 _") 
+# resonance ("[8 1 4 1 2 1]*4%6"/16) 
+# release (range 0.05 0.5 (slow 2 $ saw))
+
+hush
+
