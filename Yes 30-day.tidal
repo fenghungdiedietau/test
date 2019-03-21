@@ -7,7 +7,6 @@ let
   a= "[[yes [bd:5 yes] [yes*2]]*[1 [1.25 [1 <1 5>]] <1 3> <3.3 1 2>]*<1.5 2>]"
   b= "[[tt4b [bd:5 tt4b] [tt4b*2]]*[1 [1.25 [1 <5>]]  <3.3 1 2>]*<1.5 2>]"
 d1
-   $ rot "<0 3 1 2 0> + 0 0 2 3"
    $ off 0.5 (
     (# begin (segment "24" $ range 0 1  $ saw ))
    -- .(# accelerate 0.12)
@@ -73,7 +72,7 @@ d1
   -- $ sound (slow 10 $ choose ["yes","bev"])
 
 
-problem task:怎麼自動置換sample set??
+problem:怎麼自動置換sample set??
 
 
 do
@@ -307,9 +306,9 @@ d1 $ loopAt 8 $ rev
 d1
    -- $ loopAt ((slow 8 $ smooth $ segment 1 $ range 1.02 1 $ saw))
    $ rev
-   $ chop 36
-   -- $ linger ((slow 4  $ segment 3 $ range 0.5 1 $ saw))
---   "[<0.25 1 1 [1 0.25]>]"
+   $ chop 2
+   $ linger ((slow 4  $ segment 3 $ range 0.5 1 $ saw))
+  -- "[<0.25 1 1 [1 0.25]>]"
    -- $ stuck [
    --          linger "[0.25]",
    --          linger "1"
@@ -317,9 +316,10 @@ d1
    -- $ stut 3 0.5 1
    $ sound "yes:134"
    - n (slow (136*1) $ run 136)
-   + begin (slow 1 $ segment 16 $ range 0.05 1 $ saw)
+   + begin (slow 1 $ segment 16 $ rangex 0.05 1 $ saw)
    -- # attack 0.06
    # cut 1
+   # cps 1
 
    hush
 
@@ -525,7 +525,7 @@ d2
                   .(rev)
                   .(# speed (slow 1 $ segment 132 $ range 0.75 1 $ saw))
                   )
-  $ rot "<0 1 2 3 1>"
+  $ rot "<0 1>"
   $ struct ("t(3,<5 8>,5) {[f <t f>] t}%3")
   $ sound "dtna4b"
   -- + release (slow 2 $ segment 32 $ range 2.5 1 $ saw)
@@ -534,3 +534,17 @@ d2
   -- # tremolodepth (slow 4 $ segment 20 $ smooth  "0.2 1 0.1")
   # cut 1
   # cps "[1 0.75 1.2 [0.75 ] 1 0.5]/5"
+
+hush
+
+  d1
+    $ rot "<0 1 [1 0] [0 1]>"
+    $ speed (slow "<6 3.25 <2.5 3 10> 1.5 4>" $ segment "<200 215 250 200 100 >" $ smooth ("[1 1.2 1.23 1.2 1.21 1.25 [-4 1]]"))
+    # s "[yes(3,<8 [1 16]>,3)]"
+    # n (slow 95 $ run 95)
+    # rsaw 4 3.5 2.5 10
+    + bsaw "<1>" 0.01 0.99 100
+    # cps (slow 12 $ rangex 0.5 1.25 $ sine)
+    # cut 1
+
+hush
