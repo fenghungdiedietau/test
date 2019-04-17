@@ -61,31 +61,32 @@ d1
 
   hush
 
+  hush
 
   d1
-  $ loopAt 1
-  $ sound"yes"
-  |+ n (slow 10000 $run 10000)
-
-  hush
-  -- $ loopAt (choose [1,2])
-  -- $ sound (slow 10 $ choose ["yes","bev"])
-
+  $ every 2 (loopAt (choose [2,1,3]))
+  $ every 3 (linger 0.5 $ (0.25 <~))
+  $ sound (segment 1 $ slow 1 $ choose ["tt4b" ,"tt4b:1" ])
+  # cut 2
 
 problem:怎麼自動置換sample set??
 
 
 do
-  let a = (choose[1,2,0.5])
-  let b = (choose["yes","sn","bd","cp"])
+  let cell = "t(3,8)"
+      a = (struct (cell) (choose[1,0.25,0.75,0.5]))
+      b = (struct (layer [id , density 1.25] cell )  (choose["dtna4b","sn","byd","cp"]))
   d1
-  $ loopAt a
-  $ sound (b)
-  # n (slow 10000 $run 10000)
+    $ loopAt a
+    $ sound (b)
+    # nl
+    # cut 1
+
+hush
 
 do
-let a = segment 1 $ choose ["bd","yes"]
-d1 $ sound a
+  let a = segment 1 $ choose ["bd","yes"]
+  d1 $ sound a
 
 do
   let a = slow 138 $ segment 1 $ choose ["yes","tt4b"]
@@ -94,6 +95,13 @@ do
     $ sound a
     + n (slow 138 (run 138))
 
+d1 
+  $ cat [sound "dtna4b" , sound "yes"]
+  # nl
+
+
+d1 $ repeatCycles 4  $ cat [sound "dtna4b" , sound "yes"] # nl
+  
 hush
 --day4
 
@@ -103,6 +111,7 @@ d1
    -- $ every 3 (+ n (slow (range 0.75 2 $ cT 1 "13" )  $ segment 13 (irand 2)))
    $ every 4 (within (0.75,1) (fast 0.75 . (# speed "-1")))
    $ every 5 (within (0,0.15)((+ accelerate ((sine))).(rev)))
+  --  $ roll'' 
    ----random picking n samples in sample folder every (1/16)cycles
    $ loopAt 1
    $ sound "[breaks125,tt4b]"
@@ -119,14 +128,14 @@ d1
    |+ release (range 0.0075 6 $ cF 1 "13" )
    # gain "1.3"
 
-once $ s "momo" # gain "1.2" + n (irand 1)
+asap $ s "tt4b" # gain "1.2" + n (range 0 130 $ shrand 4)
 
-  hush
+hush
 
 d4 $ spaceOut [1.8,0.3,0.6]
    -- $ s "[bd*4,cp]"
    $ sound (fit 2 ["bd", "bd", "cp", "bd" , "bd"] "[0*6,1]")
-   -- # cps (iter 10 (segment 12 $ run 1))
+   # cps (iter 10 (segment 12 $ run 1))
 
 hush
 
@@ -208,7 +217,7 @@ d1
   + begin (fast 1 $ smooth $ segment 16 $ range 0.1 0.9 $saw)
   + gain (fast 1 $ smooth $ segment 16 $ range 0.4 1 $saw)
   -- # release 0.15
-  # hold 0.1
+  # hold 0.4
   + release (segment 20 $ (iter 16) (smooth "[0.2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]"))
   + pan "[0.7 0.3]/2.05"
   + n (slow 136 (run 136))
@@ -265,7 +274,7 @@ hush
 
 d1 $ weave 12 ((tremolodepth (range 0.5 0.8 $ sine)))
                    [
-                    struct (every "<4 3>" (slow 1.5) "[[t f <f t>][t f f] t [t [f t]]]") $
+                    struct (every "<3 4>" (slow 1.5) "[[t f <t>][t f] t [t [f t]]]") $
                     sound "tt4b"
                     + begin
                     (
@@ -297,7 +306,22 @@ d1 $ weave 12 ((tremolodepth (range 0.5 0.8 $ sine)))
 hush
 
 -- day 09 --start from this
-d1 $ loopAt 8 $ rev $ linger 0.5 $ chop 64 $ sound "bev" # cps 0.65
+d1 $ loopAt 8 $ rev $ linger 0.5 $ chop 32 $ sound "bev" # cps 0.5
+
+d1 
+  -- $ repeatCycles 8   
+  -- $ every 4 rev
+  $ loopAt 2
+  $ linger (segment 8 (choose [0.5,0.75,0.25,0.125,0.625])) 
+  $ chop (segment 2 (choose [64,48,52])) 
+  $ sound "tt4b" 
+  # cps 1.2
+  -- # lpf 3000
+  -- # bpf "[110,220,440]"
+--  |+ bpf ((slow 12 $ range 0 3000 $ sine ))
+  # bpq 0.4
+  # nl
+  # cut 0
 
 d1 $ loopAt 8 $ rev
    $ linger ((slow 8 $ smooth $ segment 1 $ range 0.5 1 $ saw))
@@ -308,7 +332,7 @@ d1
   --  $ loopAt ((slow 8 $ smooth $ segment 1 $ range 1.02 1 $ saw))
    $ rev
    $ chop 2
-   $ linger ((slow 4  $ segment 3 $ range 0.5 1 $ saw))
+   $ linger ((slow 1  $ segment 3 $ range 0.5 1 $ saw))
   -- "[<0.25 1 1 [1 0.25]>]"
    -- $ stuck [
    --          linger "[0.25]",
@@ -320,7 +344,7 @@ d1
    + begin (slow 1 $ segment 16 $ rangex 0.05 1 $ saw)
    -- # attack 0.06
    # cut 1
-   # cps 1
+   # cps 0.4
 
    hush
 
