@@ -474,6 +474,11 @@ hush
 let tickle = every "<2 3>" (fast "<2 4 6>" . (|+| speed (
                                                         (range 1 2 $ fast 0.25 tri) *
                                                         (range 1 3 $ fast 0.125 sine)
-                                                        )
-                                                        )
-                           )
+                                                        )))
+
+
+-----YAXU splice is fun
+
+d1 $ splice 64 "1(3,8) [3 5] [2 5] 5*4" "bev"`
+
+d1 $ jux rev $ splice 64 (iter 4 $ "<1 1> <3 5> <2 5*2> 5" + "<0 16 32*2 48>") "bev"` 

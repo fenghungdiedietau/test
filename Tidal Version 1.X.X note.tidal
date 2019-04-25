@@ -335,9 +335,9 @@ d2 $ degrade $ s "arpy*16"
 
 hush
 
-d3 $ degrade $ s "byd:2*16"
+d3 $ degrade $ s "byd:2*16" # shrand 2
 
-d4 $ degrade $ s "arpy*16"
+d4 $ degrade $ s "arpy*16" # shrand 3 
 
 hush
 
@@ -345,7 +345,7 @@ d1 $ s (segment 10 (choose ["arpy","byd"])) # shrand 2
 
 d1 $ s (segment 10 (choose ["sn","cp"])) |* n ((21 <~) $ rand)
 
-d2 $ s (segment 10 (choose ["sn","cp"])) |* n ((2 <~)  $ rand)
+d2 $ s (segment 10 (choose ["sn","cp"])) |* n ((4) <~)  $ rand) # shrand 44
 
 echophon 11:07 AM tidal
 
