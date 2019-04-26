@@ -337,7 +337,7 @@ hush
 
 d3 $ degrade $ s "byd:2*16" # shrand 2
 
-d4 $ degrade $ s "arpy*16" # shrand 3 
+d4 $ degrade $ s "arpy*16" # shrand 3
 
 hush
 
@@ -416,3 +416,19 @@ $ slow "<1 4 2 0.5>*8" $ saw)) "1 _ _ 1 _ _ 1 _")
 # release (range 0.05 0.5 (slow 2 $ saw))
 
 hush
+
+
+d1
+  $ sound "bd*2 cp:4(5,8,<0 2>)"
+  # gain (trigger 1 $ slow 2 envL)
+
+d1
+  $ sound "bd*2 cp:4(5,8,<0 2>)"
+  # djf (trigger 2 $ range 0.1 0.9 $ slow 2 envL)
+
+d1
+  $ sound "cp*32"
+  # gain ( range 0.7 1 $ every 3 (slow 2) $ otrigger saw " 1 _ _ _ 1 _ _ 1 " )
+
+d1
+  $ sound "cp*12" # gain ( range 0.7 1 $ trigger 1 saw )
