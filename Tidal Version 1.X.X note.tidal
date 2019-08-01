@@ -11,11 +11,9 @@ d1 $ sound "[sn(3,8) cp]"
 
 hush
 
---d1 ~ d16
+---start a track from d1 ~ d16
 
-
-
-d1 $ note ((scale "dorian" $ "{6 . 2 3 4 , ~ . ~ [10 8] 9 . 10 11 ~ 8}%2")) #s "gtr" # gain 1
+d16 $ note ((scale "dorian" $ "{6 . 2 3 4 , ~ . ~ [10 8] 9 . 10 11 ~ 8}%2")) #s "gtr" # gain 1
 
 hush
 
@@ -35,30 +33,22 @@ d1
 
   hush
 
-  d1
-  $ density 0.2
-  $ n (run ( segment 2 $ range 0 10 $ cF 1 "12")) # sound "[cp]"
-
-  hush
+  d1 $ n (run (segment 8 $ range 0 10 $ cF 1 "12")) # sound "[cp]"
 
   d1
   $ density ( segment 2 $ range 0 1 $ cT 1 "13")
   $ n (run ( segment 2 $ range 0 10 $ cF 1 "12")) # sound "[bd]"
 
-
-
-  d2 $  sound "[cp]"
-
 --smooth / smooth
 
-d1
--- $ slow ("[0*10 0*10 2*20 1]" + smooth "0 10 200")
-$ sound "808*10"
--- + n (scan 10)
--- + speed ("0*10" + smooth "-1 0.9 1.1" )
-# n (cF 1 "12")
--- + speed "0 0 2*2 1"
-+ cut 1
+do
+  let magnifi = segment (slow 15 $ run 15)
+  d1
+    $ sound "808*100"
+    + speed (slow 20   $ magnifi $ smooth "-1 0.9 1.1 0" )
+    # n     (slow 20.1 $ magnifi $ smooth "4 5 8 0")
+    -- # n (cF 1 "12")
+    # cut 1
 
 hush
 
@@ -91,7 +81,9 @@ $ n (
       + (slow 114 "0 .. 113")
       )
 + sound "[yes]"
-# cut 3
+# cut 1
+
+hush
 
 --MIDI ctrl
 
@@ -511,5 +503,12 @@ d1 $ sound "hh*16" # gain (euclidFull 3 "<8 9 4>" "1 0.7" (choose [0.8,0.1,0.9])
        d3 $ every 4 (|+| up 1) $ sound "arp/2" # cut 1 # amp 1
        d4 $ stut' 2 (1/8) (|*| speed (choose [1, -0.5, 2])) $ sound "arp:1(3,8,2)" # end (slow 2 $ range 0.0125 0.125 $ sine) # amp 0.4
        d5 $ every 4 (|+| up 1) $ n (choose [0 .. 5]) >| sound "[bass1] [bass1 _ ~ bass1] ~ [bass1 _ ~ <~ bass1>]" # up "1 [8 1] 1 8"
+
+  hush
+
+  d1 $ sound "bd*2 cp:4(5,8,<0 2>)"
+  # djf (trigger 1 $ range 0.1 0.9 $ slow 2 envL)
+  # cps 1
+
 
   hush

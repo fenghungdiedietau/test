@@ -473,11 +473,18 @@ $ inside 2 (
             -- .(# gain (fast 1 $ "[0.75 1.2]"))
             -- .((|+ end (slow "<2 2.25>" $ (run 8)*0.1 )))
             )
-$ striate " [<8 16> [16]]"
+$ striate "[8]"
 $ sound "[yes]"
-# n (slow 136 $ run 136)
+# nl
 -- # cut 2
 # cps "[0.33 0.35?]"
+-- # djf 2000
+
+:t djf
+
+hush
+
+-- # djf (trigger 1 $ range 0.1 0.9 $ slow 5 envL)
 -- # cps (slow 72 $ segment 72 $ range 0.5 2$ saw )
 
 hush
