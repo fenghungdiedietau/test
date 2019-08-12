@@ -39,7 +39,7 @@ d1
   $ density ( segment 2 $ range 0 1 $ cT 1 "13")
   $ n (run ( segment 2 $ range 0 10 $ cF 1 "12")) # sound "[bd]"
 
---smooth / smooth
+--smooth 
 
 do
   let magnifi = segment (slow 15 $ run 15)
@@ -89,30 +89,6 @@ hush
 
 setcps (1)
 
-d1
--- -- $ slow 20
--- $ every 6 ((rev).(# pan (range 0.15 0.85 $ rand)))
--- $ every 7 ((rev).(# pan (range 0.25 0.75 $ rand)).(+ accelerate (segment 1 $ range 0 0.2 $ cF 1 "13" )))
--- $ every 16 (sometimes $ within (0.2,0.6) $ off (1.3) (+ n (run 32)).(+ speed "0.91"))
--- $ slow "[1,2..10]"
--- $ loopAt 1
-$ chop 10
--- $ striate 10
--- (segment 2 $ range 0.1 0.9 $ cF 0.4 "12")
- -- (scan 120)
--- "<10 11 12 9 8 11 30 12 1 3 5 12>"
--- "[40(3,8),10(11,24,14),30(3,8),100(11,24,14)]"
--- "[25(3,8)|%|5,120(3,8)*4]|%|10"
--- $ n (run "<4 8 4 6>" + smooth ((iter 14)"-1 <0 3 10 210> <10 210 ~>"))
-$ sound "[amencutup:6]"
--- $ every 3 (sometimes $ within (0,1) $ off (1.2) (stut' 100  1.2 (+ speed "-1")))
--- # cps (slow (segment 12 $ range 1 200 $ cT 5 "12" )  $ segment 1 $ range 0.8 3 saw)
--- + attack (segment 1 $ range 0 0.1 $ cF 1 "13" )
--- + hold "5"
--- + release "2"
--- + lpf (segment 10 $ range 250 4500 $ cF 300 "12" )
-# cut 0
-
 hush
 
 p "gerard" $ sound "hh hh hh hh"
@@ -125,7 +101,6 @@ a continuous pattern. Without segment the samples will get triggered at
 an undefined frequency which may be very high.
 
 hush
-
 
 
 d1 $ fast 0.5 $ iter 4 $ sound "numbers:1 numbers:2 numbers:3 numbers:4"
@@ -478,12 +453,12 @@ d1 $ sound "hh*16" # gain " [1(3,8),0.5(^3,8)]"
 
 d1 $ sound "hh*16" # gain (euclidFull 3 "<8 9 4>" "1 0.7" (choose [0.8,0.1,0.9])) 
 
-   hush
+hush
 
-  :t euclidFull
+:t euclidFull
 
 
-  d1 $ n (euclidFull 6 15 "1" "0" |+| euclidFull 7 14 "3" "5") # s "supersaw" # cps 0.2
+ d1 $ n (euclidFull 6 15 "1" "0" |+| euclidFull 7 14 "3" "5") # s "supersaw" # cps 0.2
 
 
   d1 $ gain (euclidFull "<3 12 5 6>" "8 16" "0.3" "0 2 1.6 1") # s "808" # cps 0.5
@@ -506,9 +481,63 @@ d1 $ sound "hh*16" # gain (euclidFull 3 "<8 9 4>" "1 0.7" (choose [0.8,0.1,0.9])
 
   hush
 
+
   d1 $ sound "bd*2 cp:4(5,8,<0 2>)"
   # djf (trigger 1 $ range 0.1 0.9 $ slow 2 envL)
   # cps 1
 
+--1.1.2
+--BootTidal.hs now sends d1 .. d12 to orbits 0 .. 11 respectively @yaxu
+  
+d1 $ s "bd ~" # room 0.9 --( # orbit 1)
 
-  hush
+d2 $ s "~ bd" # room 0   --( # orbit 2)
+
+d1 silence  
+
+--markov chain support with runMarkov and markovPat @bgold-cosmos
+--waiting for tutorial
+
+runMarkov n tmat xi generates a Markov chain (as a list) of length n
+using the transition matrix tmat starting from initial state xi.
+Each entry in the chain is the index of state (starting from zero).
+Each row of the matrix will be automatically normalized. For example:
+
+runMarkov 8 [[2,3], [1,3]] 0
+
+will produce a two-state chain 8 steps long, from initial state 0, where the
+transition probability from state 0->0 is 2/5, 0->1 is 3/5, 1->0 is 1/4, and
+1->1 is 3/4.
+
+markovPat n xi tp generates a one-cycle pattern of n steps in a Markov
+chain starting from state xi with transition matrix tp. Each row of the
+transition matrix is automatically normalized. For example:
+
+tidal> markovPat 8 1 [[3,5,2], [4,4,2], [0,1,0]]
+
+(0>⅛)|1
+(⅛>¼)|2
+(¼>⅜)|1
+(⅜>½)|1
+(½>⅝)|2
+(⅝>¾)|1
+(¾>⅞)|1
+(⅞>1)|0
+
+--add setI, setF et al to BootTidal.hs for setting state variables @yaxu
+set state with external controller
+
+
+--new stitch function @yaxu
+--stitch is similar to sew, t the first pattern, f the second.
+--with stitch, the structure comes from the boolean pattern
+:t stitch
+
+d1 $ stitch bizy (s"byd*5") (s"byd*4" # speed 2) 
+
+d1 $ sew bizy (s"byd*5") (s"byd*4" # speed 2)  
+
+hush
+
+
+hush

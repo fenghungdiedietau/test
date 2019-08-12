@@ -1,12 +1,10 @@
-cps 0.8
-
 d2
   $ sometimes ((swingBy (3/2) 12).(degradeBy 0))
   $ s (iter 8 (efull 3 8 "bd cp" "bass"))
   # n (slow 12 (scale 0 10 $ sine1))
   # gain 1
 
-    hush
+hush
 
 --Sequence parser
 Now you can give * and / subpatterns in the parser.

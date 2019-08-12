@@ -8,28 +8,31 @@ number of values are selected each cycle. For example:
 
 setcps(120/60/4)
 
-d1 $ sound (fit 1 ["bd", "sn", "arpy", "arpy:1", "casio"] "0 [~ 1] 2 1")
+d1 $ sound (fit 2 ["bd", "sn", "arpy", "arpy:1", "casio"] "0 [~ 1] 2 1")
 
---
-固定結構中 "0 [~ 1] 2 1"
-置入不同採樣"bd", "sn", "arpy", "arpy:1", "casio"
-由fit n 指定數字與採樣的對映
-n=3,cycle 1 ,0 1 2 對映 bd sn arpy
-    cycle 2 ,0 1 2 對映 arpy:1 casio (回到列表的頭) bd
 
-n=2,cycle 1 ,0 1  對映 bd sn
-    cycle 2 ,0 1  對映 arpy arpy:1
-    cycle 3 ,0 1  對映 arpy:1  bd
-
-n=1, vermona perfourmer?
-    cycle 1 , 0  對映 arpy:0
---
+hush
 
 --interlace pattern?
 d1
-  -- $ slow 2
-  $ sound (pfit "<5 3>" ["bd", "linnhats", "cp", "808:3" , "tink"] "0*2 [~ 1] [{0 1 2 3}%16] 4")
-  -- # n (slow 3 (range 0 10 $ sine))
+$ slow 2
+$ sound (pfit "<2 1 3>" ["bd", "linnhats", "cp", "808:3" , "808hh"] "0*2 [~ 1] [{0 1 2 3}%16] 4")
+
+
+d1
+  $ fast  2
+  $ every 4 (within (0.8,1) (sometimes (# speed (-1))))
+  $ every 5 (within (0.5,0.7) (swingBy (1/3.3) 5).(fast 1.21))
+  $ every 3 brak
+  $ sound (pfit "<2 8 13 6 7>" ["bd", "byd", "808", "popkick:3" , "[808lt,jvbass]"] 
+            (sew (slow 2 $ rev $ bizy) (sew (slow 2 $ bizy) ("0*3") ("1*4")) (sew (slow 2 $ bizy) ("2*4") ("3*5"))
+            )         
+          )
+  # n (slow 10 $ run 10)
+  + speed 1.3
+  # gain 1.25
+
+hush
 
 d1 silence
 
@@ -163,7 +166,7 @@ d1
   $ ifp ((== 1).(flip mod 4))
   ((#speed "3 -5 [6 7 8]").(rev))(#room "0.6 4").(0.27 <~)
   $ interlace
-  (sound (pfit "3 4 10" ["bd","bass3:0","sn:4","808:2"] "[[0(3,8)]/5,0*2 ~ 0,[~ ~ 0] ~ ]" ))
+  (sound (pfit "<3 4 10>" ["bd","bass3:0","sn:4","808:2"] "[[0(3,8)]/5,0*2 ~ 0,[~ ~ 0] ~ ]" ))
   (sound "jungle:1 sn byd [808:1 hh*5]*2")
 
   hush

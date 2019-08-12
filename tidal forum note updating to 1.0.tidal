@@ -1,29 +1,25 @@
-d1 $ n (scale "<minPent majPent>" "0 1 2 3 4") # sound "supermandolin"
-
 d1 $ overlay (sound "bd*4") $ sound "hh*2"
 
-d2 $ superimpose ((slow 10) . (# s "bd")) $ n "0*9" # s "hh"
+d2 $ superimpose ((slow "<2 1 2>") .(fast 1).(# accelerate (-2))) $ n "0*4" # s "hh"
 
 hush
 
 ------danielmkarlsson
-cps (-1)
-
 d1
 $ (247 <~)
 $ fast 1.25
-$ s "ng:1(5,9)?"
-# pan (slow 0.1 $ scale 0 0.5 $ rand)
+$ s "bd:1(5,9)?"
+# pan (slow 0.1 $ range 0 0.5 $ rand)
 # rel (slow 0.11 $ choose [0.1,0.1,0.1,0.1,2])
-# hpf (slow 0.12 $ scalex 200 20000 $ rand)
+# hpf (slow 0.12 $ rangex 200 20000 $ rand)
 # up (slow 0.13 $ choose [-6,-3,0,0,0,0,3,6,9,12])
-# gain (slow 0.14 $ scalex 0.5 2 $ rand)
+# gain (slow 0.14 $ rangex 0.5 2 $ rand)
 
 d2
 $ (378<~)
 $ fast 1.25
-$ s "ng:2(5,9)?"
-# pan (slow 0.15 $ scale 0.5 1 $ rand)
+$ s "bass(5,9)?"
+# pan (slow 0.15 $ range 0.5 1 $ rand)
 # rel (slow 0.16 $ choose [0.1,0.1,0.1,0.1,2])
 # gain 1
 
@@ -31,24 +27,24 @@ d3
 $ (691<~)
 -- $ degradeBy (1/4)
 $ s "ng:3"
-# pan (slow 0.17 $ scale 0.25 0.75 $ rand)
+# pan (slow 0.17 $ range 0.25 0.75 $ rand)
 # rel (slow 0.18 $ choose [0.2,0.2,0.2,0.2,2])
-# hpf (slow 0.19 $ scalex 20 20000 $ rand)
+# hpf (slow 0.19 $ rangex 20 20000 $ rand)
 -- # up ("[11,13,16,18,20,23,27,30,32]" + choose [-24,-12,0,0,0,0,12,24])
 # orbit 1
 # delay (slow 0.2 $ choose [0,0,0,0.125,0.125,1])
 # delayfb (slow 0.21 $ choose [0.125,0.125,1])
 # delayt (slow 0.22 $ choose [(1/12),(1/12),(1/6)])
-# gain (slow 0.23 $ scalex 0.125 2 $ rand)
+# gain (slow 0.23 $ rangex 0.125 2 $ rand)
 
 d4
 $ (367<~)
 $ fast (choose [1.125,1.375,1.375,1.375,1.375])
 $ degradeBy 0.9
 $ s "ng:2"
-# lpf (slow 0.24 $ scalex 20 10000 $ rand)
+# lpf (slow 0.24 $ rangex 20 10000 $ rand)
 -- # up (slow 0.25 $ choose [3,3,3,3,6,9,12,15,18,24])
--- # gain (slow 0.26 $ scalex 0.5 1.25 $ rand)
+-- # gain (slow 0.26 $ rangex 0.5 1.25 $ rand)
 
 d5
 $ (667<~)
@@ -57,13 +53,13 @@ $ s "ng"
 # begin (slow 0.27 $ rand)
 # end (slow 0.28 $ rand)
 # att (slow 0.29 $ rand)
-# rel (slow 0.3 $ scale 1 4 $ rand)
+# rel (slow 0.3 $ range 1 4 $ rand)
 # loop (irand 5)
-# nudge (slow 16 $ scale 0 3 $ sine)
+# nudge (slow 16 $ range 0 3 $ sine)
 # pan (slow 16 $ sine)
 # cut (slow 0.31 $ choose [0,1,1,1])
-# lpf (slow 0.32 $ scalex 20 20000 $ rand)
-# gain (slow 0.33 $ scalex 0.5 1 $ rand)
+# lpf (slow 0.32 $ rangex 20 20000 $ rand)
+# gain (slow 0.33 $ rangex 0.5 1 $ rand)
 # up (-1.25)
 
 cps (0.2)
@@ -177,8 +173,8 @@ cps 1
        $ spaceOut ( (map (1/) [1,3.5..8] ) ++ (map (1/) [8,7.75..1]))
              $ s "ng:3 ng"
              # cut "0"
-             # begin (scale 0.04 0.2 $ sine)
-             -- # sustain (scale 0.2 1 $ sine1)
+             # begin (range 0.04 0.2 $ sine)
+             -- # sustain (range 0.2 1 $ sine1)
              # gain "1.5"
 
 
@@ -203,7 +199,7 @@ hush
   |+| gain (slow 2 $ sine)
   # pan (slow 0.1 $ range 0 0.5 $ rand)
   # rel (slow 0.11 $ choose [0.1,0.1,0.1,0.1,2])
-  -- # hpf (slow 0.12 $ scalex 200 20000 $ rand)
+  -- # hpf (slow 0.12 $ rangex 200 20000 $ rand)
   # up (slow 0.13 $ choose [-6,-3,0,0,0,0,3,6,9,12])
 
 hush
@@ -214,19 +210,19 @@ hush
   ok....
   I have something like this:
   `stut' 8 0.125 id $ s "bd"`
-  but I want the "0.125" part to be a pattern scaled on a sine function
+  but I want the "0.125" part to be a pattern ranged on a sine function
   something like:
-  `stut' 8 (scale 0.001 0.1 $ slow 20 sine) id $ s "bd"`
+  `stut' 8 (range 0.001 0.1 $ slow 20 sine) id $ s "bd"`
   but that doesn't work. is this possible?
 
 ----
   yaxu 下午5點44分
-  @kindohm try `stut' 8 (toRational <$> (scale 0.001 0.1 $ slow 20 sine)) id $ s "bd"`
+  @kindohm try `stut' 8 (toRational <$> (range 0.001 0.1 $ slow 20 sine)) id $ s "bd"`
   or this `sine'` seems to work without the torational bit
   `let sine' = realToFrac <$> sine`
   actually it seems like it would be good to generalise sine, square, rand, etc in this way so they work both for float and rational (time) numbers
   travelling atm but if someone has a moment to make a github issue on that, it'd be good!
-d1 $stut' 8 (toRational <$> (scale 0.001 0.1 $ slow 20 sine)) id $ s "bd"
+d1 $stut' 8 (toRational <$> (range 0.001 0.1 $ slow 20 sine)) id $ s "bd"
 
 :t stut'
 
@@ -385,17 +381,6 @@ d1
   $ striate 16
   $ sound "bd*8"
 
-
-
-hush
-
-d1
-  $ striate "<1 .. 12>"
-  $ every 3 (hurry 0.9)
-  $ jux (loopAt 0.6 . degrade)
-  $ jux (loopAt 0.6 . degrade . loopAt 2 . rev)
-  $ sound "bottle" +| n "0 .. 10"
-
 -----------------------------------
 what does "rot" do
 
@@ -411,7 +396,7 @@ d2 $ sound "tt4b"
 
 turn off all
 
-all id
+all = id
 
 hush
 
@@ -421,18 +406,14 @@ Play one cycle of pattern immediately.
 asap $ sound "cp"
 
 
-------runwith?????--------
+------runwith??--------every?
 d3
-$ degrade
-$ slow 1.5
-$ sometimes (#speed 2)
-$ runWith 4 (density 1.5) $ iter 4 $ n (run 16) # sound "bass1"
-# cut 0 # gain 0.9
-
-
+$ runWith 4 (# speed 5) 
+$ sound "bd"
 
 hush
 
+:t runWith
 
 ----rot ????-------
 
@@ -464,21 +445,15 @@ $ sound "arpy*20"
 
 hush
 
-d1
-$ sound " bd (3,8)"
-# cps ((range 0.95 1.1 $ slow 10 sine) * (discretise 1 $ range 0.15 0.7 $ rand))
-
-
-hush
-
 let tickle = every "<2 3>" (fast "<2 4 6>" . (|+| speed (
                                                         (range 1 2 $ fast 0.25 tri) *
                                                         (range 1 3 $ fast 0.125 sine)
                                                         )))
 
+hush
 
 -----YAXU splice is fun
 
-d1 $ splice 64 "1(3,8) [3 5] [2 5] 5*4" "bev"`
+d1 $ splice 64 "1(3,8) [3 5] [2 5] 5*4" "bev"
 
-d1 $ jux rev $ splice 64 (iter 4 $ "<1 1> <3 5> <2 5*2> 5" + "<0 16 32*2 48>") "bev"` 
+d1 $ tickle $ jux rev $ splice 64 (iter 4 $ "<1 1> <3 5> <2 5*2> 5" + "<0 16 32*2 48>") "bev"
