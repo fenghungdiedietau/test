@@ -1,0 +1,144 @@
+--my source is kong audio, i use gu zheng II as my instrument
+
+--List of chords
+6by9 7f10 7f5 7f9 7s5 7s5f9 7sus2 7sus4 9s5 9sus4 aug dim dim7 dom7 eleven elevenSharp five m11 
+m11s m11sharp m13m6 m6by9 m7f5 m7f9 m7flat5 m7flat9 m7s5 m7s9 m7sharp5 m7sharp5flat9 m7sharp9 m9 
+m9s5 m9sharp5 maj maj11 maj7 maj9 major major7 min min7 minor minor7 msharp5 nine nineSharp5 
+nineSus4 ninesus4 one plus sevenFlat10 sevenFlat5 sevenFlat9 sevenSharp5 sevenSharp5flat9 sevenSus2 
+sevenSus4 sharp5 six sixby9 sus2 sus4 thirteen
+
+
+d1 $ n (arp "pinkyup" "c'm13m6'0") # s "midi" # midichan 0
+
+
+--C3 = n 0
+--pipa n = -17 ~ 26
+            g1 ~ d5
+
+d1
+$ slow 1 
+$ n (scale "yu" "[-17 .. 26]/5") 
+# s "midi" # midichan 0
+
+
+
+---- this start from c3
+d1 
+$ n (arp "pinkyup" ("<c f g>" |+ "'maj'4")) 
+# s "midi" # midichan 0
+
+-----scale
+d1 
+$ n (scale "major" "0 .. 12") 
+|- n 12 
+# s "midi" # midichan 0
+
+----major has 7 notes// 0 .. 14(notes) means 2 octave
+d1 
+$ n (scale "major" "0 .. 14") 
+|- n 12 
+# s "midi" # midichan 0
+
+
+----yu has 5 notes//
+d1 
+$ n (scale "<yu>" "0 .. 10") 
+|- n 12 
+# s "midi" # midichan 0
+
+
+----五聲音階
+d1 
+$ n (scale "<gong shang jiao zhi yu>" "0 .. 10") 
+|- n 12 
+# s "midi" # midichan 0
+
+---- scale is not a note filter
+
+--  c1  ~  e6
+n: (-24)~ (40)
+
+hush
+
+scaleList
+
+---------------------------------
+yu (-10 ~ 16)
+
+d1 
+$ n (scale "yu" "-10 .. 16" ) # s "midi" # midichan 2
+-----------------------------
+gong (-10 ~ 17)
+
+d1 
+$ n (scale "gong" "-10 .. 17" ) # s "midi" # midichan 2
+
+---------------------------
+shang (-10 ~ 16)
+
+d1
+$ n (scale "shang" "-10 .. 16" ) # s "midi" # midichan 2
+
+----------------------------
+jiao (-10 ~ 16)
+
+d1
+$ n (scale "jiao" "-10 .. 16" ) # s "midi" # midichan 2
+
+----------------------------
+zhi (-10 ~ 16)
+
+d1
+$ n (scale "zhi" "-10 .. 16" ) # s "midi" # midichan 2
+
+---------------------------d1
+
+d1
+$ swingBy (1/3) 5 
+$ within (0.2,0.5) (off 0.1 ((degradeBy 0.9).(# midichan 0)))
+$ within (0.51,0.7) (off 0.25 ((degradeBy 0.67).(# midichan 0)))
+$ superimpose ((degrade).(# gain (osc64 5.5 1.28 0.8 sine)).(+ n "7"))
+$ every 2 (palindrome)
+$ n (scale "<gong shang jiao zhi yu yu>" "<[-10 .. 16][<10 9 8 10>.. <0 -5 -8>]*[3]>" ) 
+# s "midi" 
+# midichan 2
+# cps 0.3
+# sustainpedal 1
+# gain (osc64 3 0.8 1.28 sine)
+# cps "[0.7 0.5 0.4 0.3]"
+/ cps 2.4
+
+hush
+
+
+
+hush
+
+d1 
+$ every (irand 4) (within (0.5,0.8) (degradeBy 0.1))
+$ every 3 (fast 2).(palindrome)
+$ within (0.2,0.5) (degradeBy 0.3)
+$ every 3 (within (0  ,0.2) (degradeBy 0.7).(sometimes (|- n 12))) 
+$ swingBy (1/2.4) 12
+$ sometimes (off 0.5 (# midichan (choose [2,3,4,5])))
+$ every 4 (# gain (osc64 4 0.8 1.2 sine))
+$ n (scale "<gong>" (slow "<2 2.21 3.2>" "[0 .. 9]? [<14 13> .. <-5 -4>][<-6 -11> .. <12 11 6>]? "))
+|- n "<12>" 
+# s "midi" # midichan 2
+# legato (osc64  3.3 2 0.1 sine)
+# cps "0.4 0.3 0.2 0.15"
+* cps 1
+# slide 0
+
+hush
+
+d2
+
+
+
+scaleList 
+
+d1
+$ n "26 20" # s "midi" # midichan 2
+
+hush

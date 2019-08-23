@@ -1,0 +1,112 @@
+
+
+
+d1 
+--    $ jux (# attack 0.05)
+--    $ struct (binary (slow 255 $ run 255)) 
+   $ sound "mp03*8" 
+   # gain 2
+   # attack 0.02
+   # release 0.01
+   # hold (osc64 10 0.05 0.012 saw )
+   # cps 1.5
+   # n (run 10)
+   |+ n (slow 9 $ run 11)
+   # speed 2
+
+hush
+
+--2s attack + 2s release total 4s
+d2 
+$ s "superchip"
+# attack  2
+# release 2
+# cps 0.2
+
+--2s attack + 2s hold + 2s release total 6s
+d2 
+$ s "superchip"
+# attack  2
+# hold    2 
+# release 2
+# cps 0.05
+
+--when cycle restart release will be killed  
+
+d3 
+$ s "superchip"
+# attack  1
+# release 4
+# cps 0.5
+
+hush
+
+
+--legato vs hold 
+--legato 0-1 (cycle), 0.5 == half cycle
+--hold is in Secs, so does attack and release
+
+d3 
+$ s "[superchip,supergong*4]"
+# legato 0.5
+# cps 1
+
+d3 
+$ s "[superchip,supergong*4]"
+# hold 0.5
+# cps 1
+
+hush
+
+--legato can go over 1 cycle and overlap 
+
+d3 
+$ s "[superchip,supergong*4]"
+# legato 1.5
+# cps 1
+
+d3 
+$ s "[superchip,supergong*4]"
+# hold 1.5
+# cps 1
+
+hush
+
+
+--legato works like # cut 1
+
+d1 $ sound "[bev,supergong*4]" # legato 1.2 # cps 0.5
+
+d1 $ sound "[bev,supergong*4]" # hold 1.2 # cps 0.5
+
+hush
+
+--envelope adds on legato
+
+d1 $ sound "[bev,supergong*4]" # legato 1.2 # cps 0.5
+
+d1 $ sound "[bev,supergong*4]" # legato 1.2 # release 1.2 # cps 0.5
+
+d1 $ sound "[bev,supergong*4]" # legato 1.2 # hold 4 # release 0.2 # cps 0.5
+
+d1 $ sound "[bev,supergong*4]" # hold 4 # release 0.2 # cps 0.5
+
+hush
+
+
+--
+
+d1 
+    -- $ loopAt 2
+    $ sometimes (|* speed (-1))
+    $ splice 10 (every 4 (degradeBy 0.2) "1 2 3 4 5 8") 
+    $ stack [
+            sound "[mp03]" # gain 1.4,
+            sound "[estec]" # gain 1
+    ]
+    + nl
+    # hold 0.3
+    # rel 0.5
+    # cps 3
+        
+hush

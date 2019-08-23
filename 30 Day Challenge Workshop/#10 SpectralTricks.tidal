@@ -1,0 +1,60 @@
+https://github.com/madskjeldgaard/SpectralTricks
+
+# freeze 
+ON (1) or OFF (0)
+
+all = streamAll tidal
+
+all = (freeze 1)
+
+# smear
+Accepts floats to determine the amount of smearing.
+A spectral comb filter
+    # comb
+    Number of teeth and width of the comb are all controlled using one floating point number
+    Bin scrambling
+
+all = (# smear 0.1).(# comb 0.2)
+
+# binshift
+Both the stretching and shifting of bins are controlled by supplying this parameter with floats.
+Spectral high pass filter 
+    # scram
+    Accepts floats to control the width and placement of the scrambling in the spectrum
+    Bin shifting
+
+
+# hbrick
+
+Accepts floats in values ranging from 0.0 to 1.0
+Spectral low pass filter
+
+# lbrick
+
+Accepts floats in values ranging from 0.0 to 1.0
+
+
+
+
+do 
+    let 
+        patA = sew bizy (osc64 12.1 1 0.1 sine) (osc64 114 0 1 saw)
+    d1 
+        $ sometimes (off 0.1 ((rev).(+| speed (osc64 8.5 1.5 0.4 saw))))
+        $ sound "[sitar:5]" 
+         + gain (slow 3 $ sew bizy "[2(3,<9 18>,<3 5 7>)]" "[1.7(3,16,<2 5 3>)]")
+        |+ smear patA
+        # comb 0.2
+        * speed (-1)
+        + begin (osc64 23.4 0 0.9 sine) 
+        # end 0.2
+        # hold "<4.5 2 2.5>"
+        -- + up (scale "<hindu>" "1 .. 6")
+        # attack 0.4
+        # (slow 1.35 $ nl)
+        # cps (osc64 24 0.4 0.6 saw)
+        # lbrick (osc 5 0 0.2 saw 63)
+        # gain 1.5
+        # hbrick (osc 15.6 0 0.3 saw 24)
+
+        hush

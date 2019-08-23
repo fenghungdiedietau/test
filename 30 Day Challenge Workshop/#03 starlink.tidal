@@ -1,0 +1,38 @@
+d1 
+$ sound "[mp03]" 
++| gain (smooth "2 ~ [0 2] [~ 1] [0.4 [~ 1]]") 
++| speed (sew (binary (slow 255 $ run 255)) (osc64 0.2 1 2 saw) (smooth "2 0 0 1 0.4")) 
+# nl
+# cps 1
+
+
+
+hush
+
+do 
+    let 
+        binarun = (slow 1 $ binary (slow 255 $ run 255))
+        patA = sew binarun (osc64 12.1 1 1.25 sine) (osc64 114 1 1 saw)
+    d1 
+        $ degradeBy 0.2
+        $ sometimes (off 0.3 ((rev).(/ speed (osc64 8.5 1.3 1.9 saw))))
+        $ sound "[sitar:5]" 
+       |+ gain (slow 4 $ sew binarun "[2(3,<9 18>,<3 5 7>)]" "[1.7(3,16,<2 5 3>)]")
+        -- +| speed patA
+        * speed (-1)
+        + begin (osc64 23.4 0 0.9 sine) 
+        # end 0.1
+        # hold "<3.5 2 2.5>"
+        -- + up (scale "<hindu>" "1 .. 6")
+        # attack 0.4
+        # (slow 1.35 $ nl)
+        # cps (osc64 24 1 1.5 saw)
+
+hush
+
+
+ scaleList :: String
+        
+
+
+    d2 $ loopAt 2 $ s "sitar:6" # begin 0.4 # end 1

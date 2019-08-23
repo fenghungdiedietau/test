@@ -1,0 +1,87 @@
+Type: weave :: Time -> ControlPattern -> [ControlPattern] -> ControlPattern
+
+weave applies one control pattern to a list of other control patterns, with a successive time offset. 
+For example:
+
+d1 $ stack
+  [sound "bd sn cp",
+   sound "casio casio:1",
+   sound "[jvbass*2 jvbass:2]/2",
+   sound "hc*4"
+  ]
+
+
+d2 $ weave 0.5 (comb (range 0.1 0.5 $ slow 4 $ sine))
+  [sound "bd sn cp",
+   sound "casio casio:1",
+   sound "[jvbass*2 jvbass:2]/2",
+   sound "hc*4"
+  ]
+
+hush
+
+
+-- weave cps
+d1 
+$ weave 4  (cps $ range 0.25 2 $ saw )
+[sound "bd sn cp",
+sound "casio casio:1",
+sound "[jvbass*2 jvbass:2]/2",
+sound "hc*4"
+]
+
+hush
+
+You can even have it the other way round, and have the effect parameters chasing after each other 
+around a sound parameter, like this:
+
+---struct from [....]
+d1 $ weave 3 (sound "bass bd" >| n (run 8))
+  [
+   vowel "a e i",
+   vowel "i [i o] o u",
+   vowel "[e o]/3 [i o u]/2"
+   speed "1 2 3"
+  ]
+
+  hush
+
+d2 $ s "[bd sn]/<1.5 3> [cp cp cp]/<2 4>"
+
+weaveWith
+
+Type: weaveWith :: Time -> Pattern a -> [Pattern a -> Pattern a] -> Pattern a
+
+weaveWith (formerly known as weave') is similar to the above, 
+but weaves with a list of functions, rather than a list of controls. For example:
+
+try Int increase from 1 , pattern stretch  
+
+d1 $ weaveWith 1 (s "bd bd")
+  [
+      fast 4,
+      fast 6,
+   (# speed "1.25"),
+   (# speed (-1))
+  ]
+
+hush
+
+
+d1 $ weaveWith 4 (s "bd(3,8,<2 5>)")
+  [
+      fast 4,
+   (# speed "1.25"),
+   (# speed (-1.25)),
+--    (# pan rand ),
+   (# cps (trigger 1 $ range 0.2 1 $ slow 5 envL)),
+   stutWith 45 0.15 (# comb (range 0 0.3 $ slow 13 $ sine))
+  ]
+
+ d1 silence 
+
+d2 
+$ every 2 (# speed 0.3)
+$ s "hh*4"  
+
+  hush

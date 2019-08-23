@@ -1,0 +1,49 @@
+---all effect
+
+d1
+$ striate "<1 .. 15>"
+$ every 3 (hurry 0.9)
+$ jux (loopAt 0.6 . degrade)
+$ jux (loopAt 0.6 . degrade . loopAt 2 . rev )
+$ sound "bottle" +| n "0 .. 11"
+
+all (# speed 2)
+
+all = id
+
+hush
+------
+
+stopall
+
+startall
+
+--once // twice??
+
+once
+$ striate "<1 .. 12>"
+$ every 3 (hurry 0.9)
+$ jux (loopAt 0.6 . degrade)
+$ jux (loopAt 0.6 . degrade . loopAt 2 . rev)
+$ sound "bottle" +| n "0 .. 10"
+
+----transition
+
+
+
+
+
+---echophon (forum)
+-- basic midi crossfader
+xfade x y = (range x y $ cF 1 "112")
+
+d1 $ stack [
+    s "bd(3,8)" # gain (xfade 0 1),
+    s "sd(5,8)" # gain (xfade 1 0)
+    ] 
+
+---tidal093 (forum)
+you can xfade to silence 
+
+
+

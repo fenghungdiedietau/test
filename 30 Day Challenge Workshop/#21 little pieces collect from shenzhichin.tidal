@@ -1,0 +1,30 @@
+d1
+   $ every 2 (|+| accelerate "3 4 5(4,6)")
+   $ bark 0.3
+   $ sound "bd*2 hh(12,17)"
+   |+| accelerate "[3 3 3(3,4)]/4"
+
+
+d1 
+$ weave 4 (speed $ (1+) <$> sine) [density 4 $ every 5 ((0.25 <~) . rev) 
+$ (striate' 16)  "0.22 0.1 "  $ sound"[bd sn/2]/2", sound "bd [~ hc]*3"]
+|+| speed "3"
+
+--these show up a lot, not functioning in 1.X. what's that? 
+--(spread' (striate' 16)  "[[0.01! 0.2 0.03 0.05!]*4/3]"  $ sound "bd" ) 
+d1 $ slow 1.5 $(spread' (striate' 16)  "[[0.01! 0.2 0.03 0.05!]*4/3]"  $ sound "bd" ) |+| speed "1.06"
+
+-- $ (striate' 16) "[0.35 0.01 0.05]/3" -- 
+
+
+
+
+d1 $ whenmod 5 3 (|+| up "-12 -12 0 12 0 12 ")
+   $ sound "arpy!! arpy:1" # up "0 2 3 4.3 5 7 8 14"
+
+
+
+d1 $ weave 4 (speed $ (1+) <$> sine)
+[density 4 $ every 5 ((0.25 <~) . rev) $ (striate' 16)  "0.22 0.1 "  $ sound"[bd sn/2]/2", sound "bd [~ hc]*3"]
+|+| speed "3"
+  

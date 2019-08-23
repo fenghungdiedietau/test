@@ -1,0 +1,81 @@
+--velocity  
+--gain vs MIDI velocity
+    gain  velocity 
+    1.26    127
+    1.25    124
+    1.23    116
+    1.22    112
+    1.21    108
+    1.20    105
+    1.19    101 
+    1.18    98
+    1.17    95
+    1.16    91
+    1.15    88
+    1.14    85
+    1.13    82  
+    1.12    79  
+    1.11    77
+    1.10    74
+    1.09    71
+    1.08    69  
+    1.07    66
+    1.06    64
+    1.05    61   
+    1.04    59
+    1.03    57
+    1.02    54
+    1.01    52  
+    1.0     50
+    0.38    1
+
+
+d1 
+$ off 0 (# s "midi")
+$  n "1" # dave 
++ gain (osc64 4 0.38 1.26 sine)
+
+hush  
+
+--pitch: note vs n
+
+--highest and lowest n 
+n : -60 ~ 67 
+    c-2 ~ g8 
+
+
+d1 
+$ slow 4
+$ off 0 (# s "midi")
+$  n "-60 .. 67" # dave 
+    
+
+d1 
+$ off 0 (# s "midi")
+$  n "67 -60" # dave
+
+---n > 67, equs to 67
+d1 
+$ off 0 (# s "midi")
+$  n "67 80" # dave
+
+--n < -60 , equs to -60
+d1 
+$ off 0 (# s "midi")
+$  n "-55" # dave
+
+hush
+
+note     n 
+c-2     -60
+c-1     -48
+c-0     -36
+c 1     -24
+c 2     -12
+c 3      0
+c 4     12
+c 5     24
+c 6     36
+c 7     48
+c 8     60
+g 8     67

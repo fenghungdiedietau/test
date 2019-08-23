@@ -1,0 +1,119 @@
+--otrigger
+  otrigger osc string = ( squeezeJoin $ const osc <$> (string :: Pattern Int) )
+
+  d1
+  $ sound "hh*32"
+  # speed ( range 0.52 1 $ every 3 (slow 2) $ otrigger sine " 1 _ _ _ 1 _ _ 1 " )  
+
+  hush
+
+--trigger  https://tidalcycles.org/index.php/trigger
+--qtrigger https://youtu.be/9GCAlGU2en0?t=740
+
+
+-- mute fader
+d1 $ sound "bd*2 cp:4(5,8,<0 2>)"
+  # gain (trigger 1 $ slow 0.25 envL)
+-----v-----v----
+
+hush
+
+-- on fader ____|\____|\ 
+d1 $ sound "bd*2 cp:4(5,8,<0 2>)"
+  # gain (trigger 1 $ range 1 0 $ slow 1 envL)  
+
+hush
+
+
+d1 
+$ sound "han"
++ begin (osc64 3 0 0.95 saw)
+# release 1
+# gain (trigger 1 $ range 0.2 1 $ fast 2 $ envL )
+
+hush
+
+d1 
+$ sound "han"
++ begin (osc  1 0 0.9 saw 32)
+# release 1
+-- + gain "1"
+
+
+d2 $ s "midi"
+   # midichan 1
+   # ccn 12
+   # ccv (trigger 2 $ "127")
+
+
+d2 $ s "midi*16"
+   # midichan 1
+   # ccn 12
+   # ccv (qtrigger 2 $ "0")
+
+
+
+d2 $ s "midi*16"
+   # midichan 1
+   # ccn 13
+   # ccv (qtrigger 2 $ "127")   
+
+   let ofs p = struct (bizy) $ p   
+
+hush
+
+
+
+
+
+do 
+  let 
+    ofs p = struct (bizy) $ p
+  d1 
+    $ sound "yin2:2"
+    # cut 1
+    -- + gain (ofs $ 1)
+    + begin (osc64 1 0 0.95 saw)
+    # cps 0.2
+  d2 $ stack [ 
+            ofs
+            $ s "midi"
+            # midichan 1
+            # ccn 12
+            # ccv "127"
+            ,
+            rev $ ofs 
+            $ s "midi"
+            # midichan 1
+            # ccn 12
+            # ccv "0"
+            ,
+            ofs
+            $ s "midi"
+            # midichan 1
+            # ccn 13
+            # ccv "0"
+            ,
+            rev $ ofs
+            $ s "midi"
+            # midichan 1
+            # ccn 13
+            # ccv "127"
+            ]       
+
+ all (# speed (trigger 1 $ range  0.2 1 $ slow 4 $ envL ))           
+
+all id
+
+hush
+
+
+----thunder 
+d1 
+$ sound "yin2*16"
+# begin (osc 1 0 0.95 saw 16)
+# lpf ((((slow 10 $ saw ) + 0.1) ~>)(osc 0.25 100 4200 square 16))
+# nl
+# waveloss (trigger 1 $ range 0 40 $ fast 3 $ envL)
+
+hush

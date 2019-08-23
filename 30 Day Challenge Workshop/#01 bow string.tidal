@@ -1,0 +1,18 @@
+setCps = 1
+
+d1
+$ every 1 (# speed (-1))
+-- $ every 3 (# speed (trigger 1 $ range (-1) 2 $ envL )) 
+$ sound "[bow*25,sitar*12]" 
+# gain 1.3 
+# cps "0.4 0.5"
+# n (run 8)
+# up ("[f'ninesus4 g'maj'1 c'min7'2]/10")
+# begin (osc64 13.2 0.01 0.55 sine)
+# room 1
+# pan rand
+
+
+hush
+
+

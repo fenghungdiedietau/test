@@ -1,0 +1,29 @@
+:t striateBy
+
+Pattern Int -> Pattern Double 
+            -- Pattern Double : (range 0.3 0.2 $ slow 100 sine)
+
+d1
+$ slow 8
+$ striateBy 300 (range 0.13 0.3 $ slow 8 sine)  $ s "bev"          
+
+
+:t stutWith
+
+Pattern Int -> Pattern Time
+            --( toRational <$> (range 0.05 0.25 $ slow 20 sine))
+            -- slow / off .... 
+
+d1
+$ stutWith "<200 10>" ((euclidFull 2 9 "0.2" (range 0 0.2 $ sine))) (|+ speed (range 0.5 2 $ perlin*0.4)) 
+$ s "bass3:5"
+# n (slow 100 $ run 100)
+
+hush
+
+
+
+:t chunk
+
+d1 $ do x <- "<7 .. 15>"
+        chunk x (hurry 3) $ s "hh*2 lt"

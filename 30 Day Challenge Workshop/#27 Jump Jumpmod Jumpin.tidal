@@ -1,0 +1,23 @@
+--jump
+
+d1 $ sound "hh*4"
+
+jump 1 $ sound "bd*8"
+
+--jumpin
+d1 $ sound "hh*4"
+
+d2 $ sound "bd" 
+
+--jumpIn 
+jumpIn 1 1 $ sound "hh*8"
+
+jumpIn 1 2 $ sound "bd*4"
+
+jumpIn 1 3 $ sound "hh*4"
+
+--jumpMod
+
+jumpMod 1 2 $ sound "hh*8" 
+
+hush

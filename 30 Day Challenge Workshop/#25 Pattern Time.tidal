@@ -1,0 +1,32 @@
+slow 4 "<0.05,0.1..2>" ??
+
+:t slow
+
+:t off
+--Pattern Time
+
+d1 
+$ off "<0.1 0.2>" ((slow 4).(# speed 2).(# s "sn")) 
+$ s "bd*4"
+
+
+d1 
+$ off "<0.1 0.3 0.7>" ((slow "<2 3 4 4>").(# speed 1).(# s "sn")) 
+$ s "bd*5"
+
+
+
+d1 
+$ slow 3
+$ off "<0.1,0.111,0.122>" ((slow 4).(# speed 1).(# s "sn")) 
+$ s "bd*1"
+
+
+--sync and out of sync
+d1 
+$ slow 2
+$ off (range 0.05 0.95 $ slow 10 $ sine ) ((# speed 2).(# s "sn*10").( # pan 0)) 
+$ s "bd*10"
+# pan 1
+
+hush

@@ -1,0 +1,37 @@
+violeta izone 115 bpm
+
+d1 
+$ chew 4 "1 2 3 4" 
+$ lpf "100 200" 
+# sound "vio"
+# nl
+# cps (115/60/2)
+
+:t chew
+
+d1 
+$ chew 2 "[1 2 3 4 2 [~ 5] 1]/2"  
+$ s "vio"
+# nl
+# cut 1
+# cps (115/60/2)
+ 
+
+d1 
+$ chew 4 "[1 2 3 4]"  
+$ s "vio"
++ nl
+# cut 1
+# cps (115/60/2)
+ 
+hush
+
+d3 
+$ chew 2  ("[1 [2 3?] 4 2 [~ 5] 1]/2" + "0") 
+$ s "<ktlove ktlove*1.25 ktlove*1.2 ktlove*2> dulu"
+# n4
++ n 12
+# cut 1
+# cps (130/60/2)
+
+hush

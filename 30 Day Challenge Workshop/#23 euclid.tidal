@@ -1,0 +1,25 @@
+
+d1 $ euclid 5 9 $ s "bd" # cut 1     
+--e in ver 0.9.8
+
+d2 $ euclidInv 5 9 $ s "sn" # cut 1 # gain 0.9
+--einv in ver 0.9.8    
+--see http://blog.tidalcycles.org/tidalcycles-0-9-8/
+
+hush
+
+d1 $ s "bev" # cut 1
+   + gain (euclidFull 5 9 "1" "0.6") 
+
+
+d1 $ gain 1 # cut 1
+   + s (euclidFull 5 9 "bd" "sn")
+
+efull --> euclidFull
+
+hush
+
+
+d1 $ euclidOffBool 2 9 $ struct bizy $ s 
+
+:t euclidOffBool

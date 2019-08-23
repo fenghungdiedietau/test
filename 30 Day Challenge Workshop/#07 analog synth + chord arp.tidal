@@ -1,0 +1,109 @@
+--introduce 2 new player dave & juno
+
+--test midi and asynth port 
+d1 $ n (irand 10) # s "midi asynth"    
+
+hush
+
+------CHORD USERBASE DOCUMENT--------------------
+
+--List of chords
+6by9 7f10 7f5 7f9 7s5 7s5f9 7sus2 7sus4 9s5 9sus4 aug dim dim7 dom7 eleven elevenSharp five m11 
+m11s m11sharp m13m6 m6by9 m7f5 m7f9 m7flat5 m7flat9 m7s5 m7s9 m7sharp5 m7sharp5flat9 m7sharp9 m9 
+m9s5 m9sharp5 maj maj11 maj7 maj9 major major7 min min7 minor minor7 msharp5 nine nineSharp5 
+nineSus4 ninesus4 one plus sevenFlat10 sevenFlat5 sevenFlat9 sevenSharp5 sevenSharp5flat9 sevenSus2 
+sevenSus4 sharp5 six sixby9 sus2 sus4 thirteen
+
+Using chords
+
+The list above can be combined with a root using the ' to use with the synths in Super Dirt like this:
+
+d1 $ n "c'maj e'min" # s "supermandolin"
+
+The root can be set as 'sharp' or 'flat' with s or f respectively:
+
+d1 $ n "cf'maj c'maj cs'maj" # s "supermandolin"
+
+The octave can be set with a number. The default is 5:
+
+d1 $ n("c4'maj c5'maj c6'maj") # s "supermandolin"
+
+The chords can be patterned using the |+ operator:
+
+d1 $ n ("c e f" |+ "<'maj 'min>") # s "supermandolin"
+
+This will give a pattern equivalent to:
+
+d1 $ n ("c'maj e'maj f'maj, c'min e'min f'min") # s "supermandolin"
+
+
+-----------------------------------------------------------------
+
+6by9 7f10 7f5 7f9 7s5 7s5f9 7sus2 7sus4 9s5 9sus4 aug dim dim7 dom7 eleven elevenSharp five m11 
+m11s m11sharp m13m6 m6by9 m7f5 m7f9 m7flat5 m7flat9 m7s5 m7s9 m7sharp5 m7sharp5flat9 m7sharp9 m9 
+m9s5 m9sharp5 maj maj11 maj7 maj9 major major7 min min7 minor minor7 msharp5 nine nineSharp5 
+nineSus4 ninesus4 one plus sevenFlat10 sevenFlat5 sevenFlat9 sevenSharp5 sevenSharp5flat9 sevenSus2 
+sevenSus4 sharp5 six sixby9 sus2 sus4 thirteen
+
+d2 
+$ struct (binary (slow 255 $ run 255))
+$ n ("[c4 a4 <e4 f4> g3]/5" 
+    |+ "<'ninesus4 'maj7 ['sixby9 'ninesus4]>" 
+    |+ "<'4 '4 '3>") 
+# dave # gain 0.4
+
+hush
+
+----WITH arp
+
+d3
+-- $ fast 3 
+$ n (arp "pinkyup" ("[c4 a4 <e4 f4> g3]/5" 
+|+ "<'ninesus4 'maj7 ['sixby9 'ninesus4]>" 
+|+ (run 3))) 
+# juno 
+# gain 1
+
+
+----scale addon
+
+scaleList :: String
+
+d3
+$ n (arp "pinkyup" ("[c4 a4 <e4 f4> g3]/5" 
+|+ "<'ninesus4 'maj7 ['sixby9 'ninesus4]>" 
+|+ (run 3))) 
+# juno 
+# gain 1
+|+ n (scale "dorian" "-7 .. 24 ")
+
+d2 
+$ struct ("t(3,<12 7 8>,<2 3>)")
+$ n ("[c4 a4 f4 d4 g4]/7" 
+    |+ "<'ninesus4 'maj7 ['sixby9 'ninesus4]>" 
+    |+ "<'2 '2 '3>") 
++| n (scale "<dorian>" "0 .. 15 ")
+# legato 0.5
+# dave # gain 0.4
+
+let scale = getScale (scaleTable ++ [("techno", [0,2,3,5,7,8,10]),
+                                     ("broken", [0,1,4,7,8,10])
+                                    ])
+
+d2
+$ degradeBy 0.2
+$ every 3 (rev)
+$ every 4 (chunk 3 (-| n (run 4)))
+$ struct (binaryN 16 (slow 300 $ run 300)) 
+$ n ("[c4 a4 f4 d4 g4]/7" 
+    |+ "<'ninesus4 'maj7 ['sixby9 'ninesus4]>" 
+    |+ "<'2 '2 '3>") 
+|+ n (scale "techno" "1 .. 12")
+# legato 0.5
+# dave # gain 0.4
+
+hush
+
+
+-----scale still not clear ~~~ maybe next day
+
