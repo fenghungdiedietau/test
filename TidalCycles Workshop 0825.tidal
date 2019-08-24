@@ -89,8 +89,9 @@ Madskjeldgaard (sound art)
 --重新命名 自訂函數
 
   注意
---版本 (用法變化 scale --> range, discretize--> segment)
+--版本  用法變化 scale --> range, 
+                discretize--> segment, 
+                choose [1,1.5..20] 
+                
 --samples
-
-
 --結語
