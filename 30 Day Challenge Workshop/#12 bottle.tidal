@@ -5,3 +5,8 @@ $ every 3 (hurry 0.9)
 $ jux (loopAt 0.6 . degrade)
 $ jux (loopAt 0.6 . degrade . loopAt 2 . rev)
 $ sound "bottle" +| n "0 .. 10"
+
+
+hush
+
+

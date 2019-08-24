@@ -1,0 +1,191 @@
+:set -XOverloadedStrings
+:set prompt ""
+:set prompt-cont ""
+
+import Sound.Tidal.Context
+
+-- total latency = oLatency + cFrameTimespan
+tidal <- startTidal (superdirtTarget {oLatency = 0.1, oAddress = "127.0.0.1", oPort = 57120}) (defaultConfig {cFrameTimespan = 1/20})
+
+-- total latency = oLatency + cFrameTimespan
+tidal <- startTidal (superdirtTarget {oLatency = 0.1, oAddress = "127.0.0.1", oPort = 57120}) (defaultConfig {cFrameTimespan = 1/20})
+
+
+let p = streamReplace tidal
+    hush = streamHush tidal
+    list = streamList tidal
+    mute = streamMute tidal
+    unmute = streamUnmute tidal
+    solo = streamSolo tidal
+    unsolo = streamUnsolo tidal
+    once = streamOnce tidal
+    asap = once
+    nudgeAll = streamNudgeAll tidal
+    all = streamAll tidal
+    resetCycles = streamResetCycles tidal
+    setcps = asap . cps
+    xfade i = transition tidal True (Sound.Tidal.Transition.xfadeIn 4) i
+    xfadeIn i t = transition tidal True (Sound.Tidal.Transition.xfadeIn t) i
+    histpan i t = transition tidal True (Sound.Tidal.Transition.histpan t) i
+    wait i t = transition tidal True (Sound.Tidal.Transition.wait t) i
+    waitT i f t = transition tidal True (Sound.Tidal.Transition.waitT f t) i
+    jump i = transition tidal True (Sound.Tidal.Transition.jump) i
+    jumpIn i t = transition tidal True (Sound.Tidal.Transition.jumpIn t) i
+    jumpIn' i t = transition tidal True (Sound.Tidal.Transition.jumpIn' t) i
+    jumpMod i t = transition tidal True (Sound.Tidal.Transition.jumpMod t) i
+    mortal i lifespan release = transition tidal True (Sound.Tidal.Transition.mortal lifespan release) i
+    interpolate i = transition tidal True (Sound.Tidal.Transition.interpolate) i
+    interpolateIn i t = transition tidal True (Sound.Tidal.Transition.interpolateIn t) i
+    clutch i = transition tidal True (Sound.Tidal.Transition.clutch) i
+    clutchIn i t = transition tidal True (Sound.Tidal.Transition.clutchIn t) i
+    anticipate i = transition tidal True (Sound.Tidal.Transition.anticipate) i
+    anticipateIn i t = transition tidal True (Sound.Tidal.Transition.anticipateIn t) i
+    forId i t = transition tidal False (Sound.Tidal.Transition.mortalOverlay t) i
+    d1 = p 1 . (|< orbit 0) 
+    d2 = p 2 . (|< orbit 1) 
+    d3 = p 3 . (|< orbit 2) 
+    d4 = p 4 . (|< orbit 3) 
+    d5 = p 5 . (|< orbit 4) 
+    d6 = p 6 . (|< orbit 5) 
+    d7 = p 7 . (|< orbit 6) 
+    d8 = p 8 . (|< orbit 7) 
+    d9 = p 9 . (|< orbit 8)
+    d10 = p 10 . (|< orbit 9)
+    d11 = p 11 . (|< orbit 10)
+    d12 = p 12 . (|< orbit 11)
+    d13 = p 13
+    d14 = p 14
+    d15 = p 15
+    d16 = p 16
+    setI = streamSetI tidal
+    setF = streamSetF tidal
+    setS = streamSetS tidal
+    setR = streamSetI tidal
+    setB = streamSetB tidal
+    --these are better replace with osc64 and osc below to make readable
+    --used a lot in old code    
+    attsin a b c d = attack  (slow a  $ segment d $ range b c $ sine)
+    rsin   a b c d = release (slow a  $ segment d $ range b c $ sine)
+    bsin   a b c d = begin   (slow a  $ segment d $ range b c $ sine)
+    attsaw a b c d = attack  (slow a  $ segment d $ range b c $ saw )
+    rsaw   a b c d = release (slow a  $ segment d $ range b c $ saw )
+    bsaw   a b c d = begin   (slow a  $ segment d $ range b c $ saw )
+    ssine  a b c d = speed   (slow a  $ segment d $ range b c $ sine)
+    ssaw   a b c d = speed   (slow a  $ segment d $ range b c $ saw )
+    --
+    osc    a b c d e=  segment (e*a) $ slow a  $ range b c $ d
+                    --segment 1 $ range 0 1 $ slow 8 $ saw
+                    --(osc 1 0 1 saw 8)
+    osc64  a b c d = slow a $ segment (64*a) $ range b c $ d
+    nl   = n (slow 10000 $ run 10000)
+    n2   = n (slow 2  ( run 2 ))
+    n4   = n (slow 4  ( run 4 ))
+    n8   = n (slow 8  ( run 8 ))
+    n16  = n (slow 16 ( run 16))
+    bizy = binary (slow 255 $ run 255) 
+    attack = att
+    release= rel
+    efull = euclidFull
+    e = euclid
+    --hardware 
+    dave = s "asynth" # midichan 14
+    juno = s "asynth" # midichan 1
+    --added from forum discussion, maybe changed in newer version
+    otrigger osc string = ( squeezeJoin $ const osc <$> (string :: Pattern Int) )
+    pfit a b = tParam (\x -> fit x b) a
+    --Faceing City lighening divice control 
+    ohh = ccn "[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,54,55,56,57,58,59,60]"
+    oh  = ccn "[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]"
+     -- # ccn "<0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29>"
+     -- # ccn "<0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59>"   
+    c60 = ccn (choose [1 .. 60])
+    setmd a b = s "midi*10" # midichan a # ccn b # ccv "120"
+    -- Kindohm's awesome Function--
+    -- ripOLD a b p = within (0.25, 0.75) (slow 2 . rev . stut 8 a b) p
+    -- ripOLD' a b c d e p = within (a, b) (slow 2 . rev . stut c d e) p
+    -- rip a b p = within (0.25, 0.75) (slow 2 . stutWith 8 (b/(-8)) (|* gain a)) p
+    -- rip' a b c d e p = within (a, b) (slow 2 . stutWith c (e/(-8)) (|* gain d)) p
+    -- spike p = ((# delaytime (range 0.001 0.3 $ slow 7.1 sine)) . (# delayfeedback (range 0.7 0.99 $ slow 6.71 sine))) $ p
+    -- spike' p = (# delay "0.3") $ spike $ p
+    -- spike'' p = (# delay "0.4") $ ((# delaytime (range 0.001 0.1 $ slow 6.1 sine)) . (# delayfeedback (range 0.7 0.99 $ slow 5.71 sine))) $ p
+    -- ghost'' a f p = superimpose (((a/2 + a*2) ~>) . f) $ superimpose (((a + a/2) ~>) . f) $ p
+    -- ghost' a p = ghost'' a ((|* gain "0.7") . (# end "0.2") . (|* speed "1.25")) p
+    -- ghost p = ghost' 0.125 p
+    -- jit start amount p = within (start, (start + 0.5)) (trunc (amount)) p
+    gtfo p = (const $ sound "~") p
+    gtfo' p = (const $ midinote "~") p
+    -- gtfom = gtfo'
+    -- gtfo2 = gtfo'
+    shift p = (1 <~)  p
+    shift' x p = (x <~) p
+    shrand n = shift' n $ rand
+    -- choose xs = (xs !!) <$> (irand $ fromIntegral $ length xs)
+    -- one p = stutWith 2 (0.125/2) id $ p
+    -- one' p = rarely (stutWith 2 (0.125/2) id) $ shift' 1024 $ p
+    -- one'' p = sometimes (stutWith 2 (0.125/2) id) $ shift' 1024 $ p
+    -- rep n p = stutWith (n) (0.125*3) id $ p
+    -- rep' n p = stutWith (n) (0.125/2*3) id $ p
+    -- rep'' n p = stutWith (n) (0.125/4*3) id $ p
+    -- beginend bpat durpat = (begin bpat) # (end $ (+) <$> bpat <*> durpat)
+    -- mpent = [0, 3, 5, 7, 10, 12]
+    -- pent = [0, 2, 4, 7, 9, 12]
+    -- inverse 1 = 0
+    -- inverse 0 = 1
+    -- inverse 11 = 0
+    -- inverse 10 = 1
+    -- inv 1 = 0
+    -- inv 0 = 1
+    -- inv 11 = 0
+    -- inv 10 = 1
+    -- bpm x = setcps (x/120)
+    -- brakk samps = ((# unit "c") . (# speed "8")) $ sound (samples samps (irand 30))
+    -- brakk4 samps = ((# unit "c") . (# speed "4")) $ sound (samples samps (irand 30))
+    -- move p = foldEvery [3,4] (0.25 <~) $ p
+    -- move'' p = foldEvery [2,3] (0.25 <~) $ p
+    -- move' p = foldEvery [3,4] (0.25 ~>) $ p
+    -- move''' p = foldEvery [2,3] (0.25 ~>) $ p
+    -- delays = [(1/512), (1/256), (1/128), (1/64), (1/32), (1/16), (1/8)]
+    -- randDelay p = ((# delay (range 0.5 0.7 $ shift' 5001 $ rand)) . (# delaytime (shift' 5002 $ choose delays)) . (# delayfeedback (range 0.5 0.9 $ shift' 5003 $ rand))) $ p
+    -- crumble = slow 2 $ sound "[k*16 ~]/2 ~" # n (run 32)
+    -- rando = randDelay
+    -- foldEVery = foldEvery
+    -- accelrate = accelerate
+    -- discretize = discretise
+    -- crushit p = (# crush (range 3 8 $ slow 1.1 tri)) $ p
+    -- replicator text1 = [putStr (text1) | x <- replicate 500 text1]
+    -- flood text2 = sequence_(replicator text2)
+    -- replicator' n text1 = [putStr (text1) | x <- replicate n text1]
+    -- flood' n text2 = sequence_(replicator' n text2)
+    -- sbank bank pat = s (flip (++) <$> pat <*> bank)
+    -- fxchan = s "midi" # midicmd "control" # midichan "15" # nudge "0.35"
+    -- stdmidinudge p = (|+ nudge "0.2") $ p
+    -- stdvisnudge p = (|+ nudge "0.6") $ p
+    g = gtfo
+    -- del = gtfo
+    -- slice pi pn p = begin b # end e # p
+    --   where b = (\i n -> (div' i n)) <$> pi <*> pn
+    --         e = (\i n -> (div' i n) + (div' 1 n)) <$> pi <*> pn
+    -- --         div' a b = fromIntegral (a `mod` b) / fromIntegral b
+    -- r = run
+    -- ri a = rev (r a) -- run inverted
+    -- rodd a = (((r a) + 1) * 2) - 1 -- run of odd numbers
+    -- reven a = ((r a) + 1) * 2 -- run of even numbers
+    -- roddi a = rev (rodd a) -- run of odd numbers inverted
+    -- reveni a = rev (reven a) -- run of even numbers inverted
+    -- eveni = reveni
+    -- c = choose
+    -- codd a = c $ take a [1,3..] -- choose an odd number
+    -- ceven a = c $ take a [0,2..] -- choose an even number
+    -- thicken' x percent p = superimpose ((# pan 1) . (|* speed percent)) $ ((# speed x) . (# pan 0)) $ p
+    -- thicken p = thicken' 1 0.8 $ p
+    -- thick3n = thicken
+    -- thick3n' = thicken'
+    -- rollany x p = stutWith 2 x id $ p
+    -- roll p = rollany (0.125*3) $ p
+    -- roll' p = rollany (0.0625*3) $ p
+    -- roll'' p = stutWith 2 (shift' 100000 $ choose [(0.0625*3), (0.125*3)]) id $ p
+    -- rollAny = rollany
+    
+
+
+:set prompt "tidal> "
