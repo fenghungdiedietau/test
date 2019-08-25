@@ -1,4 +1,4 @@
-MY Github : yude4ni (lyd) 
+Github : yude4ni (lyd) 
         - tidalnotebook  <---這個文檔會放在這
         -  生之慶 - 恐怖行動 -懶繡停針 .....
 
@@ -9,38 +9,46 @@ MY Github : yude4ni (lyd)
 
 --structured sound
 
-d2 
+d2
 $ s "tink"
 -- # cps 0.3
--- |+ accelerate (-0.5)
+|+ accelerate (1.5)
 
 hush
 
 d2
--- $ layer [id,(#accelerate 1.5),(#accelerate 0.5)]
+$ layer [id,(#accelerate 1.5),(#accelerate (-0.5))]
 $ s "tink*16"
--- # speed (slow 12 $ smooth $ "<1 2 -4> 0  0 2")
--- # cps (slow 4 $ segment 16 $ range 0.25 2 $ saw)
+# speed (slow 12 $ smooth $ "<1 2 -4> 0  0 2")
+# cps (slow 1 $ segment 16 $ range 0.25 1 $ saw)
+
 
 hush
 
+
 d2
-$ layer [id, (# accelerate 1.5).(# lpf (osc64 12 100 500 13))]
+$ layer [id, (# accelerate 1.5 ).(# lpf (osc64 12 100 500 13))]
 $ s "yin1*16"
 |+ speed (slow 0.5 $ smooth $ "<10 2 -4> 0 0 4")
 # cps (segment 16 $ range 0.5 2 $ saw)
 
+d1 $ s "yin1:5"
 
 --example 2
 
+下午DEMO這個bottle音源有替換過 不是原本dirtsample的bottle
+下午DEMO這個bottle音源有替換過 不是原本dirtsample的bottle
+下午DEMO這個bottle音源有替換過 不是原本dirtsample的bottle
+下午DEMO這個bottle音源有替換過 不是原本dirtsample的bottle
+
 d1
-$ striate (slow 1 $ "1 .. 12")
-$ sometimes (hurry 0.9)
-$ jux (loopAt 0.6 . degrade)
-$ jux (loopAt 0.6 . degrade . loopAt 1 . rev)
+$ striate (slow 4 $ "20 .. 300")
+$ sometimes (hurry 0.2)
+$ jux (loopAt 0.3 . degrade)
+$ jux (loopAt 0.6 . degrade . loopAt 2 . rev)
 $ sound "bottle" 
 +| n "0 .. 11"
--- # cps 0.5
+# cps 0.5
 
 --try hurry_loopat_slow
 
@@ -56,21 +64,22 @@ hush
 
 
 d1  
---   $ sometimes ((chop 20).(degradeBy 0.23))
---   $ layer [id, (# accelerate 0.5), (# accelerate (-0.2)) ]
---   $ juxBy "<0.4 0.5 0.6 0.7 0.8>" ((|+ speed (range 0.7 1 $ sine)).(+ cps (slow 15 $ segment 16 $ range 0.5 1 $ saw)))
-  $ sound "lshocut"
---   # n (slow 50 $ run 50 )
---   # lpf (segment 16 $ range 1000 6000 $ perlin + 0.3 )
---   # attack 0.4
---   # hold 2
---   # release (segment 64 $ slow 15 $ range 0.013 0.8 $ sine)
+  $ sometimes ((chop 20).(degradeBy 0.23))
+  $ layer [id, (# accelerate 0.5), (# accelerate (-0.2)) ]
+  $ juxBy "<0.4 0.5 0.6 0.7 0.8>" ((|+ speed (range 0.7 1 $ sine)).(+ cps (slow 15 $ segment 16 $ range 0.5 1 $ saw)))
+  $ sound "yin2"
+  # n (slow 50 $ run 50 )
+  # lpf (segment 16 $ range 1000 6000 $ perlin + 0.3 )
+  # attack 0.2
+  # hold 2
+  # release (segment 64 $ slow 15 $ range 0.013 0.48 $ sine)
+# cps 1
 
 hush
 
 
 --glitch 
-d1 $ sound "bd"  + cps ( segment 100 $ range 1 100 $ sine )
+d1 $ sound "bd"  + cps ( segment 10 $ range 1 100 $ sine )
 
 
 hush
@@ -80,18 +89,27 @@ hush
 --show us your screen
 
 YAXU-Alex Mclean (pure)  
+
 Kindohm (electronic music)
+
 Madskjeldgaard (sound art)
 
 
+
 --BootTidal.tidal
---俚語 方言 
---重新命名 自訂函數
+
+ 俚語 方言 
+--重新命名 
+自訂函數
 
   注意
---版本  用法變化 scale --> range, 
-                discretize--> segment, 
-                choose [1,1.5..20] 
-                
+--版本  語法變化  
+
+--scale --> range 
+--discretize--> segment 
+--
+choose [1,1.5..20]   
+
 --samples
+
 --結語
