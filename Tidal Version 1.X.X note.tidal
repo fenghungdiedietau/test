@@ -542,3 +542,29 @@ hush
 
 
 hush
+
+once $ s "longsample" # loop "10"
+
+do
+  {
+    resetCycles;
+    d1 $ every 3 (0.25 <~) $ every 4 (0.25 <~)
+    $ stack [s "[~ sd ~ ~]*2" # gain "0.7",
+                s "[~ ~ ~ hh]*2" 
+        ]
+  }
+
+Kindohm
+I think some very weird and beautiful things happen when you mix cps changes inside pattern 
+transitions like clutchIn
+
+d2 $ sound "bd:3*4"
+
+d3 $ n "c3 cs4 b2 as2 c3 d3 cs3 c3 cs4 b2 as2 c3 d3 cs3 d3 d3" 
+# sound "superpwm(3,2)" 
+# decay "[0.3 0.1 0.2 0.24 0.6]/2" 
+# voice "[0.3 0.4 0.5 0.6 0.7 0.8 1]/2" 
+# cutoff "1200 2400 3600 480"
+
+d3 $ n (segment 16 $ (irand 10)-32) # sound "supersaw(3,2)" # decay "[0.4 0.6 0.8 0.92 1]/2" # voice "[0.3 0.4 0.5 0.6 0.7 0.8 1]/2" # cutoff "1200 2400 3600 480"
+

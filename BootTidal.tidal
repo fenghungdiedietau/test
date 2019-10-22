@@ -77,6 +77,8 @@ let p = streamReplace tidal
                     --segment 1 $ range 0 1 $ slow 8 $ saw
                     --(osc 1 0 1 saw 8)
     osc64  a b c d = slow a $ segment (64*a) $ range b c $ d
+    bpm a = cps (a/60/4)
+    nr   = n (irand 10000)
     nl   = n (slow 10000 $ run 10000)
     n2   = n (slow 2  ( run 2 ))
     n4   = n (slow 4  ( run 4 ))
@@ -85,8 +87,18 @@ let p = streamReplace tidal
     bizy = binary (slow 255 $ run 255) 
     attack = att
     release= rel
+    atrl a b =  attack a # release b
     efull = euclidFull
     e = euclid
+    rise1  b c d = (trigger 1 $ slow b $ range c d $ envL)
+    rise2  b c d = (trigger 2 $ slow b $ range c d $ envL)
+    rise3  b c d = (trigger 3 $ slow b $ range c d $ envL)
+    rise4  b c d = (trigger 4 $ slow b $ range c d $ envL)
+    rise5  b c d = (trigger 5 $ slow b $ range c d $ envL)
+    rise6  b c d = (trigger 6 $ slow b $ range c d $ envL)
+    rise7  b c d = (trigger 7 $ slow b $ range c d $ envL)
+    rise8  b c d = (trigger 8 $ slow b $ range c d $ envL)
+    rise9  b c d = (trigger 9 $ slow b $ range c d $ envL)
     --hardware 
     dave = s "asynth" # midichan 14
     juno = s "asynth" # midichan 1

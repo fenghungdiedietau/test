@@ -457,3 +457,168 @@ hush
 d1 $ splice 64 "1(3,8) [3 5] [2 5] 5*4" "bev"
 
 d1 $ tickle $ jux rev $ splice 64 (iter 4 $ "<1 1> <3 5> <2 5*2> 5" + "<0 16 32*2 48>") "bev"
+
+
+--ovitus
+
+do --YSXJZU modify away
+setcps 0.53 
+let eup= [ ("a", "1(8 4, 16, 0 1)")
+         , ("b", "1(16 3, 16, 0 1)") 
+         , ("c", "1(8, 16)")
+         , ("d", "1(7 3, 16, 0 1)")
+         , ("e", "1(4 9 1, 16)")
+         , ("f", "1(9 . 4 2, 15 16)")
+         , ("g", "1(4 14, 16, 0 1)")
+         ]
+let mar= markovPat 128 0
+--       [ [0,0,0,0,0,0,0], [0,0,0,0,0,0,0], [0,0,0,0,0,0,0], [0,0,0,0,0,0,0], [0,0,0,0,0,0,0], [0,0,0,0,0,0,0], [0,0,0,0,0,0,0] ]
+         [ [0,6,0,2,0,2,0], [1,0,3,0,4,0,2], [8,2,0,0,0,0,0], [2,0,2,1,1,4,0], [0,0,7,0,1,0,2], [2,0,3,0,2,0,3], [0,7,3,0,0,0,0] ]
+    p = perlin2With (isaw*2) (cosine*3)
+    sam= [ (# begin (range 0.1 1 $ p)).(# legato (range 0.1 0.6 $ p)).(# speed (range 0.1 0.9 $ p)) $ s (fmap ((map show [1..7])!!) ((0.2 ~>) mar)) # pan 0.2 # orbit 1
+         , (# begin (range 0.1 1 $ p)).(# legato (range 0.2 1.0 $ p)).(# speed (range 0.2 1.5 $ p)) $ s (fmap ((map show [1..7])!!) ((0.3 <~) mar)) # pan 0.3 # orbit 2
+         , (# begin (range 0.1 1 $ p)).(# legato (range 0.3 0.9 $ p)).(# speed (range 0.3 1.0 $ p)) $ s (fmap ((map show [1..7])!!) ((0.4 ~>) mar)) # pan 0.4 # orbit 3
+         , (# begin (range 0.1 1 $ p)).(# legato (range 0.4 0.7 $ p)).(# speed (range 0.4 1.3 $ p)) $ s (fmap ((map show [1..7])!!) ((0.5 <~) mar)) # pan 0.5 # orbit 4
+         , (# begin (range 0.1 1 $ p)).(# legato (range 0.1 0.5 $ p)).(# speed (range 0.1 1.0 $ p)) $ s (fmap ((map show [1..7])!!) ((0.6 ~>) mar)) # pan 0.6 # orbit 5
+         , (# begin (range 0.1 1 $ p)).(# legato (range 0.2 1.1 $ p)).(# speed (range 0.2 0.8 $ p)) $ s (fmap ((map show [1..7])!!) ((0.7 <~) mar)) # pan 0.7 # orbit 6
+         , (# begin (range 0.1 1 $ p)).(# legato (range 0.3 1.0 $ p)).(# speed (range 0.3 1.0 $ p)) $ s (fmap ((map show [1..7])!!) ((0.8 ~>) mar)) # pan 0.8 # orbit 7
+         ]
+let orc= "<a b c>"
+let sy1= struct (every 3 inv (inhabit eup orc)) $ arp "<pinkyup up converge>" $ n "<bs'sevenFlat10'4 af'sevenFlat10'6>" # "[m1]" # nudge (range 0 1 $ slow 8 sine)
+let sy2= struct (every 3 inv (inhabit eup orc)) $ arp "<pinkyup up converge>" $ n "<bs'sevenFlat10'4 af'sevenFlat10'6>" # "[m2]" # nudge (range 0 1 $ slow 8 sine)
+let sap= struct (every 3 inv (inhabit eup orc)) $ (|+| begin 0.06).(|+| legato 0).(|+| speed 0) $ squeeze "[1,2,3,4,5,6,7]" sam
+let bdp= struct (every 3 inv (inhabit eup orc)) $ "9b:32 9s:39 9b:29 9cp:20 9s:43" # orbit "0 9 0 9 9" # pan (range 0.25 0.75 $ p) 
+d1 $ stack [sy1, sy2] 
+d2 $ bdp
+d3 $ sap
+--all $ id
+all $ pickF (stitch (every 3 inv (inhabit eup orc)) 0 1) [id,striate 2] -- . (# nudge (range 0 1 $ slow 8 sine))
+d4 $ ccv (stitch (every 3 inv (inhabit eup orc)) 0 127) # ch 2 # ccn 55 # "m2" 
+d5 $ ccv (stitch (every 3 inv (inhabit eup orc)) 127 0) # ch 2 # ccn 55 # "m1"
+
+
+--kriyananda
+
+d1 $ stack [
+-- drumz!
+slow 2
+$ whenmod 60 59 (#lpf (fast 2 $ range 400 5000 $ sine))
+$ whenmod 50 49 (# vowel "[a i o]*2")
+$ whenmod 32 31 (stut' 8 0.125 (# up "[2 4 8 10]").(#gain 0.8))
+$ whenmod 9 8 ((#gain 0.8).(# crush 6))
+$ whenmod 20 16 (# speed 0.75)
+$ whenmod 27 24 ((# room 0.5).(#gain 0.5))
+$ whenmod 12 10 (chop 32)
+$ whenmod 18 16 (# hpf (slow 8 $ range 300 1000 $ sine))
+$ every 3 ((# shape 0.6).(#gain 0.5))
+$ every 9 (within (0.25, 1)(rev.(stut 8 0.2 (1/16))))
+$ every 5 (within (0,0.15) ( (# delay 0.4).( # phasr 1.5).(# phasdp 4.8) ))
+$ every 23 (within (0,1.25)(rev))
+$ every 16 (degradeBy 0.25)
+$ every 6 (within (0, 0.5) (# speed ( fast 2 $ range 1 5 $ tri) ))
+$ sound "[simo*8]" # n (irand (16))
+# pan (slow 2 $ range 0.2 0.8 $ sine)
+# gain 0.6,
+slow 2 $ s "arpy" # gain 0.7
+] 
+
+--compressor //spednar
+
+https://github.com/supercollider-quarks/BatLib
+
+
+----
+9:44 PM
+hi, before open a github issue some questions...
+
+with this piece of code:
+
+d1
+  $ juxBy 0.4 (|+| octave 1)
+  $ s "superpiano*4"
+
+
+the note on the right channel is on octave 1 and not on octave 6 like I was expecting.
+instead with
+
+d1
+  $ juxBy 0.4 (|+| octave 1)
+  $ s "superpiano*4"
+  # octave 5
+
+
+it works like expected. maybe the octave default value it's not recognized by "|+|" operator (the same for |-|)?
+another question. with this code:
+
+d1
+  $ juxBy 0.8 (|+| octave (irand 4))
+  $ s "superpiano*4"
+  # octave 5
+
+
+the right channel does not play, the same using choose
+function. I am missing something?
+9:57 PM
+the last one, I promise 😃
+how can I convert a Fractional Int to an Int? this code gives me error, I think it's because
+segment samples the pattern but always returns Fractional Int values, right?
+
+d1
+  $ juxBy 0.8 (# octave (segment 1 $ range 1 4 $ sine))
+  $ s "superpiano*4"
+  # octave 5
+
+9:57 PM
+you probably want one of
+round floor ceiling truncate
+which convert real fractional values to integral values
+and you probably need
+fmap or <$>
+to map it over a pattern
+10:44 PM
+yes
+d1 $ s "superpiano*4" |+| octave 1
+will set octave 1, rather than add 1 to a default value
+the addition in |+| only happens if there's more than one value explicitly added
+you have to give
+irand
+some structure if you want to hear it
+
+d1 $ sound "superpiano" + octave (irand 4) -- no sound
+d1 $ sound "superpiano" + octave (segment 8 $ irand 4) -- sound
+d1 $ sound "superpiano*4" |+ octave (irand 4) -- sound
+
+10:51 PM
+.. and the round working:
+
+d1 $ octave (segment 16 $ round <$> (slow 2 $ range 1 8 $ sine))
+   # s "superpiano"
+
+
+
+once $ repeatCycles 2 $ sound "bd bd cp cp" # cps (78/60/4)
+
+
+d4 $ "hh*8" # nudge (range 0 1 $ slow 4 sine)
+
+hush
+
+d9 $ every 2 (# nudge (range 0 1 $ slow 4 sine)) $ s "hh*8" 
+
+d1 $ s "cp*4" # nudge (squeeze "[0 0 0 0 1]/5" [slow 4 $ range 0 1 sine, 0])
+
+d1 
+$ arpeggiate $ sometimes (withEvents (reverse)) 
+$ stutWith (choose [16, 4, 8, 32]) 0 (|* gain 0.9) $ chunk 4 (fast 2) 
+$ s "sd:4(<5 3>,8,<2 4 5>)"
+
+
+-- r.tyler.mclaughlin
+11:58 AM
+figured out a way to make a flanger in tidal:
+
+let flanger1 lforate amt = nudge (fast lforate $ range (-amt) amt sine) 
+
+let flanger2 lforate lfopitch = speed (fast lforate $ range (1 - lfopitch) (1 + lfopitch) sine)
+
+d1 $ euclid 3 8 $ stack [s "[arpy:1, arpy:5, arpy:7]", s "[arpy:1, arpy:5, arpy:7]" # flanger1 0.051 0.01 # flanger2 0.051 0.02] 

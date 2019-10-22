@@ -37,9 +37,6 @@ d1 $ s "yin1:5"
 --example 2
 
 下午DEMO這個bottle音源有替換過 不是原本dirtsample的bottle
-下午DEMO這個bottle音源有替換過 不是原本dirtsample的bottle
-下午DEMO這個bottle音源有替換過 不是原本dirtsample的bottle
-下午DEMO這個bottle音源有替換過 不是原本dirtsample的bottle
 
 d1
 $ striate (slow 4 $ "20 .. 300")
@@ -73,7 +70,7 @@ d1
   # attack 0.2
   # hold 2
   # release (segment 64 $ slow 15 $ range 0.013 0.48 $ sine)
-# cps 1
+  # cps 1
 
 hush
 
