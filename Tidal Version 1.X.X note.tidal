@@ -223,7 +223,7 @@ hush
 
 --------------------------
 
-:t selectF
+:t select
 
 d2 $ sound (select (cF 0.5 "21") ["sn:4*3","bd*3"])
 
@@ -439,7 +439,7 @@ d1 $ sound "hh*16" # gain (euclidFull 3 8 1 0.7)
 
 produces xx.. ..xx ..xx .... which is correct but not what I wanted.
 
-d1 $ sound "hh*16" # gain (euclidFull 3 16 1 0.7) 
+d1 $ sound "hh*16" # gain (euclidFull 3 16 1 0.7) # cps 0.5 
 
 produces x... .x.. ..x. .... with is also correct. 
 

@@ -627,12 +627,14 @@ d1 $ slow 2 $ weave 16 (pan tri) [
   # orbit "0"
 
 
+:t elem
 
 --------elem??--------
 
-d1 $ when ((elem '4').show)
-  (striate 4)
-  $ sound "hh hc"
+d1
+  $ when ((elem '2').show) (#speed 2)
+  $ sound "bd"
+  # cps 2
 
 ---------chunk-----------
 
@@ -878,7 +880,7 @@ $ slow 4
 
 
  d1 
-  $ every 3 (+ up 12) 
+  -- $ every 3 (+ up 12) 
   -- $ outside 4 (rev) 
   $ cat [s "arpy bd sn",s "sn sn bd", s"lt lt sd", s "sd sd bd"]
   # cps 1
