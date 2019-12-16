@@ -113,6 +113,13 @@ let p = streamReplace tidal
     c60 = ccn (choose [1 .. 60])
     setmd a b = s "midi*10" # midichan a # ccn b # ccv "120"
     jat a b = slow (a/b) $ (euclidFull (round <$> (a-1)) (round <$> (a)) 0.7 1) 
+    tala a b c =  ((selectF (a) [chatusra b c, tisrah b c , khanda b c , tisra b c , misra b c])) 
+    tisrah   a b = selectF (a-1) [
+            -- 1 note
+            (struct (select (b/3) ["[t ~ ~]" ,"[~ t ~]","[~ ~ t]" ])),
+            -- 2 note
+            (struct (select (b/3) ["[t t ~ ]" ,"[t ~ t]","[~ t t]"]))
+             ]
     chatusra a b = selectF (a-2) [
             (struct (select (b/3) ["[t ~ ~ t]" ,"[t t]","[t t ~ ~]" ])),
             (struct (select (b/3) ["[t [t t]]" ,"[t t ~ t]","[[t t] t]"]))
@@ -141,25 +148,25 @@ let p = streamReplace tidal
     misra a b = selectF ((a-2)/4) [
             -- 2 note
             (struct (select (b/6) ["[t ~ ~ ~ ~ ~ t]","[t t ~ ~ ~ ~ ~]",
-                                   "[t ~ ~ ~ ~ t ~]","[t ~ t ~ ~ ~ ~]",
-                                   "[t ~ ~ ~ t ~ ~]","[t ~ ~ t ~ ~ ~]"])),
+                                "[t ~ ~ ~ ~ t ~]","[t ~ t ~ ~ ~ ~]",
+                                "[t ~ ~ ~ t ~ ~]","[t ~ ~ t ~ ~ ~]"])),
             -- 3 note
             (struct (select (b/15)["[t ~ ~ ~ ~ t t]","[t t ~ ~ ~ ~ t]","[t t t ~ ~ ~ ~]",
-                                   "[t ~ ~ ~ t ~ t]","[t ~ ~ ~ t t ~]","[t ~ t t ~ ~ ~]","[t ~ t ~ ~ ~ t]","[t t ~ t ~ ~ ~]","[t t ~ ~ ~ t ~]",
-                                   "[t ~ ~ t ~ t ~]","[t ~ t ~ ~ t ~]","[t ~ t ~ t ~ ~]",
-                                   "[t ~ ~ t ~ ~ t]","[t ~ ~ t t ~ ~]","[t t ~ ~ t ~ ~]"
-                                   ])),
+                                "[t ~ ~ ~ t ~ t]","[t ~ ~ ~ t t ~]","[t ~ t t ~ ~ ~]","[t ~ t ~ ~ ~ t]","[t t ~ t ~ ~ ~]","[t t ~ ~ ~ t ~]",
+                                "[t ~ ~ t ~ t ~]","[t ~ t ~ ~ t ~]","[t ~ t ~ t ~ ~]",
+                                "[t ~ ~ t ~ ~ t]","[t ~ ~ t t ~ ~]","[t t ~ ~ t ~ ~]"
+                                ])),
             -- 4 note
             (struct (select (b/17)["[t ~ ~ ~ t t t]","[t t ~ ~ ~ t t]","[t t t ~ ~ ~ t]","[t t t t ~ ~ ~]",
-                                   "[t ~ ~ t ~ t t]","[t ~ ~ t t ~ t]","[t ~ ~ t t t ~]","[t ~ t ~ ~ t t]","[t ~ t t ~ ~ t]","[t ~ t t t ~ ~]","[t t t ~ t ~ ~]","[t t ~ t t ~ ~]","[t t ~ t ~ ~ t]",
-                                   "[t ~ t ~ t ~ t]","[t ~ t ~ t t ~]","[t ~ t t ~ t ~]","[t t ~ t ~ t ~]"])),
+                                "[t ~ ~ t ~ t t]","[t ~ ~ t t ~ t]","[t ~ ~ t t t ~]","[t ~ t ~ ~ t t]","[t ~ t t ~ ~ t]","[t ~ t t t ~ ~]","[t t t ~ t ~ ~]","[t t ~ t t ~ ~]","[t t ~ t ~ ~ t]",
+                                "[t ~ t ~ t ~ t]","[t ~ t ~ t t ~]","[t ~ t t ~ t ~]","[t t ~ t ~ t ~]"])),
             -- 5 note
             (struct (select (b/15)["[t ~ ~ t t t t]","[t t ~ ~ t t t]","[t t t ~ ~ t t]","[t t t t ~ ~ t]","[t t t t t ~ ~]",
                                     "[t ~ t ~ t t t]","[t ~ t t ~ t t]","[t ~ t t t ~ t]","[t ~ t t t t ~]","[t t ~ t ~ t t]",
                                     "[t t ~ t t ~ t]","[t t ~ t t t ~]","[t t t ~ t ~ t]","[t t t ~ t t ~]","[t t t t ~ t ~]"])),
             -- 6 note
             (struct (select (b/6) ["[t ~ t t t t t]" ,"[t t ~ t t t t]","[t t t ~ t t t]","[t t t t ~ t t]","[t t t t t ~ t]","[t t t t t t ~]" ]))
-                         ] 
+                        ] 
     -- Kindohm's awesome Function--
     -- ripOLD a b p = within (0.25, 0.75) (slow 2 . rev . stut 8 a b) p
     -- ripOLD' a b c d e p = within (a, b) (slow 2 . rev . stut c d e) p
