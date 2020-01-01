@@ -73,11 +73,13 @@ let p = streamReplace tidal
     ssine  a b c d = speed   (slow a  $ segment d $ range b c $ sine)
     ssaw   a b c d = speed   (slow a  $ segment d $ range b c $ saw )
     --
-    osc   e a b c d =  segment (e*a) $ slow a  $ range b c $ d
+    osc   e a b c d =  segment (e) $ slow a  $ range b c $ d
                     --segment 1 $ range 0 1 $ slow 8 $ saw
                     --(osc 1 0 1 saw 8)
     osc64  a b c d = slow a $ segment (64*a) $ range b c $ d
     bpm a = cps (a/60/4)
+    sp = speed
+    dg = degradeBy
     nr   = n (irand 10000)
     nl   = n (slow 10000 $ run 10000)
     n2   = n (slow 2  ( run 1 ))
