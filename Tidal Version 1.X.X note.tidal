@@ -568,3 +568,15 @@ d3 $ n "c3 cs4 b2 as2 c3 d3 cs3 c3 cs4 b2 as2 c3 d3 cs3 d3 d3"
 
 d3 $ n (segment 16 $ (irand 10)-32) # sound "supersaw(3,2)" # decay "[0.4 0.6 0.8 0.92 1]/2" # voice "[0.3 0.4 0.5 0.6 0.7 0.8 1]/2" # cutoff "1200 2400 3600 480"
 
+
+--------------microtonal
+
+let n2edo edo p = (\x -> x*12/edo) <$> p
+
+d1 $ n (n2edo 50 (slow 2 $ "[0 .. 100]")) # s "superpiano"
+
+hush
+
+
+---------------------works in new version?
+d4 $ s "<notes*4 feelfx*8>" # gain 0.9 # n "<(irand 8) 0>"
