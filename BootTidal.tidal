@@ -331,6 +331,8 @@ g = gtfo
 -- roll'' p = stutWith 2 (shift' 100000 $ choose [(0.0625*3), (0.125*3)]) id $ p
 -- rollAny = rollany
 
+--galagala
+
 
 
 :set prompt "tidal> "
