@@ -1,0 +1,787 @@
+--day 01 2018/12/24 "[a b c]*[d e]"
+
+hush
+
+d1 
+  $ struct "[t ~ t]*[1 2 3 4 5 3 4]"
+  $ sound "dtna4b"
+  # nl
+  -- |+ n (segment (range 1 30 $ (cT 1 "12")) $ range 0 1 $ saw )
+  # cut 0
+  # release (osc64 14 0.01 12 saw )
+  -- + lpf (degradeBy 0.7 (osc64 24 2000 12000 sine ))
+
+   hush
+
+--day 02 2018/12/25 radio , with MIDI controls
+
+d3
+  -- $ almostNever ( (off 1 (|+ n (slow 136 $ run 136)))
+  -- .(# sound "[[yes*5 [bd*4 yes] sn yes]*[[1] [1.25 [5]] 2 3]*2]")
+  -- .(|+ release "10")
+  -- .(#cut "0 0 1")
+  -- )
+  $ every 3 (within (0.75,1.3) ((# gain "0.5" )
+  .(# cutoff (slow 20 $ segment 20 $ range 200 3000 $ sine))
+  .(density 1.25)
+  .(stut' 15 (range 0 2 $ (cT 0.25 "12")) (# speed "0.5"))))
+  -- $ every 5 (within (0,0.75) $ juxBy 0.1 (|+ n (segment 40 $ range 1 10 $ sine )))
+  -- $ off 1 ((juxBy 1 (+n "1")).(# begin (segment 40 $ range 1 0 $ sine )).rev)
+  $ sound "[[yes*5 [bd*4 yes] yes]*[[1] [1.25 [5]] 2 3.3]*2]"
+  -- |+| n (segment 30 $ range 1 12 $ saw )
+  -- |+ n "[16]"
+  |+ n (slow 136 $ run 136)--(cF 1 "15"))
+  -- # n "2"
+  # begin (segment "<24>" $ range 0 (cF 1 "13") $ saw )
+  -- # cut 1
+  -- # hold "1.3"
+  -- # release (slow 20 $ segment 40 $ range 0.3 1 $ saw )
+ |+ release (slow 9 $ segment 10 $ range 0.5 (range 0 5 $ (cF 5 "14")) $ sine )
+  -- # attack (slow 200 $ segment 200 $ range 0.14 0.175 $ saw )
+
+  hush
+
+--day 3 **spread + striate**
+d1
+  -- $ almostNever (loopAt 4)
+  -- $ slowspread (slow) [164,128,240,300]
+  $ jux (|+| speed (segment (choose [16,1,32]) $ range 0.5 1.2 $ density 0.15 sine))
+  $ (spread (striate' 200) [(10/24), (1/30), (1/20), (15/20) , (10/20)] $ sound "yes" )
+ |+| speed (slow 100 $ segment 10 $ range 0.2 1 $ sine)
+  + n (slow 136 $ run 136)
+
+  hush
+
+
+problem:怎麼自動置換sample set??
+
+
+do
+  let cell = "t(3,8)"
+      a = (struct (cell) (choose[1,0.25,0.75,0.5]))
+      b = (struct (layer [id , density 1.25] cell )  (choose["dtna4b","sn","byd","cp"]))
+  d1
+    $ loopAt a
+    $ sound (b)
+    # nl
+    # cut 1
+
+hush
+
+do
+  let a = segment 1 $ choose ["bd","yes"]
+  d1 $ sound a
+
+do
+  let a = slow 138 $ segment 1 $ choose ["yes","tt4b"]
+  d1
+    $ loopAt 1
+    $ sound a
+    + n (slow 138 (run 138))
+
+d1 
+  $ cat [sound "dtna4b" , sound "yes"]
+  # nl
+
+
+d1 $ repeatCycles 4  $ cat [sound "dtna4b" , sound "yes"] # nl
+  
+hush
+--day4
+
+d1
+   -- some effects
+   -- $ degradeBy 0.1
+   -- $ every 3 (+ n (slow (range 0.75 2 $ cT 1 "13" )  $ segment 13 (irand 2)))
+   $ every 4 (within (0.75,1) (fast 0.75 . (# speed "-1")))
+   $ every 5 (within (0,0.15)((+ accelerate ((sine))).(rev)))
+  --  $ roll'' 
+   ----random picking n samples in sample folder every (1/16)cycles
+   $ loopAt 1
+   $ sound "[breaks125,tt4b]"
+   -- + n (slow (choose [1,2,3,5]) $ segment 16 (irand 4))
+   + n (slow 114 $ run 114)
+   + n "28"
+   + begin (slow (range 0.05 5 $ cT 2.5 "12" ) $  segment 16 (saw))
+   -- + cut "[1 0 [1 0] 0 1 [0 1]]"
+  --  + unit "[c r]%10"
+   --sample playing lengths
+   # cut "0"
+   -- |+ release (segment 16 (choose [1,0.75,1.25]))
+   |+ release (range 0.0075 6 $ cF 1 "13" )
+   # gain "1.3"
+
+asap $ s "tt4b" # gain "1.2" + n (range 0 130 $ shrand 4)
+
+hush
+
+d4 $ spaceOut [1.8,0.3,0.6]
+   -- $ s "[bd*4,cp]"
+   $ sound (fit 2 ["bd", "bd", "cp", "bd" , "bd"] "[0*6,1]")
+   # cps (iter 10 (segment 12 $ run 1))
+
+hush
+
+--day05 try ur
+let pats =
+      [
+        ("a",
+          -- $ almostNever ( (off 1 (|+ n (slow 136 $ run 136)))
+          -- .(# sound "[[yes*5 [bd*4 yes] sn yes]*[[1] [1.25 [5]] 2 3]*2]")
+          -- .(|+ release "10")
+          -- .(#cut "0 0 1")
+          -- )
+           every 3 (within (0.75,1.3) ((# gain "0.5" )
+          .(# cutoff (slow 20 $ segment 20 $ range 200 3000 $ sine))
+          .(density 1.25)
+          .(stut' 15 (range 0 2 $ (cT 0.25 "12")) (# speed "0.5"))))
+          -- $ every 5 (within (0,0.75) $ juxBy 0.1 (|+ n (segment 40 $ range 1 10 $ sine )))
+          -- $ off 1 ((juxBy 1 (+n "1")).(# begin (segment 40 $ range 1 0 $ sine )).rev)
+          $ sound "[[yes*5 [bd*4 yes] yes]*[[1] [1.25 [5]] 2 3.3]*2]"
+          -- |+| n (segment 30 $ range 1 12 $ saw )
+          -- |+ n "[16]"
+          |+ n (slow 136 $ run 136)--(cF 1 "15"))
+          -- # n "2"
+          # begin (segment "<24>" $ range 0 (cF 1 "13") $ saw )
+          -- # cut 1
+          -- # hold "1.3"
+          -- # release (slow 20 $ segment 40 $ range 0.3 1 $ saw )
+         |+ release (slow 9 $ segment 10 $ range 0.5 (range 0 5 $ (cF 5 "14")) $ sine )
+         ),
+        ("b", almostNever (loopAt 4)
+        -- $ slowspread (slow) [164,128,240,300]
+        $ jux (|+| speed (segment (choose [16,1,32]) $ range 0.5 1.2 $ density 0.15 sine))
+        $ (spread (striate' 200) [(10/24), (1/30), (1/20), (15/20) , (10/20)] $ sound "yes" )
+       |+| speed (slow 100 $ segment 100 $ range 0.2 1.2 $ sine)
+        + n (slow 136 $ run 136)
+        ),
+        ("c",
+          every 4 (within (0.75,1) (fast 0.75 . (# speed "-1")))
+        $ every 5 (within (0,0.15)((+ accelerate ((sine))).(rev)))
+        ----random picking n samples in sample folder every (1/16)cycles
+        $ loopAt 1
+        $ sound "[breaks125,tt4b]"
+        + n (slow (choose [1,2,3,5]) $ segment 16 (irand 4))
+        + n (slow 114 $ run 114)
+        -- + n "28"
+        + begin (slow (range 0.05 5 $ cT 1 "12" ) $  segment 16 (saw))
+        -- + cut "[1 0 [1 0] 0 1 [0 1]]"
+        -- + unit "[c r]%10"
+        --sample playing lengths
+        # cut "0"
+        |+ release (segment 16 (choose [1,0.75,1.25]))
+        # gain "1.3"
+        ),
+        ("d",
+            loopAt 1
+            $ sound (segment 1 $ choose ["yes","tt4b","dtna4b"])
+            + n (slow 138 (run 138))
+        )
+      -- ]
+    fx = [("reverse", (# (room 0.8 # sz 0.99 # orbit 1))),
+          ("n", (+ n (slow 138 (run 138))))
+         ]
+in
+d1 $ ur 138 (segment 1 (choose["d:n","a","b","c"])) pats fx
+--d1 $ ur 120 "a b:reverb c:faster" pats fx
+
+hush
+
+
+---day 6
+
+setcps 0.9
+
+d1
+  $ jux ((slow 1.05).(0.01<~))
+  -- $ degradeBy 0.6
+  $ loopAt 1
+  $ sound"yes"
+  + begin (fast 1 $ smooth $ segment 16 $ range 0.1 0.9 $saw)
+  + gain (fast 1 $ smooth $ segment 16 $ range 0.4 1 $saw)
+  -- # release 0.15
+  # hold 0.4
+  + release (segment 20 $ (iter 16) (smooth "[0.2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]"))
+  + pan "[0.7 0.3]/2.05"
+  + n (slow 136 (run 136))
+  # cps (slow 20 $ segment 32 $ rangex 1 0.5 $ saw)
+
+  d2
+    -- $ slow 2
+    $ (0.10 ~>)
+    $ loopAt 1
+    $ sound"yes"
+    + begin (fast 1 $ smooth $ segment 16 $ range 0 1 $saw)
+    + gain (fast 1 $ smooth $ segment 16 $ range 0.3 0.9 $saw)
+    + accelerate (fast 1 $ smooth $ segment 16 $ range 0 (-0.8) $saw)
+    # release 1.2
+    + pan "[0.3 0.7]/2"
+    # hold 0.2
+    + hold ((iter 16) (smooth "[ 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0]"))
+    + n (slow 136 (run 136))
+
+
+d1 $ sound "{bd ~}%16"
+
+d2 $ sound "sn"
+
+
+  hush
+
+--day 07
+
+xfade "yes"
+ -- $ juxBy ((slow 5 $ segment 8 $ range 0 1 $ saw)) (chop 10)
+  -- $ chop (round <$> (slow 4 $ smooth $ segment 16 $ range 20 40 $ sine))
+  -- $ juxBy 0.8 ((chop (round <$> (smooth $ segment 15 $ range 1 7  $ saw))).rev.
+  --              (slow "<1 1.2 3>")
+  --             )
+  -- $ off 1 ((struct (every 2 ((slow 2).inv )"[t [t [t f]] ~ t]") ).(# speed 2).(# room 0.9).(# size 0.5))
+  $ sound "yes"
+  -- # cut 1
+  + begin (slow 6 $ smooth $ segment 16 $ range 0 1 $saw)
+  + release (slow 5 $ smooth $ segment 8 $ range 0.125 0.4 $ rand)
+  + lpf (slow 16 $ smooth $ segment 14 $ range 800 8500 $ saw)
+  + cps ((slow 11 $ smooth $ segment 32 $ range 1 10 $ sine) + (slow 4 $ smooth $ segment 16 $ range 1 10 $ saw))
+  + n (slow (136*6) $ run 136)
+
+hush
+
+
+
+--day 08
+
+:t weave
+
+hush
+
+d1 $ weave 12 ((tremolodepth (range 0.5 0.8 $ sine)))
+                   [
+                    struct (every "<3 4>" (slow 1.5) "[[t f <t>][t f] t [t [f t]]]") $
+                    sound "tt4b"
+                    + begin
+                    (
+                      -- slow 6 $
+                      -- slow "<6.7 7.8 8.9 9.9 3.5 20>" $
+                      smooth $ segment 16 $ range 0 1 $saw)
+                    +  release (slow 5.08  $ smooth $ segment 8 $ range 0.125 0.9 $ saw)
+                    +| release ((0.125 <~) $ slow 5 $ smooth $ segment 16 $ range 0.125 0.5 $ saw)
+                    -- *| release ((0.130 <~)  $ slow 20.05 $ smooth $ segment 20 $ range 0.5 4 $ saw)
+                    + lpf (slow 16 $ smooth $ segment 14 $ range 2500 4500 $ saw)
+                    -- + room (slow 10 $ segment 12 (choose [0.8,0,1.2]))
+                    -- # size 0.3
+                    ,
+                     (0.04<~)
+                     $ sound "momo:1"
+                     -- + speed
+                     + begin (slow 7 $ smooth $ segment 16 $ range 0 1 $saw)
+                     + release (slow 5.08 $ smooth $ segment 8 $ range 0.125 0.9 $ saw)
+                     +| release ((0.125 <~) $slow 5 $ smooth $ segment 16 $ range 0.5 0.4 $ saw)
+                     *| release ((0.25 <~) $slow 5.05 $ smooth $ segment 20 $ range 0.5 1 $ saw)
+                     + lpf (slow 16 $ smooth $ segment 14 $ range 800 6500 $ saw)
+                     # gain 0.1
+                    ]
+    # n (slow (1000*1) $ run 1000)
+    # tremolorate 2
+
+
+
+hush
+
+-- day 09 --start from this
+d1 $ loopAt 8 $ rev $ linger 0.5 $ chop 32 $ sound "bev" # cps 0.5
+
+d1 
+  -- $ repeatCycles 8   
+  -- $ every 4 rev
+  $ loopAt 2
+  $ linger (segment 8 (choose [0.5,0.75,0.25,0.125,0.625])) 
+  $ chop (segment 2 (choose [64,48,52])) 
+  $ sound "tt4b" 
+  # cps 1.2
+  -- # lpf 3000
+  -- # bpf "[110,220,440]"
+--  |+ bpf ((slow 12 $ range 0 3000 $ sine ))
+  # bpq 0.4
+  # nl
+  # cut 0
+
+d1 $ loopAt 8 $ rev
+   $ linger ((slow 8 $ smooth $ segment 1 $ range 0.5 1 $ saw))
+   $ chop 64 $ sound "bev"
+
+
+d1
+  --  $ loopAt ((slow 8 $ smooth $ segment 1 $ range 1.02 1 $ saw))
+   $ rev
+   $ chop 2
+   $ linger ((slow 1  $ segment 3 $ range 0.5 1 $ saw))
+  -- "[<0.25 1 1 [1 0.25]>]"
+   -- $ stuck [
+   --          linger "[0.25]",
+   --          linger "1"
+   --          ]
+   -- $ stut 3 0.5 1
+   $ sound "yes:134"
+   - n (slow (136*1) $ run 136)
+   + begin (slow 1 $ segment 16 $ rangex 0.05 1 $ saw)
+   -- # attack 0.06
+   # cut 1
+   # cps 0.4
+
+   hush
+
+-----*solve the gap when n change*-----
+
+let a = (slow 12 $ segment 72 $ range 20 35 $ saw)
+in
+d2
+  -- $ degradeBy 0.1
+  $ loopAt 1
+  $ off 0.125 (
+            (rev).
+            (+ speed "1").
+            (+ n "1 2").
+            (+ pan "0.2 0.8").
+            (+ begin  (slow  (a*2) $ segment 16 $ range 0.01 0.99 $ saw)).
+            (+ release (slow (1/a) $ segment 16 $ range 0.125 6 $ saw)).
+            (+ gain (slow (a*3) $ segment 16 $ range 0.5 1 $ sine))
+            )
+  $ chop (round <$> a)
+  $ sound "[yes:0]"
+  + begin  (slow (a) $ segment a $ range 0.01 0.99 $ saw)
+  + attack (slow (a) $ segment a $ range 0.5 1 $ saw)
+  + n (slow (136) (run 136 ))
+  -- + cut 1
+  -- = gain "0.4"
+
+  hush
+
+import qualified Sound.Tidal.Chords
+
+  hush
+
+  d3
+    $ (slow 1)
+    -- $ degradeBy 0.1
+    -- $ loopAt 1
+    $ off 0 (
+            (chunk 1 (+ speed (smooth $ segment 60 $ rangex 0 1 $saw))).
+            (+ n (arp "<up down diverge>" "<a'm9'8 e'7sus4'8>"))
+            )
+    -- $ chop 2
+    -- $ chunk 2 (+ release (iter 16 (smooth "[1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]")))
+    -- + pan "[1 0]/2"
+    $ sound"[yes]"
+    -- # release 0.45
+    + begin (slow (smooth "<1 1 [2 1] [1 4] 1>" )$ smooth $ segment 16 $ range 0 1 $saw)
+    + release (slow "<1>" $ smooth $ segment 60 $ rangex 0.5 0.75 $saw)
+    + n (slow 136 (run 136))
+    # cut 0
+
+hush
+
+d1 $ n (arp "<up down diverge>" "<a'm9'8 e'7sus4'8>") # sound "superpiano"
+
+let a= 16
+in
+d3
+-- $ inside a (rev)
+$ chunk a ((+ begin (slow a $ (run a)*0.1)).rev.(# speed 0.75))
+$ sound "yes"
++ begin ((run a)*0.1)
++| end (slow 0.5 $ (run a)*0.1 + 0.4)
+-- # cut
++ n (slow 136 $ run 136)
+
+let a = "<[16 4] [24 10] [8 20]>"
+in
+d3
+  -- $ chunk 16 ((+ begin (slow a $ (run a)*0.1)).rev.(# speed 0.75))
+  $ inside 16 (whenmod 8 1 ((slow 2).(+ speed (segment 16 $ rangex 0.5 1 $ sine))))
+  $ striate a
+  $ sound "[yes]"
+  # n (slow 136 $ run 136)
+  + end (slow 1 $ (run a)*0.1 )
+
+
+d1
+$ inside 2 (
+              (inside 4
+              ((every 3 (+ speed "1"))
+             .(rev)
+             .(off 0
+                   (
+                   (+ lpf (slow 3 $ segment 16 $ rangex 200 7500 $sine))
+                  -- .(# room 0.4)
+                  -- .(# size 0.5)
+                   )
+                   ))
+              )
+            -- .(# gain (fast 1 $ "[0.75 1.2]"))
+            -- .(|+ end (slow 1 $ (run 8)*0.1 ))
+            )
+$ striate 16
+$ sound "[yes]"
+# n (slow 136 $ run 136)
+# cps 0.5
+
+
+d1
+$ inside 4 (
+              (inside 3
+              (+ n "[1 0 1]/3")
+             .(every 2 (+ speed "1"))
+             .(rev)
+             .(off 0
+                   (
+                   (+ lpf (slow 3 $ segment 16 $ rangex 200 3500 $sine))
+                  .(# size 0.2)
+                  .(# room 0.5)
+                   )
+                   )
+              )
+            .(# gain (fast 1 $ "[0.75 1.2]"))
+            .(|+ end (slow 1 $ (run 8)*0.1 ))
+            )
+$ striate 16
+$ sound "[yes]"
+# n (slow 136 $ run 136)
+
+hush
+
+d3
+-- $ every 4 (within (6/8,1) ((chop 2).(# size 0.5)))
+-- $ every 3 (within (1/4,1/2) ((slow (8/4)).(# size 0.5)))
+$ inside 2 (
+              (inside 5
+              (every 5 (+ speed "[1]"))
+             .(rot "<0 0 1 2 3>")
+            --  .(+ gain (slow 2 $ segment 20 $rangex 0.75 1 $ saw))
+             .(rev)
+            --  .(|+ accelerate "[0.01 0 0.02 -0.5]/5")
+             .(off 0
+                   (
+                  (+ lpf (slow 3 $ segment 16 $ rangex 1000 5000 $ sine))
+                  .(scramble 4)
+                  -- .(# size 0.7)
+                  -- .(# room 0.8)
+                  -- .(linger 0.8)
+                  -- .(+ pan (segment 4 $ tri))
+                   )
+                   )
+              )
+            -- .(# gain (fast 1 $ "[0.75 1.2]"))
+            -- .((|+ end (slow "<2 2.25>" $ (run 8)*0.1 )))
+            )
+$ striate " [<8 16> [16]]"
+$ sound "[yes]"
+# n (slow 136 $ run 136)
+-- # cut 2
+# cps "[0.33 0.35?]"
+-- # cps (slow 72 $ segment 72 $ range 0.5 2$ saw )
+
+hush
+
+d1
+  $ inside 4 rev
+  $ sound "numbers"
+  + n " 1 2 3 4 5 6 7 8"
+
+:t inside
+
+---day 10 smooth line
+
+
+d1
+  -- $ tickle
+  $ every 4 (rev)
+  $ every 5 (|+ accelerate "{0.9 -0.9 1 0.5}%16")
+  $ rot "<1 0 1 1 [2 0] [0 1]>"
+  $ segment (segment "<1 1 2 5 8 15 21>" $ range 150 500 $ rand)
+  $ speed (slow "<1 1.2 <1.4 4 10> 1.5 4>" $ smooth ("[-1.01 1.5 0.18 1.2]" - "[ 1 1 1 1]"))
+  # s "[tt4b:0(3,<8 [1 16]>,2) dtna4b(2,9,4)]/2"
+  # n (slow 95 $ run 95)
+  # rsaw 15 3.5 1.5 30
+  # bsaw 8 0 1 20
+  # cut 2
+  + cps "[1 0.75 1.2 1.75 1 0.75]/5"
+
+hush
+
+
+d2
+  $ degradeBy 0.2
+  $ whenmod 24 18(
+                  (+ begin (slow 2 $ segment 120 $ range 0.01 0.95 $ saw))
+                  .(rev)
+                  .(# speed (slow 1 $ segment "1 1 2 5 8" $ range 0.8 1 $ saw))
+                  )
+  $ rot "<0 1 1>"
+  $ struct ("t(3,16,<1 3 8>)")
+  $ sound "dtna4b"
+  -- + release (slow 2 $ segment 32 $ range 2.5 1 $ saw)
+  # n (slow 1000 $ run 1000)
+  # begin (fit 3 "1 2 0" "0 0.25 0.5")
+  -- # tremolorate 20
+  -- # tremolodepth (slow 4 $ segment 20 $ smooth  "0.2 1 0.1")
+  # cut 1
+  # cps "0.75"
+  # unit "c"
+
+
+hush
+
+  d1
+    $ rot "<0 1 [1 0] [0 1]>"
+    -- $ speed (slow "<6 3.25 <2.5 3 10> 1.5 4>" 
+    $ segment "<200 215 250 200 100 >"
+    $ smooth ("[1 1.2 1.23 1.2 1.21 1.25 [-4 1]]"))
+    # s "[yes(3,<8 [1 16]>,3)]"
+    # n (slow 95 $ run 95)
+    # rsaw 4 3.5 2.5 10
+    + bsaw 15 0.01 0.99 100
+    # cps (slow 12 $ rangex 0.5 1.25 $ sine)
+    # cut 1
+
+hush
+
+---fit tt yes
+
+d1
+  $ (density 3)
+  -- $ whenmod 8 6 (iter 4)
+  $ striate (iter "<3 3 4>" "[4 3 2 5 <6 ~ 4>]")
+  $ sound "yes"
+  # nl  
+  # cut 1
+  -- # release (segment 32 (choose [0.25,1.2,1.12,0.3]))
+  # cps 0.73
+
+hush
+
+
+
+d1
+  $ slow 2
+  $ (density 3)
+  $ striate (iter "<2 2 4>" "[4 3 2 5 <6 ~ 4>]")
+  $ sound "ktlove"
+  -- # (slow 1 $ nl ) 
+  # cut 1
+  -- # release (segment 32 (choose [0.25,1.2,1.12,0.3]))
+  # cps (134/120)
+
+  hush
+
+d1
+$ sound (pfit "<1 2 3 4>/2" [ "tt4b:1" ,"tt4b:2" , " tt4b:3" , "tt4b:4" , "tt4b:5"] " 1 [0 2 4]")
++ nl
+# cut 1
+# unit "c"
+
+hush
+
+
+d2
+  $ struct ("t(2,4)")
+  $ sound "dtna4b"
+  + nl
+  # cut 1
+  # cps "0.75"
+  # unit "c"
+
+hush
+
+
+d2
+  -- $ every 4 (iter 6)
+  -- $ stutWith 4 (0.25) (# begin (segment 16 $ range 0 0.95 $ saw) )
+  $ sound (pfit "<3 5 2 1 1>" ["yes:1", "yes:2", "yes:3", "yes:4", "yes:5"] "{0 ~ ~ [1] ~ ~ <2> ~ }")
+  # n (slow (10000) $ run 10000)
+  # cut 1
+  # cps "0.75"
+  # unit "c"
+
+hush
+
+
+
+d2
+  -- $ every 4 (iter 6)
+  -- $ slow 2
+  -- $ stutWith 2 (0.0625) (+ begin (segment 16 $ range 0 0.5 $ saw) )
+  $ sound (pfit "4" ["numbers:1", "numbers:2", "numbers:3", "numbers:4", "numbers:5" , "numbers:6" , "numbers:7"] "{0 ~ ~ 1 ~ ~ 2 3 }")
+  # cut 1
+  # cps "1.5"
+  # unit "c"
+  # speed "0.4"
+
+
+
+d1 $ sound (fit 1 ["bd", "sn", "arpy", "arpy:1", "casio"] "0 ~ ~ 1 ~ ~ 2 ~ ")
+
+
+hush
+
+d1 
+-- $ slow 1.5
+-- $ (layer [loopAt 1,id])
+-- $ slow 1.25 
+$ layer [degradeBy 0.2,id]
+-- $ iter 16
+-- $ every 5 (within (3/16,8/16) (linger "0.125"))
+$ every 9 (within (9/16,11/16) (slow 2))
+-- $ every 6 (within (3/16,5/16) (slow 2))
+$ splice 16 "0 1 2 <3> 4 [[5 ~]] 6 <7> 8 9 10 <11 [12]> 14 13 12 15" "fancy" 
+-- $ slowcat [splice 16 "0 1 2 <3> 4 [~ [5 ~]] 6 <7 ~> 8 9 10 <11 [12]> 12 13 14 15" "fancy" , splice 16 "0 1 2 <3> 4 [~? [5 ~?]] 6 <7 ~?> 8 9 10 <11 [12]> 14 13 12 15" "fancy" ]
+-- + n (slow 2 $ run 4)
++ (slow 1 nl)
+-- # cps 0.8
+# release 1
+# speed "[1,0]"
+# cut "0 0 1 1"
+
+hush
+
+d1 
+$ slow 1.2
+$ every 5 (sometimes $ within (0,0.25) ((rip' 0 0.25 3 1 "<0.725>").(slow 1)))
+-- $ slow "<2 1 1 1>"
+-- $ linger (0.0625*5)
+-- $ ("<0.25 0.2>" ~>)
+-- $ (0.01625 ~>)
+-- $ every 9 (# release (range 0.07 4 $ saw))
+$ whenmod 16 4 (sometimes (within (0.75,1)(iter 8)))
+$ layer [degradeBy 0.6 ,id]
+-- $ every 5 (within (2/16,7/16) ((iter 8)))
+$ every 4 (within (9/16,12/16) (slow 2))
+$ every 6 (within (3/16,5/16) (slow 4))
+-- $ splice 16 "0 1 2 <3> 4 5 6 <7> 8 9 [10 ~] <11> 12 [13] 14 15" "fancy" 
+$ splice 16 "0 1 2 <3> 4 [~? [5 ~?]] 6 <7 ~?> 8 9 10 <11 [12]> 14 13 12 15" "fancy" 
++ nl 
+# speed "[1]"
+# cut "0"
+# cps 0.8
+-- # release 0.3
+-- # room 0.3 
+-- # size 0.6
+
+hush
+
+d1 
+$ loopAt (0.35)
+$ fast 1.2
+-- $ inside 2 (jux rev )
+$ splice 16 (iter 4 $ "<1 1> <3 5> <2 5*2> 5" + "<0 16 12*2 10>" + "2 3 4 5" ) "fancy" 
++ nl 
+# unit "c"
+
+hush
+
+d1 
+$ loopAt (0.35)
+$ fast 1.2
+-- $ inside 2 (jux rev )
+$ splice 16 (iter 4 $ "<1 1> <3 5> <2 5*2> 5" + "<0 16 12*2 10>" + "2 3 4 5" ) "dulu" 
+ + nl 
+
+ hush
+
+p "itn 2"
+    -- $ jux (0.25 ~>)
+    $ loopAt 1.8
+    $ every 5 (# speed "1 -1")
+    $ every 4 (chunk 2 $ iter 4)
+    $ every 4 (|- n 1)
+    $ every 8 (sometimes $ rip' 0.5 1 30 0.8 (-0.125) )
+    $ cat  [n 0 , n 1 , n (irand 200)]
+    -- $ slow 4
+    +| splice 8 (inside 4 (rev) "0 1 2 3 4 5 6 7") "{yes [fancy] [dtna4b ~] tt4b}"
+    -- + (segment "<1 3 1 2 2>" $ slow 8 $  nl )
+    -- # (slow 0.5 $ nl)
+    + (nl)
+    # accelerate "[ 0 <-0.25 0.25 0.35>]*4"
+    # cps 0.8
+
+
+    p "itn 2"
+    $ every 5 (sometimes $ rip' 0.5 1 30 0.8 (-0.125) )
+    $ cat  [n 0]
+    -- $ slow 4
+    +| slice 8 (inside 4 (rev) "0 1 2 3 4 5 6 7") "{yes [dulu] [dtna4b ~ ]}"
+    -- + (segment "<1 3 1 2 2>" $ slow 8 $  nl )
+    + (nl)
+    # accelerate "[ 0 <-0.25 0.25 0.35>]*4"
+    # cps 0.5
+  
+
+
+    hush
+    
+p "itn 2"
+  $ slow 1.21
+  -- $ every 3 (repeatCycles 4) 
+  -- $ every 5 (repeatCycles 2) 
+  -- $ juxBy 0.3 ((1/) ~>)
+  -- $ loopAt 1
+  $ every 2 (# speed "1 1 1 -1")
+  -- $ every 4 (|- n 1)
+  $ cat  [n 1  , n 2 , n (irand 20) , n 3]
+  -- $ slow 4
+  +| slice 8 "0 1 3 2 [4] [3 5] 6 7" "fancy"
+  -- + (segment "<4 3 3 2 2>" nl )
+  -- # (slow 1 $ nl)
+  + n (slow 1 $ run 1 ) 
+  -- # cut 1
+  # cps 0.7
+
+  p "itn 2"
+  $ loopAt 1.4
+  -- $ slow 1.21
+  -- $ slow (slow 36 $segment 16 $ range 1.21 1.210006 $ saw) 
+  -- $ every 3 (# speed "1 1 1 -1")
+  $ outside 2 (chop 4 .(jux ((1/16) ~>)))
+  $ cat  [slice 8 "0 1 2 3 4 [4] 6 7" "dulu",slice 8 "0 1 2 3 4 5 6 7" "dulu",slice 8 "0 1 2 3 [4] [5] 7 6" "dulu"]
+  -- # (slow 1 $ nl)
+  # nl
+--  |+ n 41
+  # release 0.12
+  -- # hold 0.03
+  -- # cut 1
+  -- # up (-4)
+  # cps 1
+  
+hush
+
+  (140/120/2)
+
+  setcps = (140/120/2)
+
+
+  p "nn"
+  -- $ slow 1.21
+  -- $ every 1 (within (0.5,0.75) ((linger "0.0625" )))
+  -- $ whenmod 8 2 (fast "<2 2 4 4 8 8>")
+  -- $ every 8 (repeatCycles 4) 
+  -- $ loopAt 1
+  -- $ every 2 (# speed "1 1 1 -1")
+  -- $ every 4 (|- n 1)
+  -- $ cat  [n 1  , n 2 , n (irand 20) , n 3]
+  -- $ ((0.125*(slow 8 $ run 8)) ~> )
+  $ slice 8 "[0 .. 8]" "fancy"
+  -- # n (slow 12 (run 12))
+  -- # n2
+  -- + n 43
+  + (slow 1 $ nl)
+  -- + n (slow 4 $ run "4" ) 
+  -- # cut 1
+  # cps (140/120/2)
+
+
+  setcps = (70/120/4)
+
+  hush
+
+  d1 $ whenmod 8 2 (fast 2) (sound "bd sn kurt")
+
