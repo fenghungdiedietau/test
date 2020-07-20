@@ -333,6 +333,20 @@ g = gtfo
 
 --galagala
 
+let 
+  spfx2 p = (# fshift  (dg 0.1 (osc64 14 100 304 sine) ))
+  spfx1 p = ((# binshift (osc 16 15 0.2 0.4 sine )).(# comb 0.3).(# scram (osc 16 14 0.3 0.9 sine ))) $ p
+  bone =  (# bpm (slow 5 $ smooth "120 120 160 110 160 40 100 60 100"))
+
+jathis :: Rational -> Pattern a -> Pattern a -> [Int] -> Pattern a
+jathis perCycle a b xs = sew boolStep a b
+  where boolStep :: Pattern Bool
+        boolStep = _slow ((toRational $ sum xs) / perCycle) $ listToPat $ list xs
+        list :: [Int] -> [Bool]
+        list [] = []
+        list (x:xs) = (True:(replicate (x-1) False)) ++ list xs
+
+
 
 
 :set prompt "tidal> "

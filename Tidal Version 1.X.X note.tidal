@@ -558,8 +558,31 @@ hush
 
 
 -------- <(irand)> works in new version?
-d4 $ s "<notes*4 feelfx*8>" # gain 0.9 # n "<(irand 8) 0>"
+d4 $ s "<notes*4 feelfx*8>" # gain 0.9 # n (cat [irand 8, "0"] ) --O
 
+d4 $ s "<notes*4 feelfx*8>" # gain 0.9 # n "<(irand 8) 0>" --X
+
+YAXU 凌晨3點11分
+I think you want
+loopFirst, e.g. 
+
+d1 
+$ repeatCycles 4 
+$ sound "arpy*8" 
+# n (loopFirst $ irand 10)
+
+There's also timeLoop if you want to loop more than one cycle 
+  
+d1 
+$ fast 2
+$ sound "arpy*8" # n (timeLoop 3 $ irand 8)
+
+If you want a different bit of the random timeline just shift with <~, e.g. 
+
+d1 $ sound "arpy*8" # n (loopFirst $ 105 <~ (irand 8)) 
+
+
+d1 $ sound "arpy*8" # n (timeLoop 1.2 $ 105 <~ (irand 8))
 
 --------timeloop & loopfirst
 
@@ -648,3 +671,79 @@ d2 $ s "supergong ~ supergong"
 
 --mininotaion:_ 
 d3 $ s "bd _ bd"
+
+
+
+
+
+---------1.49
+
+do 
+
+  let quantise n = fmap ((/n) . fromIntegral . floor . (*n))
+  
+  d1 
+  $ n (scale "major" (round <$> (range 0 12 $ sine)))
+  +| s "superpiano*15"
+
+:t scale
+
+hush
+
+d1
+$ n (scale "major" (segment 16 $ quantise 1 (range 0 8 sine)))
+# s "supersquare"
+
+d1
+$ s "superpiano"
+# n (scale "major" (struct "t(3,8)" $ quantise 1 (range 0 8 sine)))
+
+d1 $ n (scale "major" (fmap round (struct "t(3,8)") $ quantise 1 (range 0 8 sine))) $ s "superpiano"
+
+d1 $ n (scale "major" (round<$>(range 0 8 sine))) 
+
+d1 $ s "superpiano*8" # n (quantise 1 $ range 0 7 $ sine)
+
+hush
+
+---draw and drawLine
+
+draw "{a a ~ [[a b] b] a}%21"
+
+drawLine "[a b <c [d e]>, x(3,8,<0 2 4>)]"
+
+drawLine "[a b <c [d e]>, x(3,8,<0 2 4>),h h ~]"
+
+drawLine "[x(3,8,1)]" 
+
+d1 $ tala 2 4 5 $ s "bd"
+
+hush
+
+draw "{0 0 ~ [[0 1] 2] 0}%21"
+
+
+d1
+-- $ layer [id,(# s"arpy").(# gain (choose [1,0])) ] 
+$ superimpose ((# s"arpy").(# gain (choose [1,0]))) 
+$ s "bd*8" # gain (choose [0,1])
+
+
+d2
+$ degrade
+$ s "cp*8" 
+
+hush
+
+d2
+-- $ degradeBy 0.4
+$ s "cp*10" 
+
+hush
+
+degradeBy :: Double -> Pattern a -> Pattern a
+
+degradeByR x p = unMaybe $ (\a f -> toMaybe (f > x) a) <$> p <*> rand
+    where toMaybe False _ = Nothing
+          toMaybe True a  = Just a
+          unMaybe = (fromJust <$>) . filterValues isJust
