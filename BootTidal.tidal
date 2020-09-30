@@ -82,10 +82,10 @@ let p = streamReplace tidal
     dg = degradeBy
     nr   = n (irand 10000)
     nl   = n (slow 10000 $ run 10000)
-    n2   = n (slow 2  ( run 1 ))
-    n4   = n (slow 4  ( run 3 ))
-    n8   = n (slow 8  ( run 7 ))
-    n16  = n (slow 16 ( run 15))
+    n2   = n (slow 2  ( run 2 ))
+    n4   = n (slow 4  ( run 4 ))
+    n8   = n (slow 8  ( run 8 ))
+    n16  = n (slow 16 ( run 16))
     bizy = binary (slow 255 $ run 255) 
     attack = att
     release= rel
@@ -331,11 +331,9 @@ g = gtfo
 -- roll'' p = stutWith 2 (shift' 100000 $ choose [(0.0625*3), (0.125*3)]) id $ p
 -- rollAny = rollany
 
---galagala
-
 let 
-  spfx2 p = (# fshift  (dg 0.1 (osc64 14 100 304 sine) ))
-  spfx1 p = ((# binshift (osc 16 15 0.2 0.4 sine )).(# comb 0.3).(# scram (osc 16 14 0.3 0.9 sine ))) $ p
+  fx2 p = (# fshift  (dg 0.1 (osc64 14 100 304 sine) ))
+  fx1 p = ((# binshift (osc 16 15 0.2 0.4 sine )).(# comb 0.3).(# scram (osc 16 14 0.3 0.9 sine ))) $ p
   bone =  (# bpm (slow 5 $ smooth "120 120 160 110 160 40 100 60 100"))
 
 jathis :: Rational -> Pattern a -> Pattern a -> [Int] -> Pattern a
